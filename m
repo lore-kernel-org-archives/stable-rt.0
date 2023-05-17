@@ -2,45 +2,42 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EE0C77B75
-	for <stable-rt@archiver.kernel.org>; Wed, 17 May 2023 13:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827FBC77B75
+	for <stable-rt@archiver.kernel.org>; Wed, 17 May 2023 22:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231669AbjEQNHg (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Wed, 17 May 2023 09:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
+        id S229473AbjEQW73 (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Wed, 17 May 2023 18:59:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231408AbjEQNHf (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Wed, 17 May 2023 09:07:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0093186
-        for <stable-rt@vger.kernel.org>; Wed, 17 May 2023 06:06:48 -0700 (PDT)
+        with ESMTP id S229558AbjEQW73 (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Wed, 17 May 2023 18:59:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D56526E
+        for <stable-rt@vger.kernel.org>; Wed, 17 May 2023 15:58:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684328807;
+        s=mimecast20190719; t=1684364319;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ricdlEvGEUBLNA0MniTa/NJPkEIbLbsrJ3rrWmsjOC8=;
-        b=TrOGubXpKbIisn8c58HrHydwzjqAQ/0z0Fjxt39oOt+AAXG64/aBc0ebh9ieSRVwNeJGJ0
-        bxW1SeWjPIM+AjUxCWB6X9sjRnmiRUBqT9H6rhHr3gnH0tGpCBvlvSN0xSf5QG5W1/621r
-        JvvlLXmM1InRcwdgM87s+Pz8/JRU0BU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=NLrQCZgEBeNsfX2XwybhyHCcZshzGl65GSu8pOolR7c=;
+        b=AO3fHXoygKQfzRPXBYF1u2RljAf7GtOoEiIFrCTxziFt30cL7xIG7zJYcgBygz/IZUS4Gz
+        IA/tSFj6KYfRb+p4FS7s/7h/NhD5oXMLM9PsGfsV864vlXwC/+Vm98peLU8GjatBm17LLY
+        QUC6JlresmKy+5BJJk5On1NEEKxzKHA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-206-I_4TdqUoMhGbrdvh5kWDUg-1; Wed, 17 May 2023 09:06:42 -0400
-X-MC-Unique: I_4TdqUoMhGbrdvh5kWDUg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+ us-mta-615-14gJ7VpRPiOIasNur4w8kw-1; Wed, 17 May 2023 18:58:33 -0400
+X-MC-Unique: 14gJ7VpRPiOIasNur4w8kw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 852211C0512D;
-        Wed, 17 May 2023 13:06:41 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9939E878522;
+        Wed, 17 May 2023 22:58:32 +0000 (UTC)
 Received: from localhost (unknown [10.22.32.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26A882166B31;
-        Wed, 17 May 2023 13:06:39 +0000 (UTC)
-Date:   Wed, 17 May 2023 10:06:39 -0300
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 90E1940C2063;
+        Wed, 17 May 2023 22:58:31 +0000 (UTC)
+Date:   Wed, 17 May 2023 19:58:30 -0300
 From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     nobuhiro1.iwamatsu@toshiba.co.jp, jan.kiszka@siemens.com,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
         stable-rt <stable-rt@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -51,86 +48,51 @@ Cc:     nobuhiro1.iwamatsu@toshiba.co.jp, jan.kiszka@siemens.com,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         Clark Williams <williams@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Jeff Brady <jeffreyjbrady@gmail.com>
-Subject: Re: 5.10.179-rt87 (was Re: [ANNOUNCE] 5.10.175-rt84)
-Message-ID: <ZGTRX5hb0rK7MQSW@uudg.org>
-References: <ZBebYGllb3f9sOOS@uudg.org>
- <ZGS2sTPKvvNHyzGH@duo.ucw.cz>
+        Pavel Machek <pavel@denx.de>,
+        Jeff Brady <jeffreyjbrady@gmail.com>,
+        Ranjan Dutta <ranjan.dutta@intel.com>,
+        Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.179-rt87
+Message-ID: <ZGVcFsbBzVQfZ0Cp@uudg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0l8oaj5e51kAaOmh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZGS2sTPKvvNHyzGH@duo.ucw.cz>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
+Hello RT-list!
 
---0l8oaj5e51kAaOmh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm pleased to announce the 5.10.179-rt87 stable release.
 
-On Wed, May 17, 2023 at 01:12:49PM +0200, Pavel Machek wrote:
-> Hi!
->=20
-> > I'm pleased to announce the 5.10.175-rt84 stable release.
-> >=20
-> > You can get this release via the git tree at:
->=20
-> Are there any plans for new -rt release?
->=20
-> Last I see is:
->=20
-> Author: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> Date:   Fri Mar 24 11:52:56 2023 -0300
->     Linux 5.10.176-rt86
->=20
-> There's pending one in rt-next:
->=20
-> commit 5f84852113c1391abe8c38defdda562640bb3808 (origin/v5.10-rt-next)
-> Author: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> Date:   Fri May 5 14:40:10 2023 -0300
->     Linux 5.10.179-rt87
->=20
-> ...but "real" release would be useful for us, as we could base our
-> -cip-rt on that.
->=20
-> Thanks and best regards,
-> 								Pavel
+This release is just an update to the new stable 5.10.179
+version and no RT specific changes have been made.
 
-Hi Pavel,
+You can get this release via the git tree at:
 
-We are submitting our stable v5.10-rt kernels to kernel-ci now, to avoid
-problems our local tests were not able to uncover. The process is new for
-me and, while trying to streamline the process on our side, I seem to have
-hit a problem. Please allow me two more days and you shall have the release
-in hand.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-Best regards,
+  branch: v5.10-rt
+  Head SHA1: 5f84852113c1391abe8c38defdda562640bb3808
+
+Or to build 5.10.179-rt87 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.179.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.179-rt87.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
 Luis
-
-
---0l8oaj5e51kAaOmh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEk1QGSZlyjTHUZNFA85SkI/jmfCYFAmRk0V8ACgkQ85SkI/jm
-fCZmFw/+JRazR6H+Er/SohhaI8jiXtsrNABOCzMeDxiEF7DG3IQmJU5RM1kQ6iAw
-sRDmF1NFpEKKcumDbwn1J1OCmVPb8opUI+D/Yu3y2asuK6q34g8yYydTwYzSSsVb
-hjn1oL9D8XL78sAPIPcPxHdE2xKzSzLpMQ7T3CHHBODgGKwHnWTmm1ZvZ2xBIUlA
-coVEddcf6kw6WhN9hQnpDAXRc2C7G8zlu1zyvc62pXEsS3cw3aiPf6HabQxkvQwy
-tkIrkNB+fUxlz6mBlFqOIUxJp1kbAp/5rqFeQRs1HEUdoQli/njSHe/iQY3dM6w3
-tV2k28OpKWi9E+0pet51cV//WvoLGnlKUZjlXilwCWqNBBiKhJxmsVDdbzE3UVIO
-Lrv00CdoWHK98zvxBIbTnsXJF6CKSnD0prlLpZinOse2/VMGOKXjyWqttxVt7efF
-KvJ6MjGGp7uZN//M3tmc1i4ZWLWkkSUZRpWZuyKy480J8MG9PTH3HMrHvmp03KmD
-1JzEV6JUJGlD758WwJuvoVekl4t5QshqDY3VkxNN+7u4sipUqG7lqrA0TiFsqVYR
-Ez0sYGwlbq2BV0mJKyr6ai+dXK3/s4a2XADHr7O02lQ8RG1WEksTuK2ajzOkL34N
-xBamXkeVZE2CBlOtYf27ffa/e+AvikQcid9FUSUkfJXAmx1UMg4=
-=cGnq
------END PGP SIGNATURE-----
-
---0l8oaj5e51kAaOmh--
 
