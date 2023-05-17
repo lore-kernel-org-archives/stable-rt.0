@@ -2,87 +2,94 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6801DC77B61
-	for <stable-rt@archiver.kernel.org>; Fri, 28 Apr 2023 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CF4C77B75
+	for <stable-rt@archiver.kernel.org>; Wed, 17 May 2023 11:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbjD1SBY (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Fri, 28 Apr 2023 14:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43874 "EHLO
+        id S230125AbjEQLNB (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Wed, 17 May 2023 07:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbjD1SBX (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Fri, 28 Apr 2023 14:01:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0FD1FDB
-        for <stable-rt@vger.kernel.org>; Fri, 28 Apr 2023 11:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682704838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=b8JFRxct5lkOd3hzJncFizpd5DdUIvvYTUJbV5bf+yA=;
-        b=GSJO4rgMbJqjuDwXgUMkLwjbGvqOKP76eJjjbiSRUBzBtkzgcMJ2j7ZMLtXjOcVDA6NOxg
-        IbIg+Y39Y003QAIf8WlQzNz7DuZ2slgVd+zZ4xLy5k4Nr3+rBmmxIUNHJc0ZyRatKtInDt
-        ZV5WQv1BygtuMhDTosoq/6kvjMAlpXU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-547-h9IQFPu3OHm2PuOgQvU8Tw-1; Fri, 28 Apr 2023 14:00:33 -0400
-X-MC-Unique: h9IQFPu3OHm2PuOgQvU8Tw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D500811E7E;
-        Fri, 28 Apr 2023 18:00:30 +0000 (UTC)
-Received: from localhost (unknown [10.22.34.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BB0A2027043;
-        Fri, 28 Apr 2023 18:00:30 +0000 (UTC)
-Date:   Fri, 28 Apr 2023 15:00:29 -0300
-From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        stable-rt <stable-rt@vger.kernel.org>
-Subject: Re: kernel-rt: mm/memcg: refill_obj_stock() is being called from IRQ
- context
-Message-ID: <ZEwJvU69mrXFu8Rg@uudg.org>
-References: <ZEvbUY9alR5KPULD@uudg.org>
- <20230428161910.meKaMkWu@linutronix.de>
+        with ESMTP id S230136AbjEQLM7 (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Wed, 17 May 2023 07:12:59 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F69D2708;
+        Wed, 17 May 2023 04:12:52 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 24AD71C0E53; Wed, 17 May 2023 13:12:50 +0200 (CEST)
+Date:   Wed, 17 May 2023 13:12:49 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+        nobuhiro1.iwamatsu@toshiba.co.jp, jan.kiszka@siemens.com
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        Jeff Brady <jeffreyjbrady@gmail.com>
+Subject: 5.10.179-rt87 (was Re: [ANNOUNCE] 5.10.175-rt84)
+Message-ID: <ZGS2sTPKvvNHyzGH@duo.ucw.cz>
+References: <ZBebYGllb3f9sOOS@uudg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oGWPWU6pRB5bmxAR"
 Content-Disposition: inline
-In-Reply-To: <20230428161910.meKaMkWu@linutronix.de>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+In-Reply-To: <ZBebYGllb3f9sOOS@uudg.org>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 06:19:10PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2023-04-28 11:42:25 [-0300], Luis Claudio R. Goncalves wrote:
-> > Sebastian et al,
-> Hi,
-> 
-> > I am reporting this here, at first, to confirm if there is an obvious solution
-> > for the problem or if it is really a problem.
-> > 
-> > In short, refill_obj_stock() is being called from IRQ context and lockdep
-> > is complaining about the local lock stock_lock probably not being enough to
-> > protect the data.
-> 
-> This has been reported before and a patch has been posted
-> 	https://lore.kernel.org/all/20230425114307.36889-1-wander@redhat.com/
-> 
-> I don't like it but it should cure it.
 
-Thank you! I both forgot about that thread and also missed that in my searches.
+--oGWPWU6pRB5bmxAR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And yes, that's a solution for a different issue that fixes the problem I
-reported as a side effect :)
+Hi!
 
-I was torn between redoing the locking in that code or using something
-similar to an old proposal from Wayman Long, where he had different
-variables to account work on atomic and non-atomic contexts (which might
-not be applicable here)
+> I'm pleased to announce the 5.10.175-rt84 stable release.
+>=20
+> You can get this release via the git tree at:
 
-> Sebastian
-> 
----end quoted text---
+Are there any plans for new -rt release?
 
+Last I see is:
+
+Author: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Date:   Fri Mar 24 11:52:56 2023 -0300
+    Linux 5.10.176-rt86
+
+There's pending one in rt-next:
+
+commit 5f84852113c1391abe8c38defdda562640bb3808 (origin/v5.10-rt-next)
+Author: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Date:   Fri May 5 14:40:10 2023 -0300
+    Linux 5.10.179-rt87
+
+=2E..but "real" release would be useful for us, as we could base our
+-cip-rt on that.
+
+Thanks and best regards,
+								Pavel
+							=09
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--oGWPWU6pRB5bmxAR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZGS2sQAKCRAw5/Bqldv6
+8ruXAJ9rdRb7whS4MXPlmWSho1wjeu3dFACfVcNZlsMR1hRZWNiYmptMbSshq10=
+=GkZT
+-----END PGP SIGNATURE-----
+
+--oGWPWU6pRB5bmxAR--
