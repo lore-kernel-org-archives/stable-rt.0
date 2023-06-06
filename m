@@ -2,79 +2,106 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8132BC77B7A
-	for <stable-rt@archiver.kernel.org>; Thu,  1 Jun 2023 06:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FEEC7EE24
+	for <stable-rt@archiver.kernel.org>; Tue,  6 Jun 2023 09:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231824AbjFAGkQ (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Thu, 1 Jun 2023 02:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        id S232746AbjFFJtQ (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 6 Jun 2023 05:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231803AbjFAGkN (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Thu, 1 Jun 2023 02:40:13 -0400
-X-Greylist: delayed 600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 31 May 2023 23:40:11 PDT
-Received: from mail.nearlyone.de (mail.nearlyone.de [IPv6:2a01:4f8:1c1e:abde::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E02132;
-        Wed, 31 May 2023 23:40:11 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 48D45DE51F;
-        Thu,  1 Jun 2023 08:23:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-        t=1685600607; h=from:subject:date:message-id:to:mime-version:content-type;
-        bh=/r2qOvwy7YwQkvhXgOWsW1l/k3p5jbFHmPHTU/r1Law=;
-        b=gsgZvIF91urmloPkdUEH4/hzKPcggbK1UqsUt108UgvEGX2TwBz3o15hDWTK/dGYo393AR
-        eT3kabeU6J7TbxDTTTUtmofaAtF1GBnwumUjpXnDt0KkD/88SVc5MuTzOScsmhNha2hskQ
-        5U6p7spuzXVBM3WuAJqarMwveDEhKaLLUsC96THfBJlUxrs73WNXLlIbXYGe0n3uVVpUX7
-        7UGIh/Y6iTNBDmpsyc54YnoZSM7gYcHYXJOYWSr4MSAetwXwIfsnItr/EYOvX15s3HUbZu
-        3Ag+CiPPQFm4vYiq/f4eUV7WsVT+z+JGqHvbBHs7TvmCJzRvfPU0SvVQU7dFAg==
-Date:   Thu, 1 Jun 2023 08:23:25 +0200
-From:   Daniel Wagner <wagi@monom.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org, stable-rt@vger.kernel.org,
+        with ESMTP id S237540AbjFFJtB (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 6 Jun 2023 05:49:01 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4EA010C0;
+        Tue,  6 Jun 2023 02:48:58 -0700 (PDT)
+Date:   Tue, 6 Jun 2023 11:48:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1686044936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KSa4OY9dsWXX7LG19K4ps06QwMPn/kJbzHoa0LvQ/dI=;
+        b=kD6EPcw8dfX8tpFG4VG8J3fP0j3U6yVTftzZul3WT4zmlELTbQOT5cnUQvQlKUhdLh8Hbg
+        t2OO5xKtxJTTdTicNTD8UGPPkCzPzIQvZKnNI8YEii8e8jLBYMpAcQQV+n8ePSaC7/g5D2
+        trt7kdkXsSUDhsQjZt7B5In/yPv4E1/WFQQq53FoxYk+IhBPgegvZdsYLz1bXSNbS4TPeo
+        gGWXdfdr+d/HxR0UacwZmwpBVqmk5tGfRLL22eTzC/T+ETyO6b8TMD1fUgtM5ELXmA6ahr
+        bJ6XpGSE1SNRCHxt1iVHrY4297Kn3R/jdmvng2cLleiSojDUFJQtA4W8M5qvQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1686044936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KSa4OY9dsWXX7LG19K4ps06QwMPn/kJbzHoa0LvQ/dI=;
+        b=CAkW+0ZxzgX8EbTa5o4RZs12jtVQjzM2EIG7LLHwHbFe93r/jfHiMwkAhjXeMdJrnwnkyz
+        r7nurGx2ELrFK0Ag==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Daniel Wagner <daniel.wagner@suse.com>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.19.284-rt125
-Message-ID: <168560053367.8134.6051252603215600719@beryllium.lan>
+        Clark Williams <williams@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        Jeff Brady <jeffreyjbrady@gmail.com>
+Subject: Re: [ANNOUNCE] 5.10.180-rt88
+Message-ID: <20230606094855.v8zhk78I@linutronix.de>
+References: <ZHZSlJFnTK1IpXeg@uudg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <ZHZSlJFnTK1IpXeg@uudg.org>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-Hello RT-list!
+On 2023-05-30 16:46:28 [-0300], Luis Claudio R. Goncalves wrote:
+> Hello RT-list!
+Hi,
 
-I'm pleased to announce the 4.19.284-rt125 stable release.
+> Support for deferred printing was removed in v5.10-rc1-rt1 by commit
+> 9153e3c5cb0c9 ("printk: remove deferred printing").
 
-This is just an update to the latest stable release. No RT specific
-changes.
+Sorry for not getting back to earlier, where you proposed the change.
 
-You can get this release via the git tree at:
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 83c7734e98025..92e0656841128 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -609,7 +609,7 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
+>  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
+>  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
+>  
+> -#ifdef CONFIG_PRINTK
+> +#if defined(CONFIG_PRINTK) && !defined(CONFIG_PREEMPT_RT)
+>  extern void __printk_safe_enter(void);
+>  extern void __printk_safe_exit(void);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+This needs to go entirely. The "new" printk code does not need this safe
+functions also for !RT.
 
-  branch: v4.19-rt
-  Head SHA1: 667d7f30ea873d10dc49365c95a387018da5961a
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5f1c50a6bebc5..7e65e3ef16e3a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6057,7 +6057,6 @@ static void __build_all_zonelists(void *data)
+>  	 * tty_insert_flip_string_and_push_buffer() on other CPU might be
+>  	 * calling kmalloc(GFP_ATOMIC | __GFP_NOWARN) with port->lock held.
+>  	 */
+> -	printk_deferred_enter();
 
-Or to build 4.19.284-rt125 directly, the following patches should be applied:
+That is okay. However the commit, that introduced this
+	a992c387b4118 ("mm/page_alloc: fix potential deadlock on zonelist_update_seq seqlock")
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+also added a local_irq_safe a little higher up and it has to go, too.
+The code as-is should produce warnings once it enters this path.
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.284.xz
+>  	write_seqlock(&zonelist_update_seq);
+>  
+>  #ifdef CONFIG_NUMA
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.284-rt125.patch.xz
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
+Sebastian
