@@ -2,58 +2,67 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954FAEB64D7
-	for <stable-rt@archiver.kernel.org>; Tue, 20 Jun 2023 15:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7692EB64D7
+	for <stable-rt@archiver.kernel.org>; Tue, 20 Jun 2023 15:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233619AbjFTPEg (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Tue, 20 Jun 2023 11:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
+        id S232214AbjFTPxf (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 20 Jun 2023 11:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbjFTPEV (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Tue, 20 Jun 2023 11:04:21 -0400
+        with ESMTP id S230469AbjFTPxe (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 20 Jun 2023 11:53:34 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B13E170C
-        for <stable-rt@vger.kernel.org>; Tue, 20 Jun 2023 08:03:32 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 17:03:29 +0200
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0144F4;
+        Tue, 20 Jun 2023 08:53:33 -0700 (PDT)
+Date:   Tue, 20 Jun 2023 17:53:31 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1687273411;
+        s=2020; t=1687276412;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=PmCW5gmayAmCF7VGn/riRqIETVSW1nqOciIhdYKQE7w=;
-        b=OQMWtJNn1UGfpG8SUqG5DerL51tyGr3zIWQhKf7nRPTZZrds5gS82ZLebkRqzBoF5YP+WI
-        6m+Gn7lt8upq2KkJFOCNgqp5DoMPH7cIl6R32e3QvhOuH6NMeCBNjdqtJL42xE2yIlrGSP
-        WcTi2nbzHYUVaW3ehwF2UoTAi+yUD2K3IKo2gAOQOZpbOMEdaz+MBAFu8QY1Cfez83FQG7
-        EEoCJot9Lf8ECxYN9wFtXGTHgVrckoY1DRJeAZjZ2TpF0+NMx/zPeigww3fD7EXYzlzNIN
-        s2cK8O+XoSpuNehP6rQ916ho6lk5mgE8u0w1vEGFLZEfBIIXNGkEz84DeMuJJw==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8j6pwnylz+InGT1r1+A4jY+CzUPLe5e9Bq6HCRJbEiw=;
+        b=FZwrDfYT4uML+1nOdwxzxdtEd6ge0pgCUEXUL4MPNXmyGMu69/HmyxflKgI9S7UOhlh6Fr
+        mpcidhoP0deeS8c4ZkpYU+ottTHOa0JjZVni8aMuEKPrQ08gAs4f9EiU0klwwA9sp82/ok
+        W470gqSD2Tr1DdxqUc5rT0LFtQmcQnm31c6r8/gI6nYC2Dhb6eSpIggxXVCwDeh7AMnL5a
+        BSFZ4ca4vGX/LfYgENFZCzIuNj/YI41ugk/Pz53gCfdvhoJHKycidJ5I2Emyv9l0Q3S7LF
+        q5CW+ck/YYPMgANzUq6Q/vKR95ePFY08PKnQwqvcJOt02jrkaDj5x0endWqmMw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1687273411;
+        s=2020e; t=1687276412;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=PmCW5gmayAmCF7VGn/riRqIETVSW1nqOciIhdYKQE7w=;
-        b=/p5VknW/jm46ADDH+dNs83ilFvgaw3uou/WSuSiwqvhYSE0fAL1+JZVu3zEJ73kvfoOPUb
-        +0XLzSJU2HYjsWDQ==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8j6pwnylz+InGT1r1+A4jY+CzUPLe5e9Bq6HCRJbEiw=;
+        b=eFGayox60aRAOBeeI39Trx4zcqWvG4/uM2apX4W1tY1cJSuuyqwq17DJ4NAMfaF/8ZSnbh
+        hDfGIWudTrwmjeDw==
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     stable-rt@vger.kernel.org
-Subject: Stable backports
-Message-ID: <20230620150329.6r4xxvHu@linutronix.de>
+To:     "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jeff Brady <jeffreyjbrady@gmail.com>
+Subject: Re: [PATCH RT 3/3] Linux 5.10.180-rt89-rc1
+Message-ID: <20230620155331.QmYyGFc8@linutronix.de>
+References: <20230609011104.967128-1-lgoncalv@redhat.com>
+ <20230609011104.967128-4-lgoncalv@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20230609011104.967128-4-lgoncalv@redhat.com>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-Hi,
+On 2023-06-08 22:11:04 [-0300], Luis Claudio R. Goncalves wrote:
+> v5.10.180-rt89-rc1 stable review patch.
+> If anyone has any objections, please let me know.
 
-I've been looking over my queue and which patches vanishes (as in
-applied somewhere) and did not show up in the stable tree. Here is a
-list of some suggestions:
-
-- 7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in io_mapping_map_atomic_wc().")
-- 286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
-- 1c0908d8e4416 ("rtmutex: Add acquire semantics for rtmutex lock acquisition slow path")
-  (is in v6.1 but not in v5.15)
-- b8a04a538ed47 ("revert: "softirq: Let ksoftirqd do its job"")
-- 38cdd83a47fb2 ("tracing/timer: Add missing hrtimer modes to decode_hrtimer_mode().")
+Thank you, this looks good. Looking at it again made realize that I need
+something like 2/3 in my tree, too.
 
 Sebastian
