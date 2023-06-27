@@ -2,67 +2,95 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7692EB64D7
-	for <stable-rt@archiver.kernel.org>; Tue, 20 Jun 2023 15:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321B8EB64D9
+	for <stable-rt@archiver.kernel.org>; Tue, 27 Jun 2023 19:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232214AbjFTPxf (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Tue, 20 Jun 2023 11:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
+        id S231206AbjF0TOm (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 27 Jun 2023 15:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbjFTPxe (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Tue, 20 Jun 2023 11:53:34 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0144F4;
-        Tue, 20 Jun 2023 08:53:33 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 17:53:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1687276412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8j6pwnylz+InGT1r1+A4jY+CzUPLe5e9Bq6HCRJbEiw=;
-        b=FZwrDfYT4uML+1nOdwxzxdtEd6ge0pgCUEXUL4MPNXmyGMu69/HmyxflKgI9S7UOhlh6Fr
-        mpcidhoP0deeS8c4ZkpYU+ottTHOa0JjZVni8aMuEKPrQ08gAs4f9EiU0klwwA9sp82/ok
-        W470gqSD2Tr1DdxqUc5rT0LFtQmcQnm31c6r8/gI6nYC2Dhb6eSpIggxXVCwDeh7AMnL5a
-        BSFZ4ca4vGX/LfYgENFZCzIuNj/YI41ugk/Pz53gCfdvhoJHKycidJ5I2Emyv9l0Q3S7LF
-        q5CW+ck/YYPMgANzUq6Q/vKR95ePFY08PKnQwqvcJOt02jrkaDj5x0endWqmMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1687276412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8j6pwnylz+InGT1r1+A4jY+CzUPLe5e9Bq6HCRJbEiw=;
-        b=eFGayox60aRAOBeeI39Trx4zcqWvG4/uM2apX4W1tY1cJSuuyqwq17DJ4NAMfaF/8ZSnbh
-        hDfGIWudTrwmjeDw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        stable-rt <stable-rt@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        Daniel Wagner <daniel.wagner@suse.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jeff Brady <jeffreyjbrady@gmail.com>
-Subject: Re: [PATCH RT 3/3] Linux 5.10.180-rt89-rc1
-Message-ID: <20230620155331.QmYyGFc8@linutronix.de>
-References: <20230609011104.967128-1-lgoncalv@redhat.com>
- <20230609011104.967128-4-lgoncalv@redhat.com>
+        with ESMTP id S231148AbjF0TOm (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 27 Jun 2023 15:14:42 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE0126A5
+        for <stable-rt@vger.kernel.org>; Tue, 27 Jun 2023 12:14:38 -0700 (PDT)
+Received: from [10.172.66.188] (1.general.jsalisbury.us.vpn [10.172.66.188])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 66506426B5;
+        Tue, 27 Jun 2023 19:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1687893276;
+        bh=VfP4+s3d+he6YUX+JR8BAakXg/T7j1ASaK1a2dwr+1s=;
+        h=Message-ID:Date:MIME-Version:To:References:From:Subject:
+         In-Reply-To:Content-Type;
+        b=H6o5KUL8Y6gNPwe+uf3MTECiOWo8AWnEVijS4MXWDH0QdQ4Atkp2i7JLofZaSojWe
+         0BZSUj3CyIOL5uyoTyBH7YjHiF422rFNg/mNiAOJ8qOlvV1RJoNLjhQrrLj/OV9eTP
+         Y3Xs4nSksTFrfFdFNBydxZWoiXnzAuSVP0xbKn3WvUGj8kZLa7dwXSxeQhYhp/Z40H
+         0RDLZ9ni/RwjJ6FvGSw5XaZteUSuzZBdLIgIZ8/B1HS4HOkBnKz3WM33KyBoIVqynN
+         Kd2G/VJQQWj+Hep1TdsUUmQvVChRuQ0KfAvGW2r3L2M6+wWuzdQo7RPESo/Jc4ZnSZ
+         6n/IkVIGDuusw==
+Message-ID: <8436cefa-9eea-7b1e-ff3f-63223f1f1ddf@canonical.com>
+Date:   Tue, 27 Jun 2023 15:14:35 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230609011104.967128-4-lgoncalv@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        stable-rt@vger.kernel.org
+References: <20230620150329.6r4xxvHu@linutronix.de>
+From:   Joseph Salisbury <joseph.salisbury@canonical.com>
+Subject: Re: Stable backports
+In-Reply-To: <20230620150329.6r4xxvHu@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-On 2023-06-08 22:11:04 [-0300], Luis Claudio R. Goncalves wrote:
-> v5.10.180-rt89-rc1 stable review patch.
-> If anyone has any objections, please let me know.
+On 6/20/23 11:03, Sebastian Andrzej Siewior wrote:
+> Hi,
+>
+> I've been looking over my queue and which patches vanishes (as in
+> applied somewhere) and did not show up in the stable tree. Here is a
+> list of some suggestions:
+>
+> - 7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in io_mapping_map_atomic_wc().")
+> - 286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
+> - 1c0908d8e4416 ("rtmutex: Add acquire semantics for rtmutex lock acquisition slow path")
+>    (is in v6.1 but not in v5.15)
+> - b8a04a538ed47 ("revert: "softirq: Let ksoftirqd do its job"")
+> - 38cdd83a47fb2 ("tracing/timer: Add missing hrtimer modes to decode_hrtimer_mode().")
+>
+> Sebastian
+Hi Sebastian,
 
-Thank you, this looks good. Looking at it again made realize that I need
-something like 2/3 in my tree, too.
+Thanks for the heads up on these commits!
 
-Sebastian
+It appears v5.15 will need these commits:
+
+d15121be7485 ("revert: "softirq: Let ksoftirqd do its job"")
+2951580ba6ad ("tracing/timer: Add missing hrtimer modes to 
+decode_hrtimer_mode().")
+7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in 
+io_mapping_map_atomic_wc().")
+286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
+
+The following commit was already added to v5.15 in v5.15.109:
+
+c15737965434 (rtmutex: Add acquire semantics for rtmutex lock 
+acquisition slow path)
+
+
+The latest two commits are still in linux-next and have not landed in 
+mainline as of yet (d15121be7485 and 2951580ba6ad).  Should I wait to 
+add them to the v5.15-rt stable tree and see if Greg adds them to his 
+trees first?
+
+Thanks,
+
+Joe
+
+
+
