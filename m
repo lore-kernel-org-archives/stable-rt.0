@@ -2,91 +2,83 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665E6EB64DA
-	for <stable-rt@archiver.kernel.org>; Wed, 28 Jun 2023 09:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D1FEB64D7
+	for <stable-rt@archiver.kernel.org>; Wed, 28 Jun 2023 14:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232898AbjF1JD3 (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Wed, 28 Jun 2023 05:03:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233959AbjF1IY6 (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Wed, 28 Jun 2023 04:24:58 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EAE3C3B
-        for <stable-rt@vger.kernel.org>; Wed, 28 Jun 2023 01:14:37 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 08:56:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1687935384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Do6Dg2aaoVJACJNCAF8OwFXR1FEgN5mHPX2Bini7KNc=;
-        b=l6EwqinwP6517ACDTdOZeVk9QR4Fg0no4c8y5k+hoIf9wdTwMXTNUpYkI5/JHI/FKfciZH
-        QJApB6qjEmCnLSNpozUJTCydueq5jcMPrz4l+6HXsixTaASe7+umRL3epzdW7tkk8eUgax
-        vVeW9eMU6XSbOwPwvk1KQur4b1M4xj7J6wN7cblklKM9NTKmHNunaKH7ybCaGuQVY7iBp+
-        aGTwbT+x22v2sHec4YoTxzNxsR8nh3Qzmp6ADRWO5BCWlDhREdILgKIhGhKUjeDR8gehVv
-        SKHYjnvxsO1N2xcBCP+Ah7eOCer9ocI5S6MF6sTmiFgy0z/8YiEueLdDYoaNIQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1687935384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Do6Dg2aaoVJACJNCAF8OwFXR1FEgN5mHPX2Bini7KNc=;
-        b=qhIhBiIBBo4eYBIOiZsBl5LdeBqjG7GLRy2GYxaERKST0LKRJ1F7ILFOckjD1DoLWrji/6
-        Yvd1+Tqe1zfo0tAA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joseph Salisbury <joseph.salisbury@canonical.com>
-Cc:     stable-rt@vger.kernel.org
+        id S230379AbjF1O23 (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Wed, 28 Jun 2023 10:28:29 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:48296
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231127AbjF1O20 (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Wed, 28 Jun 2023 10:28:26 -0400
+Received: from [192.168.1.3] (unknown [216.212.49.106])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id F028F43F53;
+        Wed, 28 Jun 2023 14:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1687962505;
+        bh=/96p4ekEYdxHJmO9GK0Sv14uO9/Tz5RMEMpRM9oTCR4=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=m4LKMBBU5PAC+jwAo3fXt7DSl5g6v+sYn83wHJYk5y79FlW0o1YQI+tUQ+fzYWI6m
+         0viu9ybAy7ZfEyVyjFhi7zGJCZc/tpG4BE7b5tAFiwt6YhsbdKXJvrFGJCDI2Q4Jxd
+         memymbG4VI5uQRL+O6cfVwSfEjQlRVwf2E4G9GD8MF0nMwR3JQNbb2v1tc3sIhO/uO
+         iMHw0EjWbsiUCTmzpqPlwQeHfvmlwLFXbWVaxTDrJq2AsLPW+4C8rYvZrF25mM47nV
+         TQGfntJQuEnLxfEJW3Htq2e0332XsqTKPJ2ay8Ifzn6JOnKYWRPbe/C0sXhu95qSGN
+         9a2kmNR+9/CzA==
+Message-ID: <d743d4bf-cade-5fd6-1745-cb3d5742e929@canonical.com>
+Date:   Wed, 28 Jun 2023 10:28:23 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
 Subject: Re: Stable backports
-Message-ID: <20230628065623.GF8Wl6qw@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        stable-rt@vger.kernel.org
 References: <20230620150329.6r4xxvHu@linutronix.de>
  <8436cefa-9eea-7b1e-ff3f-63223f1f1ddf@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8436cefa-9eea-7b1e-ff3f-63223f1f1ddf@canonical.com>
+ <20230628040801.67d42348@rorschach.local.home>
+Content-Language: en-US
+From:   Joseph Salisbury <joseph.salisbury@canonical.com>
+In-Reply-To: <20230628040801.67d42348@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-On 2023-06-27 15:14:35 [-0400], Joseph Salisbury wrote:
-> Hi Sebastian,
-Hi Joseph,
 
-> Thanks for the heads up on these commits!
->=20
-> It appears v5.15 will need these commits:
->=20
-> d15121be7485 ("revert: "softirq: Let ksoftirqd do its job"")
-> 2951580ba6ad ("tracing/timer: Add missing hrtimer modes to
-> decode_hrtimer_mode().")
-> 7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in
-> io_mapping_map_atomic_wc().")
-> 286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
->=20
-> The following commit was already added to v5.15 in v5.15.109:
->=20
-> c15737965434 (rtmutex: Add acquire semantics for rtmutex lock acquisition
-> slow path)
->=20
->=20
-> The latest two commits are still in linux-next and have not landed in
-> mainline as of yet (d15121be7485 and 2951580ba6ad).=C2=A0 Should I wait t=
-o add
-> them to the v5.15-rt stable tree and see if Greg adds them to his trees
-> first?
 
-They should end up mainline during this merge window. You can wait until
--rc1/-rc2 if you want. If they end-up in the stable-tree, they should
-easily vanish from your RT-queue.
-Either way, please wait until until they show up in v6.1-RT so patches
-flow from the youngest kernel to the oldest.
+On 6/28/23 04:08, Steven Rostedt wrote:
+> On Tue, 27 Jun 2023 15:14:35 -0400
+> Joseph Salisbury <joseph.salisbury@canonical.com> wrote:
+>
+>> The latest two commits are still in linux-next and have not landed in
+>> mainline as of yet (d15121be7485 and 2951580ba6ad).  Should I wait to
+>> add them to the v5.15-rt stable tree and see if Greg adds them to his
+>> trees first?
+> Well, they are in mainline now ;-)
+>
+> But I just want to point out that our "upstream" is the next RT kernel
+> that we have. That is, you should wait till 6.1-rt has a commit before
+> you take it. 6.1 should wait till Sebastian's 6.3-rt has it.
+>
+> That is, if a commit goes into Sebastion's tree, it's OK to backport.
+> But those backports are always added separately from merging a mainline
+> stable branch.
+>
+> We merge stable branches by themselves and increment the -rt number
+> (and we do not need to post a shortlog for that, even though srt does).
+>
+> Then we add backports as a separate release (and increment the -rt
+> number again).
+>
+> -- Steve
+>
 
-> Thanks,
->=20
-> Joe
+This all makes sense to me now.  Thanks so much for the feedback, 
+Sebastian and Steven!
 
-Sebastian
+
