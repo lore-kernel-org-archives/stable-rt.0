@@ -2,85 +2,86 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34694EB64DC
-	for <stable-rt@archiver.kernel.org>; Fri, 21 Jul 2023 05:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87522C001E0
+	for <stable-rt@archiver.kernel.org>; Thu, 27 Jul 2023 10:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjGUFuL (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Fri, 21 Jul 2023 01:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35602 "EHLO
+        id S231817AbjG0Kup (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Thu, 27 Jul 2023 06:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjGUFtg (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Fri, 21 Jul 2023 01:49:36 -0400
-Received: from mail.nearlyone.de (mail.nearlyone.de [IPv6:2a01:4f8:1c1e:abde::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DC730F5;
-        Thu, 20 Jul 2023 22:48:44 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C8A1BDE5C6;
-        Fri, 21 Jul 2023 07:48:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-        t=1689918521; h=from:subject:date:message-id:to:mime-version:content-type;
-        bh=OEeJPBxACSKbYtUUjSqpUZyKYshaRkx5xyrD/F/5Pbo=;
-        b=OQ+F7ODRUOTL2eVrDi3COKsQTq+kaeKy8nR+QKOjFqBz06Vqv57u9prJQSJd28LO15801Y
-        /P9eWWi5MB1EkvbVBMCE6w60AR9m7eZt8gYxayXjBPG5nLyITk4n2kMfGDmTVx+a+qPH3a
-        xN1b8vGgcZBVEVq3gjUp7iduU/j4VyAhcW7blXvtDGZH4vd9Fef+vmXeyEy23wRcNcbj+y
-        76c6aMi7VnYcm5HLg/A1dcQzEwR2H35mSmo2Lz16OEfNfttS7RmdVNiDNfo7XSJHLXJ93G
-        7AVX4JVdEOtJfeZuVzGv61VZPYFdzeEBe7GDEWFJCbWl1Hvj3miuxHb0ZgE7tw==
-Date:   Fri, 21 Jul 2023 07:48:33 +0200
-From:   Daniel Wagner <wagi@monom.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org, stable-rt@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.19.288-rt126
-Message-ID: <168991842493.5654.5683918391499697984@beryllium.lan>
+        with ESMTP id S231603AbjG0Kuo (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Thu, 27 Jul 2023 06:50:44 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC882125
+        for <stable-rt@vger.kernel.org>; Thu, 27 Jul 2023 03:50:43 -0700 (PDT)
+Date:   Thu, 27 Jul 2023 12:50:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1690455041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WV28S33L9A313xv8fVSW5I0FfVPDzD1kq0pNIvKipvM=;
+        b=TXanPrCvcwb9/c6WWIM9PbpdRCGNleZA3y2eT8aYrm/mJGg0XsHRpotPT8ycZLtYCQQdC8
+        NNwy9L2epxaL0jmF+BXBDsh5OrZzNBZ9EKQUDW9VO8bpzm1ZeqpnLTv3I10HICVL16HTpv
+        z0VGgbXK9gy+ySqzNQOuB+T7hAbfiYrwSobQHTFyXGcg/en4ulq/6fgnkmKJwrCN6ZtQIB
+        Yva53jWvJTn2AKw7nIHPCquqoDzj8fGrLbMv1XrLxjGP6vM4FvThN0H1s+F21wGf5GqeU4
+        ttz6gQAfkPCRi/j2dVGPTKpn75VmGbYZU8cxYjZEDm/oix2J8/4YFn3A+4RnwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1690455041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WV28S33L9A313xv8fVSW5I0FfVPDzD1kq0pNIvKipvM=;
+        b=LJfeP0ZuF7HHMClZFr1YC0HTwR2U4HPJEHZ+xLvKCqC3vrBwlSOQudlk40PkY9KqV88i0X
+        YWD6JERWyqX/PsCA==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     stable-rt@vger.kernel.org
+Subject: Re: Stable backports
+Message-ID: <20230727105040.4V9DQ5pM@linutronix.de>
+References: <20230620150329.6r4xxvHu@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20230620150329.6r4xxvHu@linutronix.de>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-Hello RT-list!
+On 2023-06-20 17:03:29 [+0200], To stable-rt@vger.kernel.org wrote:
+Hi,
 
-I'm pleased to announce the 4.19.288-rt126 stable release. This
-is just an updated to the latest stable release. No RT specific
-changes.
+> I've been looking over my queue and which patches vanishes (as in
+> applied somewhere) and did not show up in the stable tree. Here is a
+> list of some suggestions:
+> 
+> - 7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in io_mapping_map_atomic_wc().")
+> - 286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
+> - 1c0908d8e4416 ("rtmutex: Add acquire semantics for rtmutex lock acquisition slow path")
+>   (is in v6.1 but not in v5.15)
+> - b8a04a538ed47 ("revert: "softirq: Let ksoftirqd do its job"")
+> - 38cdd83a47fb2 ("tracing/timer: Add missing hrtimer modes to decode_hrtimer_mode().")
 
-You can get this release via the git tree at:
+No idea how far backporting got, I would like to extend the list:
+- 40cd2835ced28 ("drm/i915: Do not disable preemption for resets")
+- 7edeaf858cef4 ("locking/rtmutex: Fix task->pi_waiters integrity")
+  Could be routed via stable
+- 053ba1b91e511 ("kernel/fork: beware of __put_task_struct calling context")
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+The following two are just for lockdep:
+- 0cce06ba859a5 ("debugobjects,locking: Annotate debug_object_fill_pool() wait type violation")
+- a5e446e728e89 ("sched: avoid false lockdep splat in put_task_struct()")
 
-  branch: v4.19-rt
-  Head SHA1: 83db5d9eb0eda7bd0c990b1e5bc7885791c7017e
+The following three are for mm backport from stable which broke RT and
+was noticed during Luis' stable backport. This should be backported so
+it is fixed and aligned with upstream:
+- a3f6be6e53532 ("printk: Check only for migration in printk_deferred_*().")
+- dc93c1f07d485 ("seqlock: Do the lockdep annotation before locking in do_write_seqcount_begin_nested()")
+- 4d1139baae8bc ("mm/page_alloc: Use write_seqlock_irqsave() instead write_seqlock() + local_irq_save().")
 
-Or to build 4.19.288-rt126 directly, the following patches should be applied:
+And finally. Both upstream not sure if they get in via -stable, but I
+doubt since they are RT-only and not tagged:
+- ab5d47bd41b1d ("bpf: Remove in_atomic() from bpf_link_put().")
+- 9d9e522010eb5 ("posix-timers: Prevent RT livelock in itimer_delete()")
+- 8ce8849dd1e78 ("posix-timers: Ensure timer ID search-loop limit is valid")
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.288.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.288-rt126.patch.xz
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
-Changes from v4.19.284-rt125:
----
-
-Daniel Wagner (1):
-      Linux 4.19.288-rt126
----
-localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sebastian
