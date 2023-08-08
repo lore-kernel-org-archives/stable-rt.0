@@ -2,86 +2,112 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87522C001E0
-	for <stable-rt@archiver.kernel.org>; Thu, 27 Jul 2023 10:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE8DC001B0
+	for <stable-rt@archiver.kernel.org>; Tue,  8 Aug 2023 18:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbjG0Kup (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Thu, 27 Jul 2023 06:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
+        id S233773AbjHHSoK (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 8 Aug 2023 14:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjG0Kuo (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Thu, 27 Jul 2023 06:50:44 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC882125
-        for <stable-rt@vger.kernel.org>; Thu, 27 Jul 2023 03:50:43 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 12:50:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1690455041;
+        with ESMTP id S233890AbjHHSnm (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 8 Aug 2023 14:43:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39F014249
+        for <stable-rt@vger.kernel.org>; Tue,  8 Aug 2023 09:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691512525;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WV28S33L9A313xv8fVSW5I0FfVPDzD1kq0pNIvKipvM=;
-        b=TXanPrCvcwb9/c6WWIM9PbpdRCGNleZA3y2eT8aYrm/mJGg0XsHRpotPT8ycZLtYCQQdC8
-        NNwy9L2epxaL0jmF+BXBDsh5OrZzNBZ9EKQUDW9VO8bpzm1ZeqpnLTv3I10HICVL16HTpv
-        z0VGgbXK9gy+ySqzNQOuB+T7hAbfiYrwSobQHTFyXGcg/en4ulq/6fgnkmKJwrCN6ZtQIB
-        Yva53jWvJTn2AKw7nIHPCquqoDzj8fGrLbMv1XrLxjGP6vM4FvThN0H1s+F21wGf5GqeU4
-        ttz6gQAfkPCRi/j2dVGPTKpn75VmGbYZU8cxYjZEDm/oix2J8/4YFn3A+4RnwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1690455041;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WV28S33L9A313xv8fVSW5I0FfVPDzD1kq0pNIvKipvM=;
-        b=LJfeP0ZuF7HHMClZFr1YC0HTwR2U4HPJEHZ+xLvKCqC3vrBwlSOQudlk40PkY9KqV88i0X
-        YWD6JERWyqX/PsCA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     stable-rt@vger.kernel.org
-Subject: Re: Stable backports
-Message-ID: <20230727105040.4V9DQ5pM@linutronix.de>
-References: <20230620150329.6r4xxvHu@linutronix.de>
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VprCCjOnZ8U8uZDQtcIIs9UExc35M7QTx7DJAv+v/IQ=;
+        b=JEBsFT49kES4XcSGoM3pynxLtacTw72ddo/Fjed96SuFYDuKeHykAac37EgNTXZ/PTRfPC
+        k1OCUhrfR11QT40bOQi37pYYCk/ws48EWfMxk5S+gpZA6YG8HvEVP4ArytjNJHI+YrrJsQ
+        zWVmDJv9WeoTlj7BEhwIB09qVipv/xA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-571-L8gy3KIpOdmRznagK_NPEw-1; Tue, 08 Aug 2023 12:35:22 -0400
+X-MC-Unique: L8gy3KIpOdmRznagK_NPEw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B5290101A52E;
+        Tue,  8 Aug 2023 16:35:21 +0000 (UTC)
+Received: from localhost (unknown [10.22.32.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 585AD140E962;
+        Tue,  8 Aug 2023 16:35:21 +0000 (UTC)
+From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Mark Gross <markgross@kernel.org>,
+        Luis Goncalves <lgoncalv@redhat.com>
+Subject: [PATCH RT 0/3] Linux v4.14.320-rt152-rc1
+Date:   Tue,  8 Aug 2023 13:35:17 -0300
+Message-ID: <20230808163520.305842-1-lgoncalv@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230620150329.6r4xxvHu@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-On 2023-06-20 17:03:29 [+0200], To stable-rt@vger.kernel.org wrote:
-Hi,
+Dear RT Folks,
 
-> I've been looking over my queue and which patches vanishes (as in
-> applied somewhere) and did not show up in the stable tree. Here is a
-> list of some suggestions:
-> 
-> - 7eb16f23b9a41 ("io-mapping: don't disable preempt on RT in io_mapping_map_atomic_wc().")
-> - 286deb7ec03d9 ("locking/rwbase: Mitigate indefinite writer starvation")
-> - 1c0908d8e4416 ("rtmutex: Add acquire semantics for rtmutex lock acquisition slow path")
->   (is in v6.1 but not in v5.15)
-> - b8a04a538ed47 ("revert: "softirq: Let ksoftirqd do its job"")
-> - 38cdd83a47fb2 ("tracing/timer: Add missing hrtimer modes to decode_hrtimer_mode().")
+This is the RT stable review cycle of patch 4.14.320-rt152-rc1.
 
-No idea how far backporting got, I would like to extend the list:
-- 40cd2835ced28 ("drm/i915: Do not disable preemption for resets")
-- 7edeaf858cef4 ("locking/rtmutex: Fix task->pi_waiters integrity")
-  Could be routed via stable
-- 053ba1b91e511 ("kernel/fork: beware of __put_task_struct calling context")
+Please scream at me if I messed something up. Please test the patches
+too.
 
-The following two are just for lockdep:
-- 0cce06ba859a5 ("debugobjects,locking: Annotate debug_object_fill_pool() wait type violation")
-- a5e446e728e89 ("sched: avoid false lockdep splat in put_task_struct()")
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
 
-The following three are for mm backport from stable which broke RT and
-was noticed during Luis' stable backport. This should be backported so
-it is fixed and aligned with upstream:
-- a3f6be6e53532 ("printk: Check only for migration in printk_deferred_*().")
-- dc93c1f07d485 ("seqlock: Do the lockdep annotation before locking in do_write_seqcount_begin_nested()")
-- 4d1139baae8bc ("mm/page_alloc: Use write_seqlock_irqsave() instead write_seqlock() + local_irq_save().")
+The pre-releases will not be pushed to the git repository, only the
+final release is.
 
-And finally. Both upstream not sure if they get in via -stable, but I
-doubt since they are RT-only and not tagged:
-- ab5d47bd41b1d ("bpf: Remove in_atomic() from bpf_link_put().")
-- 9d9e522010eb5 ("posix-timers: Prevent RT livelock in itimer_delete()")
-- 8ce8849dd1e78 ("posix-timers: Ensure timer ID search-loop limit is valid")
+If all goes well, this patch will be converted to the next main
+release on 2023-08-15.
 
-Sebastian
+To build 4.14.320-rt152-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.320.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/older/patch-4.14.320-rt152-rc1.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
+
+Changes from v4.14.320-rt151:
+
+
+Clark Williams (1):
+  rt: PREEMPT_RT safety net for backported patches
+
+Luis Claudio R. Goncalves (2):
+  rt: timers: use CONFIG_PREEMPT_RT_FULL instead of CONFIG_PREEMPT_RT
+  Linux 4.14.320-rt152-rc1
+
+ kernel/Kconfig.preempt | 4 ++++
+ kernel/time/timer.c    | 4 ++--
+ localversion-rt        | 2 +-
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+
+-- 
+2.41.0
+
