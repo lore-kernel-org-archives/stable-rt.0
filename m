@@ -2,41 +2,41 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D367AC001B0
-	for <stable-rt@archiver.kernel.org>; Tue,  8 Aug 2023 20:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBCDC001B0
+	for <stable-rt@archiver.kernel.org>; Tue,  8 Aug 2023 21:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232667AbjHHUqx (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Tue, 8 Aug 2023 16:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53528 "EHLO
+        id S229881AbjHHViw (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 8 Aug 2023 17:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234918AbjHHUqY (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Tue, 8 Aug 2023 16:46:24 -0400
+        with ESMTP id S229876AbjHHViv (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 8 Aug 2023 17:38:51 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A314635C6C
-        for <stable-rt@vger.kernel.org>; Tue,  8 Aug 2023 09:36:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8243F1A2
+        for <stable-rt@vger.kernel.org>; Tue,  8 Aug 2023 09:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691512529;
+        s=mimecast20190719; t=1691512922;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TRku+2jKgZ+nUwxuWVi5s637lJh7o+hs6ix8fet0MDQ=;
-        b=EBZtWO+LICiXje6fESyJai5VrJVHJTwRenNcgXXhFE6IlRsF4e6nvXhjqgb9gSncqK+Q7L
-        LdZe5k2GOt6+YaZDTFvgLjjopsmDJJHyCDX0mHRynfujcRwYS5+rrESgz0f/4D9h/6E+Is
-        pnPAonpAUo1AfObPjloKVzTveX3Bd28=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-30-JCkPqZ3INvCzZoyKWwQFBQ-1; Tue, 08 Aug 2023 12:35:25 -0400
-X-MC-Unique: JCkPqZ3INvCzZoyKWwQFBQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        bh=6LS2zS5fEeZyQMoa9x435JxujVLCIf5qEHRucYOerao=;
+        b=CyDQwIvbVmzOZ2bqMHsJW/CWreAoRGh4V01T2W+VMtB6b/ynIC0VjPD5OJgU3gAJblKenC
+        3j4UBNofv0E01WFbLwQhMX3poRLEFYL1BldH/3PGjuEEgr/iDjlsS8/Dj8cgvc9tjlgsfB
+        c+s6AYMUHX21Gdd7zPJtZRQZiHJGDRk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-212-ELNwsg0cOR6VxhpT196nrw-1; Tue, 08 Aug 2023 12:35:24 -0400
+X-MC-Unique: ELNwsg0cOR6VxhpT196nrw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 559461C29AF3;
-        Tue,  8 Aug 2023 16:35:25 +0000 (UTC)
-Received: from localhost (unknown [10.22.32.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BE9E568FF;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2FE45800159;
         Tue,  8 Aug 2023 16:35:24 +0000 (UTC)
+Received: from localhost (unknown [10.22.32.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D85E4492C13;
+        Tue,  8 Aug 2023 16:35:23 +0000 (UTC)
 From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 To:     linux-rt-users <linux-rt-users@vger.kernel.org>,
         stable-rt <stable-rt@vger.kernel.org>,
@@ -46,17 +46,21 @@ To:     linux-rt-users <linux-rt-users@vger.kernel.org>,
         Daniel Wagner <daniel.wagner@suse.com>,
         Mark Gross <markgross@kernel.org>,
         Luis Goncalves <lgoncalv@redhat.com>
-Subject: [PATCH RT 3/3] Linux 4.14.320-rt152-rc1
-Date:   Tue,  8 Aug 2023 13:35:20 -0300
-Message-ID: <20230808163520.305842-4-lgoncalv@redhat.com>
+Cc:     Clark Williams <clark.williams@gmail.com>,
+        Clark Williams <williams@redhat.com>
+Subject: [PATCH RT 2/3] rt: PREEMPT_RT safety net for backported patches
+Date:   Tue,  8 Aug 2023 13:35:19 -0300
+Message-ID: <20230808163520.305842-3-lgoncalv@redhat.com>
 In-Reply-To: <20230808163520.305842-1-lgoncalv@redhat.com>
 References: <20230808163520.305842-1-lgoncalv@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
+
+From: Clark Williams <clark.williams@gmail.com>
 
 v4.14.320-rt152-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -64,18 +68,52 @@ If anyone has any objections, please let me know.
 -----------
 
 
+[ commit 67821680a2b828aa405a2db5d7dbd812a3684fcf from v4.19-rt ]
+
+While doing some 4.19-rt cleanup work, I stumbled across the fact that parts of
+two backported patches were dependent on CONFIG_PREEMPT_RT, rather than
+the CONFIG_PREEMPT_RT_FULL used in 4.19 and earlier RT series.  The commits
+in the linux-stable-rt v4.19-rt branch are:
+
+dad4c6a33bf4e mm: slub: Don't resize the location tracking cache on PREEMPT_RT
+e626b6f873f2c net: Treat __napi_schedule_irqoff() as __napi_schedule() on PREEMPT_RT
+
+Discussing this at the Stable RT maintainers meeting, Steven Rostedt suggested that
+we automagically select CONFIG_PREEMPT_RT if CONFIG_PREEMPT_RT_FULL is on, giving
+us a safety net for any subsequently backported patches. Here's my first cut at
+that patch.
+
+I suspect we'll need a similar patch for stable RT kernels < 4.19.
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Clark Williams <williams@redhat.com>
 Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 ---
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/Kconfig.preempt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/localversion-rt b/localversion-rt
-index 7c59c4689f8b..95561e32e8aa 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt151
-+-rt152-rc1
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index 11dbe26a8279..97875b4eb569 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -6,6 +6,9 @@ config PREEMPT_RT_BASE
+ 	bool
+ 	select PREEMPT
+ 
++config PREEMPT_RT
++       bool
++
+ config HAVE_PREEMPT_LAZY
+ 	bool
+ 
+@@ -78,6 +81,7 @@ config PREEMPT_RT_FULL
+ 	depends on IRQ_FORCED_THREADING
+ 	select PREEMPT_RT_BASE
+ 	select PREEMPT_RCU
++	select PREEMPT_RT
+ 	help
+ 	  All and everything
+ 
 -- 
 2.41.0
 
