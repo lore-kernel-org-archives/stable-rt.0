@@ -2,84 +2,86 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE4CC04E69
-	for <stable-rt@archiver.kernel.org>; Fri, 11 Aug 2023 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D62C41513
+	for <stable-rt@archiver.kernel.org>; Thu, 17 Aug 2023 09:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236442AbjHKPTf (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Fri, 11 Aug 2023 11:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        id S1349335AbjHQJM6 (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Thu, 17 Aug 2023 05:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236477AbjHKPTY (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Fri, 11 Aug 2023 11:19:24 -0400
-Received: from mail.nearlyone.de (mail.nearlyone.de [IPv6:2a01:4f8:1c1e:abde::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB0EE30CB;
-        Fri, 11 Aug 2023 08:19:22 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5742EDACA6;
-        Fri, 11 Aug 2023 17:19:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-        t=1691767148; h=from:subject:date:message-id:to:cc:mime-version:
-         content-transfer-encoding; bh=GPpiLwd7DACg2qyPYTk2tLfOQ4uOlCKUsSZ9i8n1WjE=;
-        b=BXfOlQvonEWIR9klK4GVpEIa00n1uVeGNV1+srUqdXIUq5KxOX53A9PRu+CI6AfEhY9Vog
-        MRpohRF//GDpJCp2LopwxRqblzZ4zqWN2RnXQuHGau+i5j7QSzdQASsmn+SUPVeylk1uZN
-        kiRBkR4Q0zAt1YpBuTDCCAnbhPaqSFyzSCrqvJAIcFRYo7Fy5P2EzYi0c7GovmlTaLXtnF
-        pEhgJI7P6tXLh3i6Za5BuPrm4dVq6ZYu2xEHVzuFe0r5r+xZLiWjQ0tg62eZF7v0qIP0IL
-        ButKxUoORcjGBrCgaz39c9xAvmXtSGrFdyk2d5SADF9SFFGIkfsbvJd0oaoCuA==
-From:   Daniel Wagner <wagi@monom.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-rt-users@vger.kernel.org>, <stable-rt@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        with ESMTP id S1349354AbjHQJM3 (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Thu, 17 Aug 2023 05:12:29 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9450B2D63;
+        Thu, 17 Aug 2023 02:12:27 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 11:12:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1692263546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fp7L9O2Ivmey6Olx0dpGU5sez7ZYHKV4H6RchIR6KxA=;
+        b=JRdvd/eKLOliRx3lLc3OTMoAtNH1lR95NU3kcFTs1+Vaz47YIH89WQJPPE5N1faSoHxq73
+        uhQWcYl6nLdHRjQO0zajRdGpuJiacZ/gp36u9wC8rnaHp+fh7DxjxzW+CTL6PbVe4WWyWY
+        M0CsF45ETpn5soMKQ5N8ezKyIjyM/kX+L5Hj+IsGfHi7AtA/t+R0sIQCr9efIz/d2AkJOJ
+        pJ5Ip7SRtoTJjT7UnOMhWaFE/dOJ4m4RPuPoZhChn40GDt53KYlcjF8306Of2pjgh9V10n
+        o/++k/BAXpNjnCTB30pRGmI4G2neZ4jgT3CIJ8Sd0Q1MXmT8PMCBVs9f4WERaA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1692263546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fp7L9O2Ivmey6Olx0dpGU5sez7ZYHKV4H6RchIR6KxA=;
+        b=WWdAKbwMGiTgZxy+lMApDQ7tAQ4WREZhUatRs9g13frtT7w+0rU0CqNuzffADX+rcJww7v
+        cJT1/UjiLILE95Dw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     zachary.goldstein@concurrent-rt.com,
+        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+        stable-rt@vger.kernel.org
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-Cc:     Daniel Wagner <wagi@monom.org>
-Subject: [PATCH RT 0/1] Linux v4.19.291-rt127-rc1
-Date:   Fri, 11 Aug 2023 17:19:03 +0200
-Message-ID: <20230811151904.16196-1-wagi@monom.org>
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH RT] mm/memcg: Fix recursive locking on refill_stock() on
+ PREEMPT_RT
+Message-ID: <20230817091224.nqKGjRlK@linutronix.de>
+References: <20230809-memcg-fix-recursive-lock-v1-1-0870815484c6@concurrent-rt.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230809-memcg-fix-recursive-lock-v1-1-0870815484c6@concurrent-rt.com>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-Dear RT Folks,
+On 2023-08-10 15:05:34 [-0400], Zachary Goldstein via B4 Relay wrote:
+> From: Zachary Goldstein <zachary.goldstein@concurrent-rt.com>
+> 
+> 5.10 suffers from the same recursive locking issue that
+> commit a848d25434de4 ("mm/memcg: Opencode the inner part of
+> obj_cgroup_uncharge_pages() in drain_obj_stock()") fixes.
 
-This is the RT stable review cycle of patch 4.19.291-rt127-rc1.
+This is the commit id from the stable-rt tree for the v5.15 series.
+The original commit was af9a3b69e84be ("mm/memcg: opencode the inner
+part of obj_cgroup_uncharge_pages() in drain_obj_stock()").
 
-Please scream at me if I messed something up. Please test the patches
-too.
+> Modified description from the commit to reflect this patch changes:
+> 
+> Provide the inner part of refill_stock() as __refill_stock() without
+> disabling interrupts. This eases the integration of local_lock_t where
+> recursive locking must be avoided.
+> Open code __memcg_kmem_uncharge() in drain_obj_stock() and
+> obj_cgroup_release() and use __refill_stock(). The caller of
+> drain_obj_stock() and obj_cgroup_release() already disables interrupts.
+> 
+> Signed-off-by: Zachary Goldstein <zachary.goldstein@concurrent-rt.com>
 
-The -rc release is also available on kernel.org
+I would prefer a proper backport similar to the commit you mentioned.
+This would include keeping the author ship and so on.
+The change itself looks okay.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-on the v4.19-rt-next branch.
-
-If all goes well, this patch will be converted to the next main
-release on 2023-08-18.
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
-Changes from v4.19.288-rt126:
-
-
-Daniel Wagner (1):
-  Linux 4.19.291-rt127-rc1
-
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
--- 
-2.41.0
-
+Sebastian
