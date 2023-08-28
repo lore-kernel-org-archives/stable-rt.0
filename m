@@ -2,71 +2,90 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01D3C83F16
-	for <stable-rt@archiver.kernel.org>; Sat, 26 Aug 2023 15:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87673C83F12
+	for <stable-rt@archiver.kernel.org>; Mon, 28 Aug 2023 22:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbjHZPDS (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Sat, 26 Aug 2023 11:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
+        id S233895AbjH1Wh5 (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Mon, 28 Aug 2023 18:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230454AbjHZPDP (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Sat, 26 Aug 2023 11:03:15 -0400
-Received: from mail.nearlyone.de (mail.nearlyone.de [IPv6:2a01:4f8:1c1e:abde::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA080E5;
-        Sat, 26 Aug 2023 08:03:12 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B843DE1A7D;
-        Sat, 26 Aug 2023 17:03:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-        t=1693062190; h=from:subject:date:message-id:to:mime-version:content-type;
-        bh=PQY8pRZTlh1hNxRAMGxNP3xcvWUOFTxpD/BFKidKmgo=;
-        b=EggrK5hzzfMDebPHdBDiOftGPcoxMw363oWH3GIm77ypEWxd/hoS+ON1nboeofwotHLj+e
-        gIGOjXGkusnyrFr2tJjefP3ynV4aT+SZFCJKzxSvCBp3i/fTSFR0FQVV/NhUADSl5e9LJL
-        XDAD2TZjqKOfNE7IewHRRNTBxT28KXw6YOiIuEhFjxwAAW6nXdp/wwpRd+uVNYmg04uRTg
-        aeyPK+4kMNfcwh9WKdcSpZoi8uP7zWSSBdweaKjA/hPFiTk8TXNrVLkGT0rAyF0ps3qUme
-        Jmtgj040xN3oR1u5sg2PRHuvGR3z1mFJOwLs2FHFI0+Aksyok/G3PCGC/rEhBQ==
-Date:   Sat, 26 Aug 2023 17:03:04 +0200
-From:   Daniel Wagner <wagi@monom.org>
+        with ESMTP id S233896AbjH1Wh3 (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Mon, 28 Aug 2023 18:37:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABBB13D
+        for <stable-rt@vger.kernel.org>; Mon, 28 Aug 2023 15:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693262201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=x0WrWIrJdKQexUzOSkzL5xgVm52oMggI5IfEY5JG+IQ=;
+        b=E0ondECaa1HohnMVZ7xO2cNt2K09VkRJOALMUWlFN6sZfHWndNYF/5exvZZgBv8MujMZuP
+        rc347EPm3vsGG3+3OXYossEutSnKr0scrb7tiHz4S9b67Th20bh3sSU+MubYb8hIAGL6pm
+        OubmZEuQPrjKRDAViGmUr8WcR2ahiZI=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-176-jvzyGiVsOgmjHXX69O6m_A-1; Mon, 28 Aug 2023 18:36:35 -0400
+X-MC-Unique: jvzyGiVsOgmjHXX69O6m_A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E96733801BD0;
+        Mon, 28 Aug 2023 22:36:34 +0000 (UTC)
+Received: from localhost (unknown [10.22.32.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10D24140E962;
+        Mon, 28 Aug 2023 22:36:33 +0000 (UTC)
+Date:   Mon, 28 Aug 2023 19:36:33 -0300
+From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org, stable-rt@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.19.292-rt128
-Message-ID: <169306206792.7820.15513710483397536765@beryllium.lan>
+        Clark Williams <williams@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        Jeff Brady <jeffreyjbrady@gmail.com>,
+        Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.192-rt92
+Message-ID: <ZO0hcedb0m3Ey0Dy@uudg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
 Hello RT-list!
 
-I'm pleased to announce the 4.19.292-rt128 stable release.
+I'm pleased to announce the 5.10.192-rt92 stable release.
 
-This is just an update to stable release 4.19.292. No RT specific changes.
+This release is just an update to the new stable 5.10.192
+version and no RT specific changes have been made.
 
 You can get this release via the git tree at:
 
   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-  branch: v4.19-rt
-  Head SHA1: 6b3de4d487c20b013ab91bf85259c2b9a17b139b
+  branch: v5.10-rt
+  Head SHA1: a7fe2ad8ced572fc9fe4fc75168b9857e2d7e1ae
 
-Or to build 4.19.292-rt128 directly, the following patches should be applied:
+Or to build 5.10.192-rt92 directly, the following patches should be applied:
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
 
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.292.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.192.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.292-rt128.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.192-rt92.patch.xz
 
 Signing key fingerprint:
 
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
 
 All keys used for the above files and repositories can be found on the
 following git repository:
@@ -74,4 +93,5 @@ following git repository:
    git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
 
 Enjoy!
-Daniel
+Luis
+
