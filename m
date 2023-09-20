@@ -2,73 +2,76 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6FECD37B4
-	for <stable-rt@archiver.kernel.org>; Tue, 19 Sep 2023 04:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD869CE79A8
+	for <stable-rt@archiver.kernel.org>; Wed, 20 Sep 2023 02:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230099AbjISECw (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Tue, 19 Sep 2023 00:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59962 "EHLO
+        id S232038AbjITCae (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Tue, 19 Sep 2023 22:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229962AbjISECv (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Tue, 19 Sep 2023 00:02:51 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB0DFD;
-        Mon, 18 Sep 2023 21:02:46 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-578a3069f1eso748741a12.1;
-        Mon, 18 Sep 2023 21:02:46 -0700 (PDT)
+        with ESMTP id S229641AbjITCae (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Tue, 19 Sep 2023 22:30:34 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7634419B;
+        Tue, 19 Sep 2023 19:30:04 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-578b407045bso1141264a12.0;
+        Tue, 19 Sep 2023 19:30:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695096166; x=1695700966; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=alx+2MuWN41HhyE2x8kbrjTxvAUn40IVJk0e71UdPo4=;
-        b=ErRrOR/FqIoNNMuwtHKaGmg35bbxikZOT42pG1a9yfAYat/gw0cGd4Xdh+JRnUR3wc
-         vIocA5JqiTOzFHHfat75DwI7ix7NTOrOQOissZkncoceRyuVidX0IHORAaz9S1xxxKWN
-         tPQZL6iMt94To5JdvCm8he5eUpy7qvvo9aFXHQFOLTpEmUUAcGdxkoED0mXw8NJV55PF
-         W7WIHJHIGQNHntlYEZzSThJuVd0dFxj4MYiFkKJ0agBcTBY+FMsLWADqd9MSsu+WVAl/
-         926ry6ZwPGBzSGAeLh7x2etf6CPf+3kxw2OgRxeeaUDGcRnuIm0NCif5YcI3JPRm4HeP
-         jHMg==
+        d=gmail.com; s=20230601; t=1695177004; x=1695781804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/fmSZqipDCEI0w3Jx49ar+j/HesxXy1cUewwtLpSnIs=;
+        b=dwTjMujH5VaBKvC3hLS2jM3P1RTnovuVzR+RgiAXbyBsRQtDfnhS8KXio+AawvQYNU
+         rDXj1J8RjNcuFpWKhExyyGtxTEX0Idt8PbYcaywS4sDmxceFL0Y1O0hhwfJB8PWG9xIe
+         9aZHGwbOm8ZPdwIc2eR6W6g8URFI/4qvA7P3zTfftlgnDHjX7AB/HxDxS5VMZ4BYZGVo
+         r1eLtpNClzw4ySwEbyANojAnshFt7uf7qYnXmaJUBZ5UMoq/2Wk2Pb08jmbYYeHDxOON
+         Umnt+eUSzjZavm+9UNC66NonH4ALyRL2PrX0FqwPNaeHnpJUEA0goXJ8NwAWqBFsivSc
+         yXhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695096166; x=1695700966;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=alx+2MuWN41HhyE2x8kbrjTxvAUn40IVJk0e71UdPo4=;
-        b=Xo7AHTsNAJMemJ6C/fTvwQAKGJUgDOxdcaK+KIbyoQhd+bvaeUqyPjizRqSwXSynhA
-         wsIFYTDRIUe7ubGiJ+sxMY8BSqI3umnolExqMJcJgK07sGjqorJvKV45hAJAOIS0WRdY
-         QccWM5jiBwMqtqZXU7Dpw/YHHXMM+Bv/KIRo1EfTZ5DdAEpd0jj25K6SALvgFMNUu2b8
-         1EALuzI6aY6LQHXmY5mfKwNc0ltxedX2jbeMfs3JtWXTv6w+Ej7h4LPwWEEzonwXYAk5
-         mL7f/W++imWS3ZXchIAaaIyoVZEUwsP59ZCHIszcY5TQO/v92pWWTtrh4sCtEyc0v6kQ
-         GLuA==
-X-Gm-Message-State: AOJu0YyQc4/RKNbe4xo3vfKCYgdk2uj2wvEK51+2B0VkAPwLKDDQXdoU
-        h/JBIITk5jnSJPhrxKsMkLI=
-X-Google-Smtp-Source: AGHT+IGWNxO5IbS2lhd33UVyJK93tGxLypjLjrUvmIXcHYHrcvpQV72dRDq3ROAtaLn8Df2QEy4YEw==
-X-Received: by 2002:a05:6a21:9989:b0:140:253b:b658 with SMTP id ve9-20020a056a21998900b00140253bb658mr11243738pzb.57.1695096165688;
-        Mon, 18 Sep 2023 21:02:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695177004; x=1695781804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/fmSZqipDCEI0w3Jx49ar+j/HesxXy1cUewwtLpSnIs=;
+        b=VViW+EbczUYm7QMBt/I7vkoHRlj8RlgOY7njAwvGBrrOsCAf4RJDgjpz9Xhy9wr1Rg
+         jcvErmITOoNf0r0NgBMVeM18gC41cVsPqBul/O6/Ztmjp1abPwJV4d60lLrpI+3DDvV3
+         SdR89WFfA4Xny+yz1xrbVC/knuyEMxHNFtVjbG7/FOKFrm+n+IcN3dLn8wvpNhpTkDvX
+         JH2fi6ywlrubZCpdV/+SLXgGTrYrVRbUEGlM1zZZoPMAJpz6zd94R+N9+oOQiPJkzaMu
+         iQeJhRxEG3ZRZm0e8jSuh7T+v8T9GGYI2UT3RyThI2be7xtWWolW8jqnY0pIaWkNWmL7
+         2zLQ==
+X-Gm-Message-State: AOJu0Ywmr8H5cYF9Pc+oWSkJSa+s/7qyAbLzeGWf2ElrZRW0HPOOd8tD
+        7bJw8uS7Or7Zwfhet4JkD3kLgI864kabTczP
+X-Google-Smtp-Source: AGHT+IHp8TguCJKq8FV0I7l5G54VU0hzUd7uQ5jHkn8lW0pP8mU8yJAZPvD4+OuY3XWK4IirFRVciA==
+X-Received: by 2002:a05:6a20:5649:b0:14c:4e31:97f3 with SMTP id is9-20020a056a20564900b0014c4e3197f3mr1172528pzc.59.1695177003755;
+        Tue, 19 Sep 2023 19:30:03 -0700 (PDT)
 Received: from Laptop-X1 ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id a26-20020aa780da000000b0068fe6ad4e18sm7798708pfn.157.2023.09.18.21.02.43
+        by smtp.gmail.com with ESMTPSA id c15-20020a17090a020f00b00273744e6eccsm288435pjc.12.2023.09.19.19.29.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 21:02:44 -0700 (PDT)
-Date:   Tue, 19 Sep 2023 12:02:41 +0800
+        Tue, 19 Sep 2023 19:30:01 -0700 (PDT)
+Date:   Wed, 20 Sep 2023 10:29:57 +0800
 From:   Hangbin Liu <liuhangbin@gmail.com>
-To:     Clark Williams <clrkwllms@kernel.org>
-Cc:     stable-rt@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Please help backport 3c107f36db06 selftests/net: mv bpf/nat6to4.c to
- net folder to v6.1-rt
-Message-ID: <ZQkdYYWScEnqagU1@Laptop-X1>
+To:     Clark Williams <williams@redhat.com>
+Cc:     Clark Williams <clrkwllms@kernel.org>, stable-rt@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: Please help backport 3c107f36db06 selftests/net: mv
+ bpf/nat6to4.c to net folder to v6.1-rt
+Message-ID: <ZQpZJcnMqQhNS4mP@Laptop-X1>
+References: <ZQkdYYWScEnqagU1@Laptop-X1>
+ <CAMLffL-SbDP=As=bocxsVFew+FBBOme69ZoxyYy7pYezdt8kTw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAMLffL-SbDP=As=bocxsVFew+FBBOme69ZoxyYy7pYezdt8kTw@mail.gmail.com>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
 Hi Clark,
+On Tue, Sep 19, 2023 at 06:27:47PM +0000, Clark Williams wrote:
+> I just released v6.1.54-rt15 which contains this commit. Sorry for the long
+> delay.
 
-Is it OK to backport 3c107f36db06 ("selftests/net: mv bpf/nat6to4.c to net folder")
-to v6.1-rt? The selftest always failed[1] with error like "./nat6to4.o: Permission denied".
-The issue has been fixed and backported to all stable kernels except v6.1-rt[2].
+Thanks for your quick response.
 
-https://datawarehouse.cki-project.org/issue/1758
-https://datawarehouse.cki-project.org/kcidb/checkouts/104785#issue-1758
-
-Thanks
+Cheers
 Hangbin
