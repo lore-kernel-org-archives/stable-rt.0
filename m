@@ -2,78 +2,92 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151C0E7E65A
-	for <stable-rt@archiver.kernel.org>; Tue, 26 Sep 2023 19:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7372BE80A99
+	for <stable-rt@archiver.kernel.org>; Wed, 27 Sep 2023 06:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjIZTUs (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Tue, 26 Sep 2023 15:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
+        id S229537AbjI0Gep (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Wed, 27 Sep 2023 02:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbjIZTUr (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Tue, 26 Sep 2023 15:20:47 -0400
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CA3192
-        for <stable-rt@vger.kernel.org>; Tue, 26 Sep 2023 12:20:40 -0700 (PDT)
-Received: from [10.172.66.188] (1.general.jsalisbury.us.vpn [10.172.66.188])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 85EA943EA6;
-        Tue, 26 Sep 2023 19:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1695756038;
-        bh=PJAad6d+B0a8gqDLzsbLJCwDMt467KmJUilmMHC/a9g=;
-        h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type;
-        b=WYcatwYAdPEaWSHMURO6vSPiIZtPYJvFuJq/rBj0t1UzBDdfPVhALZMLG4BVFerio
-         c+fLC/ayyE8GvCmh/XLHMp20XIA0MD0V3g1rh8iq0p6+XFU/8GNlcmZPShSAJziEtE
-         KH9uLytCf7cHpjU41VcP0ZItTUHfGkP8BQvFwVaGJz7h2m2rjfeRM3AlcaUOKWADZD
-         dnFUfYaMvWNKzD/vqfdn7DIWG80YYP90pQhxIOuVzwSITG17LVrlwOBFe3gm4RnqiC
-         vGSr9aSsBj+kCGKAlpyonV50Xnyu4XFdmRf2K3WSjeBkN0gi440Am1Pbb5+jo7gXd8
-         XHBHRhI//2Tkg==
-Message-ID: <f4b772af-3df2-82c5-336a-44341fce07fc@canonical.com>
-Date:   Tue, 26 Sep 2023 15:20:35 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To:     Clark Williams <williams@redhat.com>,
+        with ESMTP id S229499AbjI0Gep (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Wed, 27 Sep 2023 02:34:45 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3180A9C
+        for <stable-rt@vger.kernel.org>; Tue, 26 Sep 2023 23:34:44 -0700 (PDT)
+Date:   Wed, 27 Sep 2023 08:34:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1695796481;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z8unhHVLOoukWXaWRaeIRVDxKhjSenw1dZsYwH5k4L4=;
+        b=19lEE7VBN8XUTh9mfFUsA3qcm0lNhwPrZSnPWoYBFVEQI+lEZ3t6ZheDMVWT9hrOrIvGbJ
+        Oq1/VViKqE6O28CmMJ+CBxyxmhfetSaTNKEf5YD+LxnL28P/q41723E+jRcI/H4J03m8mj
+        IdU5WzxCUoeUA5gI5qMW88gcbcGcWYhBT0NwXBl7iDUvKkxN0iU7FPjMucsPUt5YDubPpv
+        ItqxE6OonWyuV4wliY8zoApWFDgohzfKwsmeL9120f2YdP2KxkFd0szgWsIFmM8J5+Kg3x
+        qgJD7QyyIDkVB92QcEZyN65wmJUiyoQEo4Td7fvLQ8K1aYuCpfEWnhaCgjHNtw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1695796481;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z8unhHVLOoukWXaWRaeIRVDxKhjSenw1dZsYwH5k4L4=;
+        b=tmNQv7M/V4UFVAZm3RoZXiWex7iaLK1mxvVbaM8UhfIhbBNvN3JK4RZRW9TfYM2IUXlwD0
+        TY0yW8yQ9fFQwdAg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Joseph Salisbury <joseph.salisbury@canonical.com>
+Cc:     Clark Williams <williams@redhat.com>,
         Clark Williams <clark.williams@gmail.com>, lgoncalv@redhat.com,
         daniel.wagner@suse.com, tom.zanussi@linux.intel.com,
-        "Gross, Mark" <mark.gross@intel.com>
-Cc:     john.ogness@linutronix.de, stable-rt@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-From:   Joseph Salisbury <joseph.salisbury@canonical.com>
-Subject: Conflict for v5.15-rt
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        "Gross, Mark" <mark.gross@intel.com>, john.ogness@linutronix.de,
+        stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: Conflict for v5.15-rt
+Message-ID: <20230927063438.ddjwR4DY@linutronix.de>
+References: <f4b772af-3df2-82c5-336a-44341fce07fc@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f4b772af-3df2-82c5-336a-44341fce07fc@canonical.com>
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
-Hey Stable Folks,
+On 2023-09-26 15:20:35 [-0400], Joseph Salisbury wrote:
+> Hey Stable Folks,
+Hi,
 
-While creating the real-time stable kernel, v5.15-rt68, I ran into a 
-conflict.  The conflict occurred while merging in upstream stable 
-5.15.133 due to the following commit:
-f980bf1586ef ("printk: Consolidate console deferred printing")  Upstream 
-commit 696ffaf50e1f
+> While creating the real-time stable kernel, v5.15-rt68, I ran into a
+> conflict.=C2=A0 The conflict occurred while merging in upstream stable 5.=
+15.133
+> due to the following commit:
+> f980bf1586ef ("printk: Consolidate console deferred printing") =C2=A0Upst=
+ream
+> commit 696ffaf50e1f
+>=20
+> I was wondering if you came across this commit for v6.1-rt yet, Clark?=C2=
+=A0 If
+> you did, how did you proceed with the backport?=C2=A0 For v5.15-rt, there=
+ is the
+> following patch that touches the same code, so I wanted to be careful:
+> 0009-printk-call-boot_delay_msec-in-printk_delay.patch - [PATCH 009/171]
+> printk: call boot_delay_msec() in printk_delay()
+>=20
+> I wanted to run this buy you all prior to backporting, and ensure I follow
+> what all other stable versions plan on doing.
 
-I was wondering if you came across this commit for v6.1-rt yet, Clark?  
-If you did, how did you proceed with the backport?  For v5.15-rt, there 
-is the following patch that touches the same code, so I wanted to be 
-careful:
-0009-printk-call-boot_delay_msec-in-printk_delay.patch - [PATCH 009/171] 
-printk: call boot_delay_msec() in printk_delay()
+I dropped that patch while doing v5.19-rc1-rt1. It was merged as
+   1f47e8af45fdd ("printk: call boot_delay_msec() in printk_delay()")
 
-I wanted to run this buy you all prior to backporting, and ensure I 
-follow what all other stable versions plan on doing.
+meaning Clark shouldn't have any problems related to this.
 
-Thanks,
+Would looking at later RT kernel help? As of v6.6-rc1-rt1 the printk
+code is mostly the same.
 
-Joe
+> Thanks,
+>=20
+> Joe
 
-
-
-
-
+Sebastian
