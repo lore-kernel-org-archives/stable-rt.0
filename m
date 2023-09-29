@@ -2,91 +2,156 @@ Return-Path: <stable-rt-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B50E82CA2
-	for <stable-rt@archiver.kernel.org>; Wed, 27 Sep 2023 14:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01926E728F3
+	for <stable-rt@archiver.kernel.org>; Fri, 29 Sep 2023 20:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbjI0O6J (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
-        Wed, 27 Sep 2023 10:58:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41162 "EHLO
+        id S232878AbjI2Uke (ORCPT <rfc822;stable-rt@archiver.kernel.org>);
+        Fri, 29 Sep 2023 16:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232253AbjI0O6I (ORCPT
-        <rfc822;stable-rt@vger.kernel.org>); Wed, 27 Sep 2023 10:58:08 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1837FC
-        for <stable-rt@vger.kernel.org>; Wed, 27 Sep 2023 07:58:06 -0700 (PDT)
-Received: from [10.172.66.188] (1.general.jsalisbury.us.vpn [10.172.66.188])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S229508AbjI2Ukd (ORCPT
+        <rfc822;stable-rt@vger.kernel.org>); Fri, 29 Sep 2023 16:40:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36711AB
+        for <stable-rt@vger.kernel.org>; Fri, 29 Sep 2023 13:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696019993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=aTxHeJJZooLm0LnqykCD+3TI4+Q/DSXoZTkzlwvMAIE=;
+        b=JQwIP6CVD5fsLe85TG2SHl96Z0Zev8LDYDrE8z6dqQQGfddDIjKwFRHebz5hvB5OjqBAQB
+        BOFJ+bKo/AIkiRw8FHfpdOilOzrbFSJ8eMlj+o7oJ4wMTzjCTVzI3Yb9cUr9O59Fyb2uM5
+        oN5qif99MeYnYll229GnGKpvglk9Pm8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-687-vrCNtTJtPxik9U9WrzXkkQ-1; Fri, 29 Sep 2023 16:39:47 -0400
+X-MC-Unique: vrCNtTJtPxik9U9WrzXkkQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 85FDB3F1DB;
-        Wed, 27 Sep 2023 14:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1695826683;
-        bh=YXBLffQh8IEIRv/Gz7wpg3U+GoEQ64owEiEjGNuR/jE=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=gN6l2g/rEjLmvgZYinjM9p2mtpq29GRbAyok2KMuGAqqG6m+T/YJkha7eLKWZA3og
-         K6keCKqSste1XaQZqRUlMPX2cvA5JCA85+neShuFr/cFL1s8mVRlspf20j+tk5U0Uv
-         f9jqqAOQ+paKe7kFd36N3GtDk23EHLFo6Qz3WNXbWaFScPEaR5o0o/4RA8ISlq5ff7
-         8NGNwj3xsXl4jA5iLQPQ+WfLMrtUVPrcfu5PNnMp6woLPtQ+A/C1pUC6yz+GSnJgbQ
-         2ht+7PRYsjfTvIQAv2sIJm9g31qEQAQLRFTJc/jRLe/gkVaQemjdNOfn9NROybPMix
-         yVyz26E2kMROg==
-Message-ID: <0c80279b-e836-64a7-2bbb-6520e1834360@canonical.com>
-Date:   Wed, 27 Sep 2023 10:58:01 -0400
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 68FFF185A797;
+        Fri, 29 Sep 2023 20:39:45 +0000 (UTC)
+Received: from localhost (unknown [10.22.10.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94421170E9;
+        Fri, 29 Sep 2023 20:39:43 +0000 (UTC)
+Date:   Fri, 29 Sep 2023 17:39:42 -0300
+From:   "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        stable-rt <stable-rt@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        Jeff Brady <jeffreyjbrady@gmail.com>,
+        Wang Yong <wang.yong12@zte.com.cn>,
+        Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.194-rt95
+Message-ID: <ZRc2DtDvnsK7wVwR@uudg.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: Conflict for v5.15-rt
-Content-Language: en-US
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Clark Williams <williams@redhat.com>,
-        Clark Williams <clark.williams@gmail.com>, lgoncalv@redhat.com,
-        daniel.wagner@suse.com, tom.zanussi@linux.intel.com,
-        "Gross, Mark" <mark.gross@intel.com>, john.ogness@linutronix.de,
-        stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-References: <f4b772af-3df2-82c5-336a-44341fce07fc@canonical.com>
- <20230927063438.ddjwR4DY@linutronix.de>
-From:   Joseph Salisbury <joseph.salisbury@canonical.com>
-In-Reply-To: <20230927063438.ddjwR4DY@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <stable-rt.vger.kernel.org>
 X-Mailing-List: stable-rt@vger.kernel.org
 
+Hello RT-list!
 
+I'm pleased to announce the 5.10.194-rt95 stable release.
 
-On 9/27/23 02:34, Sebastian Andrzej Siewior wrote:
-> On 2023-09-26 15:20:35 [-0400], Joseph Salisbury wrote:
->> Hey Stable Folks,
-> Hi,
->
->> While creating the real-time stable kernel, v5.15-rt68, I ran into a
->> conflict.  The conflict occurred while merging in upstream stable 5.15.133
->> due to the following commit:
->> f980bf1586ef ("printk: Consolidate console deferred printing")  Upstream
->> commit 696ffaf50e1f
->>
->> I was wondering if you came across this commit for v6.1-rt yet, Clark?  If
->> you did, how did you proceed with the backport?  For v5.15-rt, there is the
->> following patch that touches the same code, so I wanted to be careful:
->> 0009-printk-call-boot_delay_msec-in-printk_delay.patch - [PATCH 009/171]
->> printk: call boot_delay_msec() in printk_delay()
->>
->> I wanted to run this buy you all prior to backporting, and ensure I follow
->> what all other stable versions plan on doing.
-> I dropped that patch while doing v5.19-rc1-rt1. It was merged as
->     1f47e8af45fdd ("printk: call boot_delay_msec() in printk_delay()")
->
-> meaning Clark shouldn't have any problems related to this.
-Ok, I understand.  Thanks for the feedback!
->
-> Would looking at later RT kernel help? As of v6.6-rc1-rt1 the printk
-> code is mostly the same.
-I'll do this.  Thanks again for the suggestions and help!
->
->> Thanks,
->>
->> Joe
-> Sebastian
+This release is an RT-only update. All the changes here are specific to RT.
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.10-rt
+  Head SHA1: e9e1d0b892ed4e46c4d83b53f0f39880e37f8d92
+
+Or to build 5.10.194-rt95 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.194.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.194-rt95.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
+
+Changes from v5.10.194-rt94:
+---
+
+Luis Claudio R. Goncalves (1):
+      Linux 5.10.194-rt95
+
+Wang Yong (1):
+      arm64: signal: Use ARCH_RT_DELAYS_SIGNAL_SEND
+---
+arch/arm64/include/asm/signal.h | 12 ++++++++++++
+ arch/arm64/kernel/signal.c      |  9 +++++++++
+ localversion-rt                 |  2 +-
+ 3 files changed, 22 insertions(+), 1 deletion(-)
+---
+diff --git a/arch/arm64/include/asm/signal.h b/arch/arm64/include/asm/signal.h
+new file mode 100644
+index 0000000000000..0fb418cf4c17a
+--- /dev/null
++++ b/arch/arm64/include/asm/signal.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ARM64_ASM_SIGNAL_H
++#define __ARM64_ASM_SIGNAL_H
++
++#include <uapi/asm/signal.h>
++#include <uapi/asm/siginfo.h>
++
++#if defined(CONFIG_PREEMPT_RT)
++#define ARCH_RT_DELAYS_SIGNAL_SEND
++#endif
++
++#endif
+diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+index 94eed0dc3afcd..5b08f55ec85d9 100644
+--- a/arch/arm64/kernel/signal.c
++++ b/arch/arm64/kernel/signal.c
+@@ -929,6 +929,15 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
+ 		} else {
+ 			local_daif_restore(DAIF_PROCCTX);
+ 
++#ifdef ARCH_RT_DELAYS_SIGNAL_SEND
++			if (unlikely(current->forced_info.si_signo)) {
++				struct task_struct *t = current;
++
++				force_sig_info(&t->forced_info);
++				t->forced_info.si_signo = 0;
++			}
++#endif
++
+ 			if (thread_flags & _TIF_UPROBE)
+ 				uprobe_notify_resume(regs);
+ 
+diff --git a/localversion-rt b/localversion-rt
+index 8d02a9bac5002..5a28f0a65d160 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt94
++-rt95
 
