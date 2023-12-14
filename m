@@ -1,62 +1,83 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="VRAoZBvs"
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="qkEQ9YI3"
 Received: from mail.nearlyone.de (mail.nearlyone.de [IPv6:2a01:4f8:1c1e:abde::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC2C10E4
-	for <stable-rt@vger.kernel.org>; Thu,  7 Dec 2023 07:33:58 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 55DD4E1A5B;
-	Thu,  7 Dec 2023 15:58:22 +0100 (CET)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B667A109
+	for <stable-rt@vger.kernel.org>; Thu, 14 Dec 2023 00:45:26 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ECECCE1D60;
+	Thu, 14 Dec 2023 09:45:17 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1701961102; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=WE9ZyEGuVyo72628JRvkXj4/XgUWNLTkHhkataYllOQ=;
-	b=VRAoZBvsthvwrxPtFqnCCI0qI4/ETcx8w++DbEUaLSmA+nPP1SwvbySSWXBm/z3IIsKrsD
-	aM1QB9nIJ6FDj5G598nOibnnQxtcwCLWsTYNpLNft+4GQQsV1R+Kp/0lGXs7vpFLK2TTUl
-	DXL4helLxHw/nVTV3TJdrb/3biMtKTZVSXvLb1d2BOXFf9BSgawt3D8QfRZesYJez4DSti
-	A1sKDCAt8hMW8SWugS8hTINDKXdvK0ub8IDm8ePgFrxu8wMQVndjX393dM7vfAb0CS/fBr
-	UYYlaAomPmSM1ZjjX/euVa2gMs8aIP8v5JaH+AObanwe235W2vGGAif3EN1KBQ==
+	t=1702543520; h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=sDSb1qqHtkUz2/XPauaz/NpVOMr1hYcEwXh+vxb5xOM=;
+	b=qkEQ9YI3iIyEBnMTfq8Jtoj5HwaF8OuTT9xFUHbpEUAAcJWp5Vmr8h2SaS42JoelIFfuqz
+	nVW0LJWPdh4dBMugTgl0EzhEOYOlBPnRI3XaBlZ1OYxvyS7o9FR4I+YUf5+m6CrhJ8g1mr
+	QByI3MT7ZmTogTGOhgjYae0+ZCMYf7TclNGE8A7IEqZ/X3jjT4Aa6mJwFeHaZyZgViyFmN
+	jKNBR6F22V9UtCk1FH7yboTfeDDZMIQqeGsqAa/D4yDNU7bX0iIEt91OrPB+CFyUKziK5z
+	kzZfHGPOyRzkShFLlD8gxm5DQJF4u8MlsTgtOXZKjH5Ka4MzeIP2KK3QIBDq1g==
+Date: Thu, 14 Dec 2023 09:45:17 +0100
 From: Daniel Wagner <wagi@monom.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	 <linux-rt-users@vger.kernel.org>,
-	 <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>
-Cc: Daniel Wagner <wagi@monom.org>
-Subject: [PATCH RT 1/2] Revert "sched/rt: Provide migrate_disable/enable() inlines"
-Date: Thu,  7 Dec 2023 15:58:14 +0100
-Message-ID: <20231207145815.30461-2-wagi@monom.org>
-In-Reply-To: <20231207145815.30461-1-wagi@monom.org>
-References: <20231207145815.30461-1-wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
+	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.19.299-rt130
+Message-ID: <170254303594.22090.13135204123422729997@beryllium.lan>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Last-TLS-Session-Version: TLSv1.3
 
-v4.19.299-rt130-rc1 stable review patch.
-If anyone has any objections, please let me know.
+Hello RT-list!
 
------------
+I'm pleased to announce the 4.19.299-rt130 stable release. This
+is just updating the stable release 4.19.299. No RT specific changes.
 
+There was a conflict due to the backport of 56e894982522 ("sched/rt:
+Provide migrate_disable/enable() inlines") to stable. Thus I dropped the
+backport because v4.19-rt already provides these two functions.
 
-This reverts commit 56e8949825226341d28dd5156b3d0057684ff669.
+You can get this release via the git tree at:
 
-The tree contains already the migrate_disable/enable() helpers thus this
-stable backport conflicts (b) with the existing definition (compiler
-complains with conflicting definition). Thus we don't need this
-backported functions and can avoid the conflict by just dropping the
-backport.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-Signed-off-by: Daniel Wagner <wagi@monom.org>
+  branch: v4.19-rt
+  Head SHA1: a279ca52df99df429ac873bcd8cf7df8569758ae
+
+Or to build 4.19.299-rt130 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.299.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.299-rt130.patch.xz
+
+Signing key fingerprint:
+
+  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Daniel
+
+Changes from v4.19.295-rt129:
 ---
- include/linux/preempt.h | 30 ------------------------------
- 1 file changed, 30 deletions(-)
 
+Daniel Wagner (2):
+      Revert "sched/rt: Provide migrate_disable/enable() inlines"
+      Linux 4.19.299-rt130
+---
+include/linux/preempt.h | 30 ------------------------------
+ localversion-rt         |  2 +-
+ 2 files changed, 1 insertion(+), 31 deletions(-)
+---
 diff --git a/include/linux/preempt.h b/include/linux/preempt.h
 index 29ecd13afdda..9c74a019bf57 100644
 --- a/include/linux/preempt.h
@@ -96,6 +117,10 @@ index 29ecd13afdda..9c74a019bf57 100644
 -}
 -
  #endif /* __LINUX_PREEMPT_H */
--- 
-2.42.0
-
+diff --git a/localversion-rt b/localversion-rt
+index 90303f5aabcf..6fa797e5b850 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt129
++-rt130
