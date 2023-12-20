@@ -1,61 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="dVZfU63b"
 Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69A710A;
-	Thu, 14 Dec 2023 00:50:07 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F3B2E1DD4;
-	Thu, 14 Dec 2023 09:50:05 +0100 (CET)
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4EF24B4C;
+	Wed, 20 Dec 2023 12:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="f1rPHDcW"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CB8ECE2092;
+	Wed, 20 Dec 2023 13:46:57 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1702543805; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=PKmlC2Km/Y8eCB+0kfLSs9rB2YE5pcQXkdIsAFTfZ6Y=;
-	b=dVZfU63bBnhJJKMZyswhjBYq6mcVVSq+GVuLtZwxL76u2xHeQLx/jBKGlbmKwITj61IfNq
-	3BFlDd5ce80k+S0J+eVqqqD2+phPOv/mYQSQzu2e69j9ppCwNNPspQMVSpyhB30wgXXVPo
-	V6BPrl1lteY3lsIXcPtZhjgCact5oWBpmLV9joovWeRNKYAx926plHJCa6QqMHKf44HBOM
-	6xll6TAfn+Ojbs+Ar42icUPWWQtCZ7BZr/jLOKZ08W5ODyS5Mu8PRLjacZvc6T9ks6wF5W
-	dLWh8JtyNZAFwjLBRMEEolxq0+hBdm2cnIsugQE8JfoK/n/tAL3toxTdLP99+A==
+	t=1703076420; h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=e3hnxaD4xgct/ovUmvI4AiLnTRKSaJT8zLm5qcJ8cRU=;
+	b=f1rPHDcWORB1pClhiSwa4iKvfGQhYDyzi+NnLkXz3m+3VcNOPvBK5KDVIyPpcqftv5pbTr
+	ZCeN81EgzLKerMXrrSniIpnhzQQyOrp+6L71ctn+37vDvBAcjew8XGjJb7oB0ktL85inPC
+	y0i30suZixSaUWS5/9QtndrdLfDyyc96mVNU/wt7mxSJRh+Kf7jHuOt7UwwbWJYfDEajfh
+	MUamzhGXz6+GpKERath5eHsBK4ViEVkY9iR3ik3hjf/PKz3lOqV/jLp4PqLgsxt60RKY1n
+	/DsFqKkEyRZh1b7O0LziDTkWaXJyP07AkXyb3z6tqC8eBOdzclu8ue/wuoLNPQ==
+Date: Wed, 20 Dec 2023 13:46:56 +0100
 From: Daniel Wagner <wagi@monom.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	 <linux-rt-users@vger.kernel.org>,
-	 <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>
-Cc: Daniel Wagner <wagi@monom.org>
-Subject: [PATCH RT 1/1] Linux 4.19.302-rt131
-Date: Thu, 14 Dec 2023 09:50:02 +0100
-Message-ID: <20231214085002.9264-2-wagi@monom.org>
-In-Reply-To: <20231214085002.9264-1-wagi@monom.org>
-References: <20231214085002.9264-1-wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
+	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.19.302-rt131
+Message-ID: <170307633790.6193.437447257232223288@beryllium.lan>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Last-TLS-Session-Version: TLSv1.3
 
-v4.19.302-rt131-rc1 stable review patch.
-If anyone has any objections, please let me know.
+Hello RT-list!
 
------------
+I'm pleased to announce the 4.19.302-rt131 stable release.
 
+This is just an update to the v4.19.302 stable release. No RT specific
+changes.
 
-Signed-off-by: Daniel Wagner <wagi@monom.org>
----
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You can get this release via the git tree at:
 
-diff --git a/localversion-rt b/localversion-rt
-index 6fa797e5b850..a328b97369c2 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt130
-+-rt131
--- 
-2.43.0
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
+  branch: v4.19-rt
+  Head SHA1: 5cb4bf59d366acdf4ba96cb0d98962379bd9645d
+
+Or to build 4.19.302-rt131 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.302.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.302-rt131.patch.xz
+
+Signing key fingerprint:
+
+  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Daniel
+
+Changes from v4.19.299-rt130:
