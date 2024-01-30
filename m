@@ -1,37 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF052E857
-	for <stable-rt@vger.kernel.org>; Fri, 22 Dec 2023 20:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQdAZ3bl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703277674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=ZVKuVqui5GBClDiAGi7QmgUs8/59xw2Hq2GF0X1cLYg=;
-	b=hQdAZ3blsWwp/sslG6Pnnag+5u/RAAebLEfQTtwNG/oc//Ui4dksznPFLLUSFAjh39eTc0
-	xqmba2qhm8E9c6QcglPLzvjOSQzFokJc/WUpzj5Cxn4pZHHYE16NcY+mPMvqbbpAU2CuNA
-	z9yy+39eTYivFVxxKEJJr9F3o+eqIx0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-404-gEVoSHwdNlGi4dQp19aYoQ-1; Fri, 22 Dec 2023 15:41:09 -0500
-X-MC-Unique: gEVoSHwdNlGi4dQp19aYoQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC064185A780;
-	Fri, 22 Dec 2023 20:41:08 +0000 (UTC)
-Received: from localhost (unknown [10.22.8.75])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5ACF2492BE6;
-	Fri, 22 Dec 2023 20:41:08 +0000 (UTC)
-Date: Fri, 22 Dec 2023 17:41:07 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: LKML <linux-kernel@vger.kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628B0383BA;
+	Tue, 30 Jan 2024 19:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706643356; cv=none; b=SqYkZkCx2g5LwoXzaa9iMBRo6EoW8cOI9WtIDxT09vuqKAtbGqNAS7gT1pxatnTU7T7+emq8mp6ttJ1cOIsFl4H4Co8YTPE5KQtrGijMAe87rElzDEskR8RJdkTszFFQL6Qe7H8kes3H6lwMBs98IJWCFKFNqeC3xFxYZDrGTAA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706643356; c=relaxed/simple;
+	bh=AqtvsA+TojyvEdhqjAUAJv/36H4xYBLJGbhhgrw1/Gk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qdavwlTFxEQOjkim9ncqjDMg5rHWsGhPjZcHpvRw5aZXwg4AQZOQ+aM8RSCegBgZYx1E6yAN+f8Fzj61AamZOwHUxF+5QPEPJMTY2n/z+hyrnbFKLFOTfKPO8jo5PmFQF0yDXKrIJxsGM7qcxT9IRz4KatKG4eMb77Fbay8wuq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 4EF821C006B; Tue, 30 Jan 2024 20:35:52 +0100 (CET)
+Date: Tue, 30 Jan 2024 20:35:51 +0100
+From: Pavel Machek <pavel@denx.de>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
 	linux-rt-users <linux-rt-users@vger.kernel.org>,
 	stable-rt <stable-rt@vger.kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -42,94 +30,47 @@ To: LKML <linux-kernel@vger.kernel.org>,
 	Tom Zanussi <tom.zanussi@linux.intel.com>,
 	Clark Williams <williams@redhat.com>,
 	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
-	Jeff Brady <jeffreyjbrady@gmail.com>,
-	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.204-rt100
-Message-ID: <ZYX0Y_lbe8hNUNnj@uudg.org>
+	Jeff Brady <jeffreyjbrady@gmail.com>
+Subject: Re: [ANNOUNCE] 5.10.204-rt100
+Message-ID: <ZblPl7XCGo648oeU@duo.ucw.cz>
+References: <ZYX0Y_lbe8hNUNnj@uudg.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dQZEVK1Sbqb2AdcB"
+Content-Disposition: inline
+In-Reply-To: <ZYX0Y_lbe8hNUNnj@uudg.org>
+
+
+--dQZEVK1Sbqb2AdcB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Transfer-Encoding: quoted-printable
 
-Hello RT-list!
+Hi!
 
-I'm pleased to announce the 5.10.204-rt100 stable release.
+We (as in cip project), are trying to do -cip-rt releases
+once a month. Are there any plans for 5.10-rt release any time soon?
+That would help us ;-).
 
-This release is an RT-only update.
-The only change in this release is specific to RT:
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-    rt: mm/page_alloc: backport missing bits from __build_all_zonelists() fix
-    
-    A while ago upstream landed commit a2ebb51575828 ("mm/page_alloc: use
-    write_seqlock_irqsave() instead write_seqlock() + local_irq_save().")
-    to fix a problem that had already been worked on v5.10-rt via commit
-    7bdd3bd5143a4 ("Revert "mm/page_alloc: fix potential deadlock on
-    zonelist_update_seqseqlock""). Sebastian pointed out it was important
-    to backport the missing elements of a2ebb51575828 for code consistency.
-    
-You can get this release via the git tree at:
+--dQZEVK1Sbqb2AdcB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+-----BEGIN PGP SIGNATURE-----
 
-  branch: v5.10-rt
-  Head SHA1: 3f1186be09688c4aedf2d61176990651cf996c75
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZblPlwAKCRAw5/Bqldv6
+8vNUAKCiLApgpsqWVf3R1ShJfn+RutJ4iQCfTL76BjjVp/5InUQFgR01/clhxRM=
+=0Mw+
+-----END PGP SIGNATURE-----
 
-Or to build 5.10.204-rt100 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.204.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.204-rt100.patch.xz
-
-Signing key fingerprint:
-
-  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Luis
-
-Changes from v5.10.204-rt99:
----
-
-Luis Claudio R. Goncalves (1):
-      rt: mm/page_alloc: backport missing bits from __build_all_zonelists() fix
----
- mm/page_alloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
----
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 39d1782b398f..cd1e8d0b2269 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6043,8 +6043,9 @@ static void __build_all_zonelists(void *data)
- 	int nid;
- 	int __maybe_unused cpu;
- 	pg_data_t *self = data;
-+	unsigned long flags;
- 
--	write_seqlock(&zonelist_update_seq);
-+	write_seqlock_irqsave(&zonelist_update_seq, flags);
- 
- #ifdef CONFIG_NUMA
- 	memset(node_load, 0, sizeof(node_load));
-@@ -6077,7 +6078,7 @@ static void __build_all_zonelists(void *data)
- #endif
- 	}
- 
--	write_sequnlock(&zonelist_update_seq);
-+	write_sequnlock_irqrestore(&zonelist_update_seq, flags);
- }
- 
- static noinline void __init
-
+--dQZEVK1Sbqb2AdcB--
