@@ -1,107 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638DD53374
-	for <stable-rt@vger.kernel.org>; Thu,  1 Feb 2024 14:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2DD5FEE6;
+	Fri,  2 Feb 2024 17:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706796736; cv=none; b=n7ts5VpJlYigOVJURt7EKi87DoJSwM8tIDgh3pjY245Gb61Sgye9hPhP7ha9owzJugMDIJN9yMVVVcdYMVXL7gGisQNwhvQvCvgZMWtk3axgz8t7lNhZESapKQ8z2cXuzG32bPfeOtISHDnlAUrL6kO7oDwflwYXtuJuOjmpUW4=
+	t=1706893907; cv=none; b=qpIkfHBkyyeFZeRWpten5AFapGx4W8EN3RIv1VGZ2kP3Rfe8ECizy/x0ALMMdqezMcNRgC38CwLLDzGw0Dq7FVYwKw4+anZsGf8c1ObQWCtj0L9Lu32XwJNEyVBFzkQe0huOqYv/4363fCwFX8bD5DLZPcmZpISDVPC5VgV1jXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706796736; c=relaxed/simple;
-	bh=WBVM3neXLXU2Mk3vMLp7/mqFO+dt8lVAj2XCpTmISys=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OAjnOj8RMrQpCeJth2tWC4VZnYnquTOvq07d0tv0ig2o4QFhxmcGoR+fdfrR3m5EsB2+cJR6DZn8N9OD9RV9IU2PaPjPA+eCuIZOZNJ/k6xb68vkurChcmV4uiI89W37fjXyBLYkm3+1NkoBE2ZRH7TWSQ5HMDrMBnTLvNPkAJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXKvfkZ1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706893907; c=relaxed/simple;
+	bh=p/cssrwWO4JA+lysWQPVqrAGJ0msE/E/7wO3Tnhk2l4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fwCqmD0ElhEf3RBmG0iWsin2bArCHxQBkv30wy0CPNB+RytFE2Hmp5RbtiuSl18Di3L1jly+iA7KOOufh+fR6S8TH3XU19m9CyWs8PTAwMEehCndAsDPH+LyRgl8sxs4LbiyhMA/xh7IKKXWP3Rd75Y30BYwG+m6JYV0uK+6aiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=Fs4qqqnl; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXKvfkZ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706796733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=aQU410ABE1pym2sA3RLoHJZ1Td4guFKftSlr219gO7g=;
-	b=TXKvfkZ1Ye/cYMeL3qII9nUyPZl9/5nzxzwsHEYHqah/4N/kRNCIX+h+AiboO6tAojapaL
-	ZT0yf5I2S+tF1aaNDMjUK3xePY/T+d0ENAl0MPT3dYgiarQEw9SbNy3Lp8aZSJwYbP3Xwi
-	qw3b6MkQdE5M4sVJy42K/qCkFhXN27A=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-493-JzGJ8wBrMBOnn9HQiXhiVg-1; Thu, 01 Feb 2024 09:12:10 -0500
-X-MC-Unique: JzGJ8wBrMBOnn9HQiXhiVg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A66BF85A588;
-	Thu,  1 Feb 2024 14:12:07 +0000 (UTC)
-Received: from localhost (unknown [10.22.32.98])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F02E72166B31;
-	Thu,  1 Feb 2024 14:12:06 +0000 (UTC)
-Date: Thu, 1 Feb 2024 11:12:02 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
-	stable-rt <stable-rt@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="Fs4qqqnl"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 530A1DAE38;
+	Fri,  2 Feb 2024 18:05:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1706893504; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=6xv0ghtBWKci3ltFD1w38GyDNGgkmxE+GwKbqBNa0b4=;
+	b=Fs4qqqnlwdzstMLeQMich9y4y19YmkMxpUMCLUV3S4+yi/GsqqSRfuNvsdyvJxi/TA0yGX
+	63LxpEl8JTRHqLYqvJ5KBD0LfgLUYfBr2Rb1Oe/9OLjAW4msbxdEMS7j0a3d5M3f8GfvUO
+	s8XcLGoJW3V5iexXOyhh91tsg9jUC/6Jc9LHVAHU8vM7jR3c9iUi6gF6uZBkLeZaxZAR54
+	Wq0ZyEJa5YxhoGlC0dvisjmNLzMtJdmbrZIyDqKoFyaCozbKXx3eLwVvYWnQ2XKLEf+uUw
+	x4zieMty50pirlKTav4T27EQ8PzttNMmBdpp2wXX+ffs/eFwP+o+Irj1Wzm/Eg==
+From: Daniel Wagner <wagi@monom.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-rt-users@vger.kernel.org,
+	stable-rt@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Carsten Emde <C.Emde@osadl.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Wagner <daniel.wagner@suse.com>,
 	Tom Zanussi <tom.zanussi@linux.intel.com>,
 	Clark Williams <williams@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 4.14.336-rt159
-Message-ID: <ZbumspYp6S14TONh@uudg.org>
+	Daniel Wagner <wagi@monom.org>
+Subject: [PATCH] Revert "crypto: scompress - serialize RT percpu scratch buffer access with a local lock"
+Date: Fri,  2 Feb 2024 18:04:57 +0100
+Message-ID: <20240202170457.29516-2-wagi@monom.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240202170457.29516-1-wagi@monom.org>
+References: <20240202170457.29516-1-wagi@monom.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hello RT-list!
+This reverts commit 0cb152421350004d4dcf3a4523d88c002d0a7973.
 
-I'm pleased to announce the 4.14.336-rt159 stable release.
+The stable backport f8f261f9ade2 ("crypto: scompress - Use per-CPU
+struct instead multiple variables") replaces this downstream workaround.
 
-Please remember that this is the LAST 4.14.y-rt kernel to be released.
-Refer to Greg Kroah-Hartman's announce of 4.14.336 for more information:
+Signed-off-by: Daniel Wagner <wagi@monom.org>
+---
+ crypto/scompress.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-  https://lore.kernel.org/lkml/2024011046-ecology-tiptoeing-ce50@gregkh/
-
-Again, 4.14.y is officially end-of-life. So is the RT counterpart.
-
-This release is just an update to the new stable 4.14.336 version and
-no RT-specific changes have been made.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.14-rt
-  Head SHA1: 998ff9c899891ef962ca1cb42bf807dc5d223ebf
-
-Or to build 4.14.336-rt159 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.336.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/older/patch-4.14.336-rt159.patch.xz
-
-Signing key fingerprint:
-
-  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Luis
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index c2f0077e0801..968bbcf65c94 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -24,7 +24,6 @@
+ #include <linux/cryptouser.h>
+ #include <net/netlink.h>
+ #include <linux/scatterlist.h>
+-#include <linux/locallock.h>
+ #include <crypto/scatterwalk.h>
+ #include <crypto/internal/acompress.h>
+ #include <crypto/internal/scompress.h>
+@@ -35,7 +34,6 @@ static void * __percpu *scomp_src_scratches;
+ static void * __percpu *scomp_dst_scratches;
+ static int scomp_scratch_users;
+ static DEFINE_MUTEX(scomp_lock);
+-static DEFINE_LOCAL_IRQ_LOCK(scomp_scratches_lock);
+ 
+ #ifdef CONFIG_NET
+ static int crypto_scomp_report(struct sk_buff *skb, struct crypto_alg *alg)
+@@ -148,7 +146,7 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 	void **tfm_ctx = acomp_tfm_ctx(tfm);
+ 	struct crypto_scomp *scomp = *tfm_ctx;
+ 	void **ctx = acomp_request_ctx(req);
+-	const int cpu = local_lock_cpu(scomp_scratches_lock);
++	const int cpu = get_cpu();
+ 	u8 *scratch_src = *per_cpu_ptr(scomp_src_scratches, cpu);
+ 	u8 *scratch_dst = *per_cpu_ptr(scomp_dst_scratches, cpu);
+ 	int ret;
+@@ -183,7 +181,7 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 					 1);
+ 	}
+ out:
+-	local_unlock_cpu(scomp_scratches_lock);
++	put_cpu();
+ 	return ret;
+ }
+ 
+-- 
+2.43.0
 
