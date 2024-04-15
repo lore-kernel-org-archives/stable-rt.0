@@ -1,35 +1,47 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC541F16B;
-	Mon, 15 Apr 2024 07:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F1167A14
+	for <stable-rt@vger.kernel.org>; Mon, 15 Apr 2024 12:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713167794; cv=none; b=mU54FDnP+J2Q6QzKA+wztiWOlPyR88ZcecG9OzQDnjPcKPQIrA4VV2qq6hkbYsZtveYvTYFEO9vQTytEzb8sX+Rpi14l9pUHD7hieH8ydZTZy1RS5SZiJIyQXAwo6ny81nTMmOpbd5+3IasJdZGE6BDmuh2C/CmyROkJAl+vR/g=
+	t=1713183954; cv=none; b=B54zjOP9cNnmpnup88893GKCJV1EHSsrSOeAmkw67RjQgL5nc9OcKGtvJCvV0TIxh+eQsNKuKSXKytdgY9AyYMpAmOLOFsEaHiE48QG473bRmNLWpjltu3oGztpQAIFprL+9DbPhxGR66woC6l/JwjHtyoXWUcvLvlNdQkQUytM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713167794; c=relaxed/simple;
-	bh=S324kEgCuhI/VRe9Fz0tirH7HrFyKJZFebNrYDHytn8=;
+	s=arc-20240116; t=1713183954; c=relaxed/simple;
+	bh=L1V0jRuSiUbCxImGX5gLQ66xX5kwC8N2gF7cCPTzXv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gXUw1Xe3KXSQbUv0vGrFxKinliPM6dJRTNS1ckoSRYTLTzW5kBikxcxOUwu5hSfQJl9zd3shznMqjOOTxof7MnRxNe6Zp8pskrFMQU83Gs+SQdVYqi9oa9h4Z6bw1Oqhf7gNgNNlswB/UhgJAu1AoK9cA7MGn1iHuZhy+KZHahE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=KnZxMYqs; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcLcG6rEXp9KUQSW38AnEjz6+hIWdsi6STLF+JW/STVlRZ+fvqs3+nV3uG4FzOfQcqIIH4M6jyuAD/8CFr1dVOCl872lEXsvaDccfh7v8p4xDm9nmlwFSQ0xSJDrt88hD4/IVpFJur16jDNe1Lt8VyDRLut0DD3ww7f/p8sy4Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P+rQCWAf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="KnZxMYqs"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id B648D1C007F; Mon, 15 Apr 2024 09:56:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1713167787;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+rQCWAf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713183951;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WjfMW+NA/CnSQotoTVzRdyimGwWSKCreZbaAXRI+G10=;
-	b=KnZxMYqsLqcB75iP5P6dBUnN189g6ARNATtxXQYnU0MC6S1l81LkMNYw73a3dAkv0SK0B+
-	SxdW537XZbJslbH2KvqCFxH0ItKMEA4EEeA8TofmcZioW+RDU+h7nM/LCDFrO7vstLSdXi
-	pBwR/U2uRCkc7cIxCTu/VGlFqIqrYZ0=
-Date: Mon, 15 Apr 2024 09:56:27 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+	bh=xi1nc+JsCBSl9tDY1rQ0F/hUsrd+06AFpIRijMer3uU=;
+	b=P+rQCWAfdq7MRpeOMq+4j+vVtTbyEjLgdQICKcx0luX54m8ANfedu5L9d02BihYlCUMFmi
+	8AXcEIQtEXabL7THRby6ru0Ux2XhZrtzMOqK4N2NYF3Wm3fhc+YJBcJ0T6w+I/G4JEmpQh
+	csJbfFxVBZw+YuXNc4CjKGelNbfuws4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-eTFHdXHtPr6tar0TtmvQyQ-1; Mon,
+ 15 Apr 2024 08:25:45 -0400
+X-MC-Unique: eTFHdXHtPr6tar0TtmvQyQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8DB933C02764;
+	Mon, 15 Apr 2024 12:25:44 +0000 (UTC)
+Received: from localhost (unknown [10.22.8.61])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 882BB2026D06;
+	Mon, 15 Apr 2024 12:25:43 +0000 (UTC)
+Date: Mon, 15 Apr 2024 09:25:42 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	linux-rt-users <linux-rt-users@vger.kernel.org>,
 	stable-rt <stable-rt@vger.kernel.org>,
@@ -43,52 +55,86 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
 	Jeff Brady <jeffreyjbrady@gmail.com>
 Subject: Re: [ANNOUNCE] 5.10.213-rt105
-Message-ID: <ZhzdqyqZrjhXs7ZJ@duo.ucw.cz>
+Message-ID: <Zh0cxp0i-jO7Lisp@uudg.org>
 References: <ZgFy9au0Gvkzr6gZ@uudg.org>
+ <ZhzdqyqZrjhXs7ZJ@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ioEvBMbk+BU4Wpfr"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gOSc9cJjPjL7deDu"
 Content-Disposition: inline
-In-Reply-To: <ZgFy9au0Gvkzr6gZ@uudg.org>
+In-Reply-To: <ZhzdqyqZrjhXs7ZJ@duo.ucw.cz>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
 
---ioEvBMbk+BU4Wpfr
+--gOSc9cJjPjL7deDu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> I'm pleased to announce the 5.10.213-rt105 stable release.
+On Mon, Apr 15, 2024 at 09:56:27AM +0200, Pavel Machek wrote:
+> Hi!
 >=20
-> This release is an update to the new stable 5.10.213 version and no extra
-> changes have been performed.
+> > I'm pleased to announce the 5.10.213-rt105 stable release.
+> >=20
+> > This release is an update to the new stable 5.10.213 version and no ext=
+ra
+> > changes have been performed.
+>=20
+> Thanks for release.
+>=20
+> I see v5.10.214-rt106-rc1 is out there and now v5.10.215-rt107-rc1,
+> but I don't see v5.10.214-rt106 (which would be useful to me).
 
-Thanks for release.
+Hi Pavel!
 
-I see v5.10.214-rt106-rc1 is out there and now v5.10.215-rt107-rc1,
-but I don't see v5.10.214-rt106 (which would be useful to me).
+I submitted v5.10.214-rt106-rc1 to kernelci around 2 weeks ago and there
+were more build problems than usual, though I didn't observe problems in my
+local tests. So I decided to run a few more local tests before releasing th=
+is
+kernel. Based on the current results I will probably release
+v5.10.214-rt106 in the next few hours.
 
-Is it a mistake or should I plan for v5.10.215-rt107?
+As for v5.10.215-rt107, there were a few printk changes that I decided to
+submit to kernelci as soon as possible, given the HW diversity available
+there.
 
-Thanks and best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
+Best regards,
+Luis
+=20
+> Is it a mistake or should I plan for v5.10.215-rt107?
+>=20
+> Thanks and best regards,
+> 								Pavel
+> --=20
+> People of Russia, stop Putin before his war on Ukraine escalates.
 
---ioEvBMbk+BU4Wpfr
+
+---end quoted text---
+
+--gOSc9cJjPjL7deDu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhzdqwAKCRAw5/Bqldv6
-8s16AKCCORSigOjFdUBW/JSDdMs6H2UTtgCfYavhz8dojqsBLVcXSYxU0kR4X+I=
-=MGB3
+iQIzBAEBCAAdFiEEk1QGSZlyjTHUZNFA85SkI/jmfCYFAmYdHMYACgkQ85SkI/jm
+fCYbow//ceRSONcoqY3ExwTMNRxulYIWVkeP9I1Z9k0EdgXCsNqC+hlN9gGYmAkt
+6g4QT7vLTdtr84CEsJQ8+hrOl72TlllC4mAgxwOpIUIxh0KQqu9E8VW6qyMbzv9f
+Oq0s/6rt7jRSwDIxEKnIZJWF4E9NtvVzERtmX3I3UC+scZIrHSe/4Ui+dnR++XOh
+kmiUTR3hQGofhKO674WJXf304yDoZe5J9h1NzFdw1tmKG6lY8Gx1tys7vLaBlA5Q
+czmW2gS+S5o6/UjAqajNP5cwXxnFZIhLTwJ0yNEiPYauF5i7b2AEv3WdWjPERCWJ
+ceMUMOOmR3jwTaBEL10TxeOCLSSAXj10cg8AiFyYJIvSFnYIJPW9Mg2k4VBdyUyV
+r6xz9gfjUntfAfwuLyAK2vBtgK9u+RqQVgkedmagmJZ8kXA0EKz4feB1DSMMBS6d
+4LahZlFLHNmFWSOlN1Yw51pc9qn8mz20dEG6eRzgS9uWZawPXY2Otmy4XMVr5YgN
+4pZaLT0imyINFoO1Z3MiAgbk8J4rt5viosugL0Jr0zlaFVJcypOzX1Ni86wce6l9
++uztTNlJgFsm5RyKgL/FRLbHpNqE+UmADALiI4v/0TG3ZYKaCeRx9BLVXGfpDPJA
+WfejCcs2ZfYIYu22w81PoQocAUpPrS1OexE1mCiOd+f0iQzue/o=
+=2fPT
 -----END PGP SIGNATURE-----
 
---ioEvBMbk+BU4Wpfr--
+--gOSc9cJjPjL7deDu--
+
