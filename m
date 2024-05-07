@@ -1,90 +1,75 @@
 Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF68215250D;
-	Tue,  7 May 2024 11:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67E316132A;
+	Tue,  7 May 2024 15:16:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715080308; cv=none; b=S+tCr7HwK4ukEYBpURhzkXdTi56bKq4ldF2AsVpMVR5cwcFFjNhovc9slPnHQ3OK50+XZstlLqPfBVFsZIEsQXySuJjLQtc9/7GF3aIP9KtWpNl7h4m6u6iMHyA9tW2pdnaJHVuRHAFg8ymlW9A2Xl9XfgS53A/JLcXsNENoBMU=
+	t=1715095021; cv=none; b=Q9yqlzPPVeQVetaVBHlKReU9Hxfm5ukm9oc1NSEFWhvBGsBjKDBFE4h0iE2z1vxuOrgSTPwiAEOrb1hiXbUrZUHzm9ms87+ESk5QpkJAI8wvV+1kbd93bAotSEMsaBf9TnKE/85GVs++4/TuJFOv2BiQT6VPTkmfWB0qGkl9Ndw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715080308; c=relaxed/simple;
-	bh=ugirj27XhqixAq69VU9txIVOtc8CmdlxXWxSRutQCds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=krbMElN2NnfUmcFTmP9YCNr7h0GcWZH2VPSIjpQ3nppdnRir9HMHcD4tXg+K97JwWBLkc22KYWrrEwMbG1Q+dI7Pp4/qP/QrrNkU+gYkr75u/FzEmkHpdwpXGnjA5rKwD+O2wqLHql35czuCFnPkrJoQQ2IR5Qs3PHHu/bh5nrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=lhjEK3p5; arc=none smtp.client-ip=49.12.199.46
+	s=arc-20240116; t=1715095021; c=relaxed/simple;
+	bh=pj+rRRnJ//cpd1dCxUwjzWTtiuE4tkK8iURQhRZdoUs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Y9AGxmjvcSR3OdnEBRzWKdrPr3Rfhch4RFyHixbAb3NlyZCM6rfDFQJB1XG/v/pSAvMbaAQCkqwVuq38vK0J2OAbiLB8lGu+uUcO6jBVrRwpeD+N6WJ1+YTnXTuPTXaMLo+tt851yYkvsKnrM3VHqhxW3sqf5z+FZqfr1zHRsB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=UlqmJ5p4; arc=none smtp.client-ip=49.12.199.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="lhjEK3p5"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9E847DB3F7;
-	Tue,  7 May 2024 13:11:34 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="UlqmJ5p4"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 25FF4DB443;
+	Tue,  7 May 2024 17:16:56 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1715080297; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=lhggNZcChQN1+cSOoBexSrlJQQ7dgudKQ/bV9WGXnRI=;
-	b=lhjEK3p5hYOrmqFxzDCYlQQffO8sEE+WO8L+WpKZpWx9Cai9ulv0qsq9H2ZNOqPxRZCLDi
-	Y6Pdw3Gazkcwsvv5pp4qB+sinzjEJnknjTHKsJcPiIKAe+orXLRk0ZLQzCVdqlRygF8d6V
-	4v4h7NXO9P7cCG0NLQ2VTrV8e8yc3EvHQW2jDALWuTpGIzF3bMI+GmndryiRlkjxU0s0WT
-	TedNrkpYt5mVagcdhFcTnLw7aBQoWepx/0WTy8YkNRWsoMelZaq+qIkrPAHkFnx3nmt15W
-	RzuyScHpgJCapEG1pb6fHx3JEJsD8H4pJpiJpO8CRMl4UasMYvddtCZXGJu5qA==
-Date: Tue, 7 May 2024 13:11:31 +0200
+	t=1715095016; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=YOMGMkH+XITc7boKTbyMryoJEokCnAKEzkDlct7BX7Q=;
+	b=UlqmJ5p4lQ8qQs0wrajQ9w4pQi3Egvn9KMw7BTl9bGmngLglr5UR4WPz3gv5FdTDwPU99Q
+	oiaWxhWLzZ1RJ27/aoJx+sTTR/hz6zhQPkIVRA0wLsBZXGSTrgAM4+uzblbLd4M2GWZpO9
+	869v1uQL0jNd+/wTrCdQHSlPjcqeIxFjFpVhItS7AGEY5rAfzFxqYdQelznCr2j9isxkIH
+	aUkGgqjjPhGwdQxGk1wxwQZzco04OyV15uOLwpPuHG+XCLEFlA9w9Hm2d/tIjAhOrQVXE+
+	9yFC9j9uG9mxtmPRWZ4rtBVr8NBvdlDfwntKPKtdZwF0OJIRpxSiPBXjkkL0/A==
 From: Daniel Wagner <wagi@monom.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-rt-users@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, 
+To: LKML <linux-kernel@vger.kernel.org>,
+	 <linux-rt-users@vger.kernel.org>,
+	 <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
 	Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT 0/1] Linux v4.19.312-rt134-rc2
-Message-ID: <6irersxerqltgzv63uis2rint4ycugtr7uve7j4bbvaccogxf6@qvfg6plzrvsx>
-References: <20240506104602.16972-1-wagi@monom.org>
- <5c3ff133-6953-448b-a1e1-6bacbc210e4d@monom.org>
- <20240507095407.jAjEuCJ8@linutronix.de>
+Cc: Daniel Wagner <wagi@monom.org>
+Subject: [PATCH RT 1/1] Linux 4.19.312-rt134
+Date: Tue,  7 May 2024 17:16:48 +0200
+Message-ID: <20240507151648.17883-2-wagi@monom.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240507151648.17883-1-wagi@monom.org>
+References: <20240507151648.17883-1-wagi@monom.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507095407.jAjEuCJ8@linutronix.de>
+Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Sebastian,
+v4.19.312-rt134-rc3 stable review patch.
+If anyone has any objections, please let me know.
 
-On Tue, May 07, 2024 at 11:54:07AM GMT, Sebastian Andrzej Siewior wrote:
-> I compared mine outcome vs v4.19-rt-next and the diff at the bottom came
-> out:
-> 
-> - timer_delete_sync() used to have "#if 0" block around
->   lockdep_assert_preemption_enabled() because the function is not part
->   of v4.19. You ended up with might_sleep() which is a minor change.
->   Your queue as of a previous release had the if0 block (in
->   __del_timer_sync()).
->   I would say this is minor but looks like a miss-merge. Therefore I
->   would say it should go back for consistency vs previous release and
->   not change it due to conflicts.
+-----------
 
-Makes sense.
 
-> - The timer_delete_sync() is structured differently with
->   __del_timer_sync(). That function invokes timer_sync_wait_running()
->   which drops two locks which are not acquired. That is wrong. It should
->   have been del_timer_wait_running().
+Signed-off-by: Daniel Wagner <wagi@monom.org>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Understood. I was a bit strungling here. Glad you caught this error.
+diff --git a/localversion-rt b/localversion-rt
+index c2c7e0fb6685..6067da4c8c99 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt133
++-rt134
+-- 
+2.44.0
 
-> I suggest you apply the diff below to align it with later versions. It
-> also gets rid of the basep argument in __try_to_del_timer_sync() which
-> is not really used.
-
-Will do.
-
-> As an alternative I can send you my rebased queue if this makes it
-> easier for you.
-
-Yes please, this makes it easy to sync the rebase branch.
-
-Thanks a lot!
-
-Cheers,
-Daniel
