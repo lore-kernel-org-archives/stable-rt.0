@@ -1,42 +1,39 @@
 Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8025F81720;
-	Mon, 13 May 2024 20:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496627EF1F;
+	Wed, 22 May 2024 12:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715633268; cv=none; b=FdmNkTcOXAIIvDHHEt2jXqMWewNG8iz+k0BK9167cnL9MyMOFuQZF+ObRWs/2Z/m1rLLFZJBkV+HqL93tzvgK/2bsOjMs6XDFXwpc2thJn63vNSy5KzqYK6scJ2dL2enFK09XoM3IQgSLpRmoYlY6YWsTLvDQi9TfmBEYAYJwsk=
+	t=1716380255; cv=none; b=ItcMM+A7X5FVMGKN9vWyWH+FNo3hJ4w1jzPu6dodsrjfRYbMB5A0BnpIw5SXtJxHpIsKrM4cy9xp480HWfVSmBLEjFnncmobNs+etac65BkNNs1xcsw+Cc2MrNgQ5j+j95GmxOSLDt0CnTcKfz0EmrA1lfR0hEu86U60sMTROBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715633268; c=relaxed/simple;
-	bh=UJBBxco8vlCXFrwL2rdHorUqQeY5Agk5Kikd6UwKDDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovgqBcz7sjI6Bk00p89CD1ol/sHLBC2t6191MlRJGlHKxsbZEP9WrxIlAVWRx4kuR/yiqlGarvJGmH6XeFGSNdPLq0zoBNsw8yDyD/DODiR082gQbXaWu0ds/FmPkZBD5zoX0/jPRDTS+WFhh88Oh1Ev/eGvrS5O4w9fJkmrovI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=hdTBfAO/; arc=none smtp.client-ip=49.12.199.46
+	s=arc-20240116; t=1716380255; c=relaxed/simple;
+	bh=5XqgxJ4s4obLjU3RH1Hcac8iajNl61h552vrzAtJlLo=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=clKrt7HQIBH2i3PopCYzQJ6Pe7tcEyfuL9nYc/2VXtZVe026asFBmdsktu/u7pWtdGhVJBX2Y6d9N9enM10FeR/H2sZyW9HVVZ+prNcMB0MIYwbVX9Tr6Qua9Ic162/VFe35M7QHmfa/SM5mtXrZv/vY4lRCXmbyIaNhkwh7vC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=ckFXKomN; arc=none smtp.client-ip=49.12.199.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="hdTBfAO/"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 51BE2DB422;
-	Mon, 13 May 2024 22:47:32 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="ckFXKomN"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A5A25DB440;
+	Wed, 22 May 2024 14:10:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1715633256; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=0uJiQ582lHn4ACjeoU6ecYjd0v8F9pqkd0xe3q/N7j4=;
-	b=hdTBfAO/yWWjw2bJdgpCL0+drpq8qDhZLsg2jfb95XPbFefJsBQNK7ZqTC6+wmO/iX9x4+
-	GezJe/cpuwYg3D8lyy6JTWWOuIfSghEv0Yyu3dtbDDtPrSx9k2nSWmPALi1tN3p8zhPKWZ
-	WK1LUfb1CtduA78BrNOiWqdyCNBZjVbhGt3cgv7Qy977plhOqQagpgxE2bX8eUP3Im0j+/
-	77R15m8StPKxPDR3n335MAN/OydKqH51cklILfaT/HpF4wDFv5eE7OkGrHx8qf047t2j4G
-	1BkCN7o1BcZxCENGWP1M8UA8i3NHL6nkklBbzZk4B72yWjzPN9xE1dkn/qIyfg==
-Date: Mon, 13 May 2024 22:47:29 +0200
+	t=1716379804; h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=I99HSrXGOWc4gQITzBBfFSgceACHwqV/lEW4REQuRGY=;
+	b=ckFXKomNanJ1UCvpfwEMFId+iGHzd3jWn1EiT8VWS8ErrBJLBOBnMq2O6g3A0yAgL3mSxc
+	lDdA4TAA/gLtsAOeJjexCpLDx15Mprp+fPqyRHXQj4Xa1pFmxcdCyVJLSvZd3b8e+A89MM
+	K0GDI3rbQQjaX/apuTg66Zs3xYpmV82tOjvU7AD4Xvr6XDJ0K12BaEF7rxaPGTxJR8/Co+
+	RhTUDtqg+HxYKk8bjZG+lgQgUx6fXGjhZxKgSiOe7+GSr1HHczuS37jrknjs2E/a+K4KwS
+	mFqZpEnTUXli9BQAlTv1ayyaMC0FsVdexV7NHXkNfDEveW/ZvT4Ql/u3T8PEfw==
+Date: Wed, 22 May 2024 14:09:55 +0200
 From: Daniel Wagner <wagi@monom.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
 	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Zanussi <tom.zanussi@linux.intel.com>, 
-	Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT 0/1] Linux v4.19.312-rt134-rc3
-Message-ID: <af3jd6f5pym7gflg3gzjxfinj7i4zovah4jg36f2p6whtsdfqv@iejgojacrut2>
-References: <20240507151648.17883-1-wagi@monom.org>
- <20240513065935.hT5MCimc@linutronix.de>
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.19.312-rt134
+Message-ID: <171637952997.5572.1871863446768796282@beryllium.lan>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -45,25 +42,61 @@ List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240513065935.hT5MCimc@linutronix.de>
 X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, May 13, 2024 at 08:59:35AM GMT, Sebastian Andrzej Siewior wrote:
-> On 2024-05-07 17:16:47 [+0200], Daniel Wagner wrote:
-> > Dear RT Folks,
-> > 
-> > This is the RT stable review cycle of patch 4.19.312-rt134-rc3.
-> > 
-> > Please scream at me if I messed something up. Please test the patches
-> > too.
-> >
-> > The -rc release is also available on kernel.org
-> 
-> I do have to complain a bit. The whole diff contains only a diff against
-> localversion while the content of interest not here. But but I guess it
-> is what we talked about so... but for everyone else it looks like
-> version increment.
+Hello RT-list!
 
-Sure, the merge diff should also be included. This feature missing in
-the tooling. I'll add it, so next time it should also contain also the
-merge diff.
+I'm pleased to announce the 4.19.312-rt134 stable release.
+
+This updates the rt-stable branch to the upstream stable v4.19.312
+release. This took a bit longer because there were some more complex
+merge conflict . Stable backported one of the preempt-rt preparation
+patches which v4.19-rt already shipped. Sebastian helped out to get this
+merge correct, thanks a lot!
+
+Cheers,
+Daniel
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v4.19-rt
+  Head SHA1: 1c3b7281e2711af8488ce40c9202ad19f3eeb557
+
+Or to build 4.19.312-rt134 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.312.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.312-rt134.patch.xz
+
+Signing key fingerprint:
+
+  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Daniel
+
+Changes from v4.19.307-rt133:
+---
+
+Daniel Wagner (1):
+      Linux 4.19.312-rt134
+---
+localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---
+diff --git a/localversion-rt b/localversion-rt
+index c2c7e0fb6685..6067da4c8c99 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt133
++-rt134
