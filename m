@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95093EDE
-	for <stable-rt@vger.kernel.org>; Thu, 11 Jul 2024 00:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DA216C86D
+	for <stable-rt@vger.kernel.org>; Thu, 11 Jul 2024 15:17:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720658241; cv=none; b=TJpP8PTtHPvXi0JJWm34s7Q1fIKIMgNeAIMyyBqvPhTlKwh+wRTVEoeLPFGeQBbkE0oBNJbdRlzY87aQ0hmftQy+ZvREDsN+3c41Q0h/ZUAJlKiD288bXu5GBst8oqvEHQc3dwhY5XIBdMxnmDepZ+8/i6ieNJEWBskljuyxaf4=
+	t=1720711048; cv=none; b=fWswFazGlr3KMzSlOKNd2S83NzoFLsWw2u+0bwFkmLGhGfRYy+TndNO72jZyzVYypeOp8hg+Xl/pBuXocFpwfIHQ94BT8yR0R6b7DW4eUMuryMnxo0BC51Y9SkmX1XWvi407TWLYEShBy/d14qGxStGVIKV2WVA0TpnDywYbt9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720658241; c=relaxed/simple;
-	bh=Pwt6HpDzF04SqtWTpzLP4Kb9ajlmJjE/x8qFxKKdrWk=;
+	s=arc-20240116; t=1720711048; c=relaxed/simple;
+	bh=1oergYkWXTm94y5+7ZzuMTJoIeNgn0N1IrJVu94BCi0=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=o/okilwGtbx5LhXQXHVVB83eM910jMKefQ0TMLa2unt0DZpb6fC4KkvtJd3GbS3SWnHaKIHivwMOYtPa+8Bfgb0Fw9bDI2004VXKIu5fWCnFFtAGX8l9k7xyMsdN6+6Cg0qIfF83+p5iKXlKX97dA9Pgc7Qb1lYjen6QfvrDkKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGnILLkt; arc=none smtp.client-ip=170.10.133.124
+	 Content-Disposition; b=OaRHXe6zV/P9z0dPIFJ5WX2AUK4PToHrDGs89f0r07Gt6npZ4cw7lyyeTvWgP0ghGdiZeV8k+QTMaORi6WKEE9lWe4PaD6bZAEfjpxZCNb3zvyRfYJYjh/Hc436SB+UwmPIemzhaseNxyffcin8ro4F9Ag1xOqnVI79mPnoNTGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flYVZI5d; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGnILLkt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flYVZI5d"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720658237;
+	s=mimecast20190719; t=1720711045;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=pmG1I3rDWsEemreYYSLcpqwv1JF6UKierrIURxVUb3o=;
-	b=KGnILLkt8LUQ0kC0jFHZdZAQtYzl6PPteBYli7IDPZZYlD3DTuH6W2i3DMkB86rQXDjiOG
-	Dq4w4zYC80/p0H5C02RSSUKL5tpQkI5ZSILy+8e83RD0TZ3RSNRZspZ6ZuXWG19G2vbeMz
-	PoEpvqZAgd05IpcqOLvQnjciU1emHn4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=putu84WQ0rdP2ZeyMOIhOvpzMiIiotZXLet2mvMCZ2Y=;
+	b=flYVZI5di2L8ka+havXLH2rs4OXoj+nZp8ans5xgJMknpp5EayPzmNQaIwSLJxdTHIiHCy
+	pWgRE/glUT8i02/HxpvpwxBbsuvVU9GE2CBvNAp3lXu3FbkcBSJOvdNj7BOfA7SsShyZCG
+	6tV2T5aofJ/yv+RJAvxgkeRG1OQPv9U=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-474-kCCU5OcyNn6jfGeg_E5EmA-1; Wed,
- 10 Jul 2024 20:37:12 -0400
-X-MC-Unique: kCCU5OcyNn6jfGeg_E5EmA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-hnxNToyFPdKo8fdvXgjQTA-1; Thu,
+ 11 Jul 2024 11:17:22 -0400
+X-MC-Unique: hnxNToyFPdKo8fdvXgjQTA-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A40D2195608B;
-	Thu, 11 Jul 2024 00:37:09 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A12BD196E08E;
+	Thu, 11 Jul 2024 15:17:19 +0000 (UTC)
 Received: from localhost (unknown [10.22.32.84])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E3E3919560AA;
-	Thu, 11 Jul 2024 00:37:07 +0000 (UTC)
-Date: Wed, 10 Jul 2024 21:37:06 -0300
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6498719560AA;
+	Thu, 11 Jul 2024 15:17:18 +0000 (UTC)
+Date: Thu, 11 Jul 2024 12:17:17 -0300
 From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -54,8 +54,8 @@ To: LKML <linux-kernel@vger.kernel.org>,
 	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
 	Jeff Brady <jeffreyjbrady@gmail.com>,
 	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.220-rt112
-Message-ID: <Zo8pMpNo972JHYIs@uudg.org>
+Subject: [ANNOUNCE] 5.10.221-rt113
+Message-ID: <Zo_3fcnMWknpZ6Ml@uudg.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -68,9 +68,9 @@ X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 Hello RT-list!
 
-I'm pleased to announce the 5.10.220-rt112 stable release.
+I'm pleased to announce the 5.10.221-rt113 stable release.
 
-This release is just an update to the new stable 5.10.220
+This release is just an update to the new stable 5.10.221
 version and no RT specific changes have been made.
 
 You can get this release via the git tree at:
@@ -78,15 +78,15 @@ You can get this release via the git tree at:
   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
   branch: v5.10-rt
-  Head SHA1: b7364cea19a02eda9039a2d34c5f105d77f4697a
+  Head SHA1: ea80a8cd61dcdda428f61d90b3ace2c4d7682d2c
 
-Or to build 5.10.220-rt112 directly, the following patches should be applied:
+Or to build 5.10.221-rt113 directly, the following patches should be applied:
 
   https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
 
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.220.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.221.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.220-rt112.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.221-rt113.patch.xz
 
 Signing key fingerprint:
 
