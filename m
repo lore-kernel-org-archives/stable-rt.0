@@ -1,66 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E56E847B;
-	Sat,  3 Aug 2024 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14ED81311AC;
+	Mon,  5 Aug 2024 10:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722666019; cv=none; b=H1qDPDXDVI4ZUUU0MVUbQhyHsTJ79mWOm7c/Q3UEa0/cZoiplXAfsmvC7bEeQLabRbtXUO41P8CIpCQd+qN338DA2IyvOEr6XZ/Z/BUX09dE4cka7Fl4IposqARQyiq0/CuspflqGEDx0rXU5E/WVOvqUvOqU0vOcbYrGzj2cNo=
+	t=1722855519; cv=none; b=lonD9pYWVFP57Wtcfuc8m88YwzV7XvqQg17SdHaKFeVSXnrCQht/M3dh0WcS2DyZTV02Q49q0WRV+DxAbnY+8ZgXjbmgNTLjBNjzmu0TJwW0CMh0Flhe17xA08ds7PH+KwhAP777TNIu37TDCz6RaceSvfR801dUMhDLnA4ukVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722666019; c=relaxed/simple;
-	bh=Fg1nh2vMMPSpYRokeN1l3zNGY2cK5TcfaFLm26xBCtc=;
+	s=arc-20240116; t=1722855519; c=relaxed/simple;
+	bh=iCDyLJDJcrNsVT2B/JZ97EcLspik/XX/andmruk85YY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjCNstMQCPlwwE3KDuUW/gvW3DGOYwr6FTyZyLpdqHifvAKqwUwbl986MHqK5hUSIMLZzbuT9q60FrRn02VVn/lTK/OECb1UHIlSADA7gkfjPmGyPqKl6lITG530Lxau/vPCQ9TJzBEe2WNmYZ2G+c5ZlddLay+KdL61EeAGP+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sIgYOeDK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=i3UuqxkgxoZ5lpZxoye36rlNfHppY7cwh56HsYHi7PVmdmrJfZ9qXQP/k8uKCzB9iwqivgdvl0EAqACDNlZY/Hp7byd1PGM6cIxQFoR/zcbHD3373BAWQPwpcKtKBJaG6xmy49eI3UKRWXMOi8qD1YswokeTDZVRLOry2CQw2xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O9q5DlN0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjLtUHMg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sIgYOeDK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8B8C116B1;
-	Sat,  3 Aug 2024 06:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1722666018;
-	bh=Fg1nh2vMMPSpYRokeN1l3zNGY2cK5TcfaFLm26xBCtc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIgYOeDKFhWSVnVVd2w3luNxbXpZij7i+tD6sfPD/1UOnUaAzQI0wf0eSLDgwVvnM
-	 1XaHYhn4/6hyxu9ZVHbye4AeZNfZrFyrG2xsxnGPD9YoY0mr295Vv+DVDvimlBVbNr
-	 5zb8CTCwzUPKPaeh+4slGjjAU7N8OpBCNIQJzLzE=
-Date: Sat, 3 Aug 2024 08:20:16 +0200
-From: "Kroah-Hartman, Greg" <gregkh@linuxfoundation.org>
-To: Clark Williams <williams@redhat.com>
-Cc: stable-rt <stable-rt@vger.kernel.org>, stable <stable@vger.kernel.org>,
-	"Claudio R., Luis" <lgoncalv@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O9q5DlN0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjLtUHMg"
+Date: Mon, 5 Aug 2024 12:58:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1722855516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hOQHdh8C0L92v8N4xs5E7i95vlFnGxFZ44qi7RqxWX8=;
+	b=O9q5DlN0lF2Q3joYKlNpQcOkviufksOsRpjlhk41A9yKIzSs5q1ZbZ6BEOp5oOsUzxdkXt
+	lv44IGllo7dE+vnJKGN0HQ2oLR746kJbnnrwsfMnd0nkG3VhI5r1uGjqiK564kmIX8MeiO
+	BHRkBdBcpePUvihblGBgZ9aPlDav2XQ8zUs8r8NKJlzLCBA0+jRR34W3E34ChMFJ4qShvC
+	RpaeXCyBm03vfgAn/yVSPA6udEc4qNapIO18YDEPybGtRTSeCWV0dmDy1l3XmdMUmc+W3Q
+	pG751KoMXv2dNnOhP6eyBGfxSEuQ9O1wIuvk7W66TgE5hFGbnH4QJ2fX7v1imQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1722855516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hOQHdh8C0L92v8N4xs5E7i95vlFnGxFZ44qi7RqxWX8=;
+	b=VjLtUHMgnh1PtNOSAJwdeVCqs3pcvMtsai8Qdk8v17qfE5QPWycuyztaZ8veaQNYVPzBDE
+	MhscXepMUqxC9hDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Kroah-Hartman, Greg" <gregkh@linuxfoundation.org>
+Cc: Clark Williams <williams@redhat.com>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	stable <stable@vger.kernel.org>,
+	"Claudio R., Luis" <lgoncalv@redhat.com>
 Subject: Re: CI build failure in v6.6-rt
-Message-ID: <2024080344-division-undertook-4905@gregkh>
+Message-ID: <20240805105834.9GZL-G9o@linutronix.de>
 References: <CAMLffL9t0SFkO90d6pFZAwp-WVbont7NgELx_WW-GRRYkF_QXA@mail.gmail.com>
+ <2024080344-division-undertook-4905@gregkh>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMLffL9t0SFkO90d6pFZAwp-WVbont7NgELx_WW-GRRYkF_QXA@mail.gmail.com>
+In-Reply-To: <2024080344-division-undertook-4905@gregkh>
 
-On Fri, Aug 02, 2024 at 08:46:55PM +0000, Clark Williams wrote:
-> Greg,
+On 2024-08-03 08:20:16 [+0200], Kroah-Hartman, Greg wrote:
+> On Fri, Aug 02, 2024 at 08:46:55PM +0000, Clark Williams wrote:
+> > Greg,
+> > 
+> > Kernel CI is reporting a build failure on v6.6-rt:
+> > 
+> > https://grafana.kernelci.org/d/build/build?orgId=1&var-datasource=default&var-build_architecture=riscv&var-build_config_name=defconfig&var-id=maestro:66a6b448bb1dfd36a925ebef
+> > 
+> > It's in arch/riscv/kernel/cpufeature.c where a return statement in
+> > check_unaligned_access() doesn't have a value (and
+> > check_unaligned_access returns int).
+> > 
+> > Is 6.6 stable supporting RiscV? If so then we either have to fix that
+> > return, or backport the refactor of arch/riscv/kernel/cpufeature.c
+> > (f413aae96cda0).  If it's not then who should I talk to about turning
+> > off riscv CI builds for v6.6-rt?
 > 
-> Kernel CI is reporting a build failure on v6.6-rt:
-> 
-> https://grafana.kernelci.org/d/build/build?orgId=1&var-datasource=default&var-build_architecture=riscv&var-build_config_name=defconfig&var-id=maestro:66a6b448bb1dfd36a925ebef
-> 
-> It's in arch/riscv/kernel/cpufeature.c where a return statement in
-> check_unaligned_access() doesn't have a value (and
-> check_unaligned_access returns int).
-> 
-> Is 6.6 stable supporting RiscV? If so then we either have to fix that
-> return, or backport the refactor of arch/riscv/kernel/cpufeature.c
-> (f413aae96cda0).  If it's not then who should I talk to about turning
-> off riscv CI builds for v6.6-rt?
+> Why not ask the people responsible for the -rt patchset?  If this isn't
+> an issue on a non-rt kernel, then I think you found the problem :)
 
-Why not ask the people responsible for the -rt patchset?  If this isn't
-an issue on a non-rt kernel, then I think you found the problem :)
+I'm sorry. I misunderstood Clark and assumed this is a stable issue. Now
+that I have the needed pointers, it is a RT-stable issue only.
+I'm going to drop the stable folks from Cc: and reply with a patch.
 
-thanks,
+> thanks,
+> 
+> greg k-h
 
-greg k-h
+Sebastian
