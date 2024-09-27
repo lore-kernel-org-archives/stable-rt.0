@@ -1,94 +1,60 @@
-Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2442B17741;
-	Mon, 23 Sep 2024 07:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A763C1C172C
+	for <stable-rt@vger.kernel.org>; Fri, 27 Sep 2024 15:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727076692; cv=none; b=oplQwxXieN6n4SvL92xtUd4C54XnhsdZNWN+H3ig+XtnFVCpQZ+HrsLt0VDHA9s3spf2kX9TfA0XEf5XdMOp1RrB1XMwf5G5zqgy55JtyawMIkX4KJqcSgpJ0SNNHCp5G/rDZAftaZa8bhxEo9mmsVtiFCu6AlszRtihgk3lssM=
+	t=1727452621; cv=none; b=eA/DBAoMLZ8iolgmHx6nNrYjBwk1Brxy4EHEDAOpTN9TJqLqRepJVcy+D/wqWEVzJtCgDHQDyEru4J6P5qJGzpzR7N/YYNGNjaVN1vjK1vnsloh/hXs3wIxTElaD1Pzxya15ZS9cRAHt/k6hNk71FwU/RWiEqLGvxzkNN/dzea4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727076692; c=relaxed/simple;
-	bh=YOPrK/LQFNu1yTd7p8XEMFxAWFKnMsmN7u5aRla9zS0=;
+	s=arc-20240116; t=1727452621; c=relaxed/simple;
+	bh=IukDf/O1arMlFrxuKXqQVSf8aqzT2OMcFgwNtqxNj2U=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fhJ07luihzImF1e6eW32HWlXhY9wI0kJbT3FUhm65VDpNDs69VURDB0HSS4QsuTOmvSC36S60XXA6Y6pnIbypfdq3wjsqXt/f4XP7y0FClRHl2eCK3+RxBet2I94mgNFDdAQOaWlhGNynwifjpTQghJp97MgcxOi3N0acP4MZQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=cRbvpk+F; arc=none smtp.client-ip=49.12.199.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	 Content-Disposition; b=GbFCKBoQZMbPtx55R3I8/trTNGe1FNbbguUC5VSa8Y8MayjVlxiqvkQYv7UIrmsNxRRcjHdMOwBF+z5yvRqUa59VvJlGVamaidzT4UW4hhxZ0Vs076g41dyRXh1QsknaKDVIqiYZL340XoBbOMdQEx34EbxJpfaV6/jz8+GfaTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RXTOaAWr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xzj/m7Kz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="cRbvpk+F"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D7B1BDB324;
-	Mon, 23 Sep 2024 09:31:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1727076680; h=from:subject:date:message-id:to:mime-version:content-type;
-	bh=k4fe+L1YliAWTSVKJAMtXdF3NNuBlfyNCAN7rxxKt1I=;
-	b=cRbvpk+FmASae5dX8/+3P80iX7vlauYLYeK5Me0QikOUc2OBXxp/AS9i44p2cTeqx5sYLa
-	qvKAvkwDqK3luGrQgrLjsQfnCg+G4vMQGNz7+Pca85URM1hHXwmhUdpGSl6Q7iNNbfEMjH
-	fD2olnuhuTZEe9L4fKRbJGe7tDGW6yGOjQq8BHABkzttdMxVHI+T/lVY6UqMnsmh0TpaAb
-	PZF3j/BFpJYYS96YsJM5dFTuJe4m+suLoOv1KIqQn8Urnz6IMeUlQIWKz9XHV/Jht3rQE4
-	t5wv3o7I+WVjbIKJY2wdLzEU66/4GOG1CmMYEWuFSoXmXzWWmjjBZJ6RvbNHBA==
-Date: Mon, 23 Sep 2024 09:31:15 +0200
-From: Daniel Wagner <wagi@monom.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
-	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.19.322-rt138
-Message-ID: <172707659553.17516.8509354000862390767@beryllium.lan>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RXTOaAWr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xzj/m7Kz"
+Date: Fri, 27 Sep 2024 17:56:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1727452618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=IukDf/O1arMlFrxuKXqQVSf8aqzT2OMcFgwNtqxNj2U=;
+	b=RXTOaAWreEjDqgodZ8HjqVlojE9FZIOgNqyIKgB+TWX2mXz4fwVnAUrtDgPa276E4JMTTq
+	tMeU8c5Ypuvoy5kyho0zNJJp3QDXBSCyGe+KniI+2EPLaNNYAQRGpEIKvpXWT/lo5FvxNM
+	Oe312Nzcta/zc4fC+2vlGCcVloNI9OHRE8kRlthiGKsf95ThLkhN5oIlpZ5QjmtAeFUwb3
+	igeJVN36FTm49U1Tz/xO2cVeoHSX8LTr/3P3n0qG6K22phb7yRXQLf3gE5X3hM4vC938pY
+	yfC4WcRiZ9WlBOdp9i9SC6OCiStvXdmFLzvzL3OIZD80mwtRIuZ2eqzwwnE+Ww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1727452618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=IukDf/O1arMlFrxuKXqQVSf8aqzT2OMcFgwNtqxNj2U=;
+	b=xzj/m7KzK00qy1V0Esme7RzKD4E+hiWGbal+pLJpw4VsZvIYoa5S28FbrYsx2VnBXpN5a7
+	ukUb7i6pJZ/yCgCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: stable-rt@vger.kernel.org
+Subject: Please backport: netfilter: nft_counter: Use u64_stats_t for
+ statistic.
+Message-ID: <20240927155656.Z-s6BO9B@linutronix.de>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hello RT-list!
+Hi,
 
-I'm pleased to announce the 4.19.322-rt138 stable release. This is just
-an update to the 4.19.322 stable release. No RT specific changes.
+please backport
 
-You can get this release via the git tree at:
+4a1d3acd6ea86 ("netfilter: nft_counter: Use u64_stats_t for statistic.")
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+https://git.kernel.org/torvalds/c/4a1d3acd6ea86
 
-  branch: v4.19-rt
-  Head SHA1: 27022b8669f4531defab96b62fddc6e2db7f04a9
-
-Or to build 4.19.322-rt138 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.322.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.322-rt138.patch.xz
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
-Changes from v4.19.317-rt137:
----
-
-Daniel Wagner (1):
-      Linux 4.19.322-rt138
----
-localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
----
-diff --git a/localversion-rt b/localversion-rt
-index 41b444e910ef..9f63718d5731 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt137
-+-rt138
+Sebastian
