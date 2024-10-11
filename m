@@ -1,56 +1,51 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0331A20C46C
-	for <stable-rt@vger.kernel.org>; Fri, 11 Oct 2024 09:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1893EBE
+	for <stable-rt@vger.kernel.org>; Fri, 11 Oct 2024 09:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728637931; cv=none; b=hA3/VxJMEN5cjfwRE6lWXnebMAclT+gS6q2HPjinBHcNndYuSsdvrkBCo2wUTRe3lTlmsN15rsz5jt/UtbZyOmz6aAy2c9H726akv+N29oQyC0wiTar6xoV4NlsgX2YiuIzEFrpMTsrOkaL/gwNDFW0MXXm0rGyAhKlojXjfFdk=
+	t=1728638628; cv=none; b=QOeJYPDakkKJLicrvGxNlvOUr0jfyceQwI+arFykGnIRp3YTuYRLYoh4BZY/z7tsFbZsvQXgWWePdf3OlXmMmCzHKcLhyaST0PqZu8CFb3stvmfeyzqkdGpLjODNBR3NBauBoBuvYs5y0Uiy+c6hsc6aUner6Jsi0/HFgx1zHEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728637931; c=relaxed/simple;
-	bh=WnizTig0DJkvXNCOIZS5RrGoFQDdkuk9RtMAKkLjUxY=;
+	s=arc-20240116; t=1728638628; c=relaxed/simple;
+	bh=RZOhCqtQGUrND5PdW8SuF8LpV5qTKpOyhothPaTQL/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOGuwWXx3v5iU4QL5oBMrqChCR7CKexGOhsFw5jJq2vTCnxhha1Fi+Kx4bC5i4SI/RpSwdh/w0BVdB1gYOX01ftfRStc3eiAcNWwJgkb+dZsCivANDMMQlxm+i0HyYhn/yyeS5E07GmrkHHaR1wKWsCB4H1tNzMpF5VBhyF6UBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aMZt+0BO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wwVEroEc; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=WF8GBoNSD/sQ7FLrYU4tJPgaP/rlMVOg+OR0ER+NFjwvMaQpjTazYXR6Kvp3ZNNFuGdamCGkJzqUbqgZAVjftEyXUIXr8PFAyMNz5ppAB0J0gdM+4TF68kkmRmla9aoM8f2Qm86PuMQKgBJenhw/QVUD0B9EM6SDlGDxY6SSLuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yF4rXgUh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6lUMUNYC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aMZt+0BO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wwVEroEc"
-Date: Fri, 11 Oct 2024 11:12:07 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yF4rXgUh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6lUMUNYC"
+Date: Fri, 11 Oct 2024 11:23:44 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728637928;
+	s=2020; t=1728638625;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Codc880JuiZdnIRWCTnyuxvqgQb+M5uiKzkTWfeeXDQ=;
-	b=aMZt+0BOV4VgZKWY2VAeL2iWxrDX0MMByB2vJ/QyP+WWZZseSMK4a7CYxqwErnycK0MFuS
-	sWl3DW8OWc7ywI0SKZK874LtgqTtcg6eHJpJk6gQ6S8qiev2/X5YwFrcambm8yAJKvrgPn
-	ZP3ZSS3Thxux/V+g8Fwch56fk9FtIcr3vkTz8et9zPgnEKYcQz7QneaOgQUz8ZPfEfNTyf
-	VNyWP5QnYkBnZzS5sbdwGsX0f+pKNKYC90PfpOoz8lU0B8yn/dRmA/GufObXKYHT3LYr9r
-	2Q6NK1SYkL5/tdDbEndDyEe7FaGSiklMx2RIFTmnyAjf/zyOfvhCS+STETcpqA==
+	bh=RZOhCqtQGUrND5PdW8SuF8LpV5qTKpOyhothPaTQL/M=;
+	b=yF4rXgUh+Kc70w74SA4h3S6GzmFxR4INwwTHCknzlGGp5mqTWryenjTD+A4lva0oxAgZtL
+	eEsRR1avLPvIbb8wPDEa1zlAMsPSsm3xMpFzaGlx9GHRbraZI6Zde2LBo42aEztehQj5z0
+	bwESYk4ILZiuIKesb5IenL3pGMlefOSFe8fyYWwXpzKmluHT4rUFR57A/5A4fIbrnYj2ls
+	H5aWBjmTOTF9z7YPPs5Ve6VYT1zZmMQluTv3nzwX30peF/881rS4umJ4EArkzgM5Bqkhua
+	uo2Oj6wc0DBsWMaLFzuN5t+fSjB+fL17DWBt3ZSBmozPDmEj8lQv8lpAcuNAAw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728637928;
+	s=2020e; t=1728638625;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Codc880JuiZdnIRWCTnyuxvqgQb+M5uiKzkTWfeeXDQ=;
-	b=wwVEroEcebQsB02z0ZSiXV4aw51voekUc33ZdFIS2twwTuvTjjPbK2RxkzxXBuq7TVszAE
-	6QsLqy2cB1ORB9BQ==
+	bh=RZOhCqtQGUrND5PdW8SuF8LpV5qTKpOyhothPaTQL/M=;
+	b=6lUMUNYCgfw0TOATBnHNTBlfzOTWaCwdW+K/ODH/4wFv4zKSqz6DRYDLqENq0SWYBPSDaK
+	fvboeKAmz9mUXVCQ==
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Joseph Salisbury <joseph.salisbury@oracle.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, stable-rt@vger.kernel.org,
-	Clark Williams <williams@redhat.com>
-Subject: Re: [External] : Re: Please backport: netfilter: nft_counter: Use
- u64_stats_t for statistic.
-Message-ID: <20241011091207.g4MeBvAn@linutronix.de>
-References: <20240927155656.Z-s6BO9B@linutronix.de>
- <20240927144126.0dba172a@gandalf.local.home>
- <bab856cc-7c9f-4ee9-84f6-ab228b2648c0@oracle.com>
- <20241004073934.501MFrgf@linutronix.de>
- <9f71f094-7763-4f96-869f-dd781aa68c68@oracle.com>
+To: stable-rt@vger.kernel.org
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
+Subject: Re: Backports for 8b4865cd9046 ("cpufreq: intel_pstate: Make
+ hwp_notify_lock a raw spinlock")
+Message-ID: <20241011092344.WmduKcxt@linutronix.de>
+References: <20241006205106.385009-4-ukleinek@debian.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -60,42 +55,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <9f71f094-7763-4f96-869f-dd781aa68c68@oracle.com>
+In-Reply-To: <20241006205106.385009-4-ukleinek@debian.org>
 
-On 2024-10-04 15:14:52 [-0400], Joseph Salisbury wrote:
-> I attempted a backport of commit 4a1d3acd6ea8 to v5.15-rt.=C2=A0 Commit
-> 4a1d3acd6ea8 removes nft_counter_seq() from most places, but in v5.15 it =
-is
-> still in: nft_counter_module_init():
->=20
-> ...
-> ...
-> ...
-> static int __init nft_counter_module_init(void)
-> {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int cpu, err;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for_each_possible_cpu(cpu)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 seqcount_init(per_cpu_ptr(*&nft_counter_seq*, cpu));
++forwarding to the rt-stable list
 
-This should have been
-		seqcount_init(per_cpu_ptr(&nft_counter_seq, cpu));
+On 2024-10-06 22:51:05 [+0200], Uwe Kleine-K=C3=B6nig wrote:
+> commit 8b4865cd904650cbed7f2407e653934c621b8127 is marked for backport
+> to stable. The patch does apply cleanly to 6.11.y, but not to earlier
+> versions. In reply to this mail I send a backport for 6.10.y and 6.6.y.
+> The 6.6.y patch also applies to 6.1.y. I didn't test earlier stable
+> branches.
 
-in 5.15 and should work to be replaced as
-		u64_stats_init(per_cpu_ptr(&nft_counter_sync, cpu));
+I've been looking at this and this go via the stable-rt queue, too. This
+was applied to v6.6 already. In will probably appear in v6.1 but the
+cycle did not start yet, I have no idea about earlier trees.
 
-I *think* the API was the same in 5.15.
+Fee free to wait a bit before looking into backporting ;)
 
-=E2=80=A6
-> It looks like your patch handles this in nft_counter_init_seqcount().=C2=
-=A0 I
-> believe I can just backport the same into in nft_counter_module_init() for
-> v5.15, but I wanted to run it by you.
+> Best regards
+> Uwe
 
-You probably do the right thing. If in doubt just do it and post it for
-review.
-
-> Thanks,
->=20
-> Joe
+Sebastian
