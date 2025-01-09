@@ -1,583 +1,90 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C451FC0E0
-	for <stable-rt@vger.kernel.org>; Wed, 18 Dec 2024 19:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BD1204C0C
+	for <stable-rt@vger.kernel.org>; Thu,  9 Jan 2025 12:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734551488; cv=none; b=rauMZwFdTcoXSC9Km+iPB266DOk+eNl2ksuXeDtRymoiqf6vuoPY1TAQYCbHkTEEm0loy6U6zr3g7W0vXyG9ZFOfOuKk1hc3LtcffxSsaXwwjkxHeX1USRyZpPBbx56PY6KQ8GhL0/x3+hBbe9HCsk9wG/g31Ln3e65EnEv9L0I=
+	t=1736424063; cv=none; b=JauY50h98xFvihc+NDd6jT94VXjnKH6Rlj039pO4s34Fj9AAwfJh8zatzKtJ/uBkbYOJXhSgYVIhOm4d+tNdxjoOWN56h5QtCEELiTZWZZLoF5fbBpEiafF82LKAe2MAItGnpKDy792BuQHzNDHd9CyfrRYM7x1bmn26z2IcWUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734551488; c=relaxed/simple;
-	bh=1S3j1gZ2Vbyz5LjnkqseGNaACfmGlCvqGP07mh7TAJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KkESdVUsY3lafPREs+gEk8GqRLhveBm3q4zvkamg5WQ2X9pumkjIH6LfQKfd21vXeXMv+MkODncDqKiFa1dAUorlxIzUuMtoTFwmiCSfVGCrLasQwk/zkZrrqT9qDDw417aGHQL6FUYn2oVLeOoAKhEgxHkg887bDMi0ZAiun4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurora.tech; spf=pass smtp.mailfrom=aurora.tech; dkim=pass (2048-bit key) header.d=aurora.tech header.i=@aurora.tech header.b=kP3DFghj; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurora.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurora.tech
+	s=arc-20240116; t=1736424063; c=relaxed/simple;
+	bh=QNia71mevrAclqOjNgRMhf/ZjIjiIdHTnUh5OF4dr/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UWNQP0sRy0IObrqWlxQceOLk1Fqj8zfrEWPdymJ6Ts0qfD+2InbD2a/33bmzki0C6Pr9R1MRdLTQCNK5y+7JJ5ycm+OhwAuPcCnESL7Mf1s855RgENSw/niIh40iWvd8aubP3oOxUhxl/F7avvq16RZ2Sz6OHOBCaYHpjDiyIdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I1ao/RPi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TielsCzz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurora.tech header.i=@aurora.tech header.b="kP3DFghj"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d437235769so11483712a12.2
-        for <stable-rt@vger.kernel.org>; Wed, 18 Dec 2024 11:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=aurora.tech; s=google; t=1734551485; x=1735156285; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpZESv4JKMme6J/T91rZtJT9JEh56k3z1VpoEjb8c34=;
-        b=kP3DFghj19FYwNMjgaWmUfWb7Xs5f5Ct9UXMMfw8yHrPEB/7rpOXQ1cFBa+FMxf13n
-         tbqSuXGbUfhfYSL6hVey1qbTsHAljH6J0ZCAkFaquFemlgrQuWiE4Z0Gh8Oso9WfJCoX
-         jPAsVMCj8sFhbYqDMakHah8peWMgZTk5B+qpmmJfH0JEOe1PLpRkuWQo9yBdqwbFDIg6
-         5sJL96JMfs22YSsewvb6khhBv/Fd7Npwn3jdNxzzQe9ObfzPTvoa+Xi0x8WDEGVQfBEK
-         4PnSbdx64JQdIi2xBsJdy5RnQDaW4HeFfUIgOBBMOWvoSdJuUIW5gkxMpaEt/joJGP/C
-         KNHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734551485; x=1735156285;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bpZESv4JKMme6J/T91rZtJT9JEh56k3z1VpoEjb8c34=;
-        b=wq0JqtGG0QtkybmyGEDXzv3ko1q9OGjZSMOZk3bB2pw9n6mKIOQzk6F7u+l6NHbuKY
-         snEvSGiF1JtTk1Mz9vYsfX6l+zU9caAi9Zk8QIZ5Q+J5qIGm6lMbfqwJRP2yzNHVzqsy
-         KVWA/UeMwV+Xga7DIF7zcdgFPzk/Hhahn/+NDv5XX2jwpm7wg/5rtyVnmCs4UNjOFgfF
-         +10szUfO6YUMRX8YruVjzY2a2/c/MXBjn7YagX08511UsdCLmF2gqxF9Y7yQcMYxGEzS
-         wzik7N69WsB4/LKm9YDMnV/urNhS57/60TXHpHc+qVpMuQnYOJAtitNHSnPatS2T5txT
-         Aoxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWx30mmwMN7+oUnn/gog2KXpPR2/hyDYcW011gF2aWDAJova44T6P1PUcMQPjVCsh6cOvvf0bW2Hgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5tmpAoEVMdxaCVkCDC2k5UdlUy9GhNHVgK5o1tqcq55W4mzNM
-	7vvkpKF9EWKCvMIEqHqp4UQT7jged5ZXxqWjxwM/y7dtaQYhDJIvULGLPZbHnOoyNoWcV3cipV9
-	dW96u1eieBOHwqEjDtGJT0hH+Wvm9ALS0yQVfjQ==
-X-Gm-Gg: ASbGnctcHfJF4Xmib/DEomua3hMgKmyNAfdYFUxayNhmEvmwapUA4x2xxfUVeiZdC+k
-	Xn/8JwHdMUAXN5TRCnnh+G42iUw2AtnzqDC0yymM=
-X-Google-Smtp-Source: AGHT+IE7BZxA6fASy3vJVWUgLL4RdazsW6DIJasx12SRwrK/c0EiC24c3Lvp5lMdUjhkUhWaB/HMZpf6tjOPd0H0OvU=
-X-Received: by 2002:a05:6402:3491:b0:5d0:81f3:18bc with SMTP id
- 4fb4d7f45d1cf-5d8025b105dmr386673a12.1.1734551484653; Wed, 18 Dec 2024
- 11:51:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I1ao/RPi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TielsCzz"
+Date: Thu, 9 Jan 2025 13:00:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1736424058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=+3UgZfyLHQAK5SyUNOSbAMpnD1xz5c0yDHUR/RZhaR0=;
+	b=I1ao/RPiclKnlou1kVnLOykK3bkOo/iU6uhqDUIA0yi064fTYQ3xWnLEUVklmd+yB+ezux
+	YvuzYSWeYoP4oKEKbN9AbI0S1mw5n2L0fymPCR/h2Uc55rm8kpSjjFiQSHp/NTfM/V2IYY
+	jEAOwmu7ClaZWWDs8aHTPm6/DBnb0Vp/evcUrC66QqaB/prpN8zkYDZnqtoLQ+55VoTyUy
+	pS5ukGTWjeB5P1pKi6WdW5H5Lqv82QDrb5FT0Y4KILN5gqmz0mhCkd+HuElbi7hd1+UfL/
+	9TY/tr6XP/txpOFP2jM66H2Yu024jYlQeCTQWE9qWBEe43ID2dIPWalFOIOVxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1736424058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=+3UgZfyLHQAK5SyUNOSbAMpnD1xz5c0yDHUR/RZhaR0=;
+	b=TielsCzz42IuWnJ9v1YvM8ymsqS+PUjAIQE3Ej8Msit6n5gpcAwqAmwcsjzAfx8gB6fR4p
+	fbTZPTJmrAPKlhBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: stable-rt@vger.kernel.org
+Cc: Robert Joslyn <robert_joslyn@selinc.com>,
+	Clark Williams <williams@redhat.com>
+Subject: [PATCH v6.6-RT] powerpc: Allow scheduling of IRQ with PREEMPT_RT.
+Message-ID: <20250109120056.TjyCKwua@linutronix.de>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6743da2b.050a0220.118402.0d9a@mx.google.com> <6fa5d605-8a9a-4875-b15e-b236bd74a15c@collabora.com>
- <0222c0ae-ce85-4a33-9d22-df4579ee543a@monom.org> <8a6bc8e2-1e18-4af4-8bb7-d6251c5cabb6@shentel.net>
-In-Reply-To: <8a6bc8e2-1e18-4af4-8bb7-d6251c5cabb6@shentel.net>
-From: Alison Chaiken <achaiken@aurora.tech>
-Date: Wed, 18 Dec 2024 11:51:13 -0800
-Message-ID: <CAFzL-7v6d3mYYVmvXMPVRZv0xuzW3=yuj8VH1Aqh203ibLa3Yg@mail.gmail.com>
-Subject: Re: KernelCI report for stable-rt: v4.19-rt-next@v4.19.324-rt139-rc1
-To: gene heskett <gheskett@shentel.net>
-Cc: Daniel Wagner <wagi@monom.org>, Muhammad Usama Anjum <Usama.Anjum@collabora.com>, 
-	RT <linux-rt-users@vger.kernel.org>, stable-rt <stable-rt@vger.kernel.org>, 
-	Jeny Sadadia <jeny.sadadia@collabora.com>, Shreeya Patel <shreeya.patel@collabora.com>, 
-	Helen Mae Koike Fornazier <helen.koike@collabora.com>, kernelci-results-staging@groups.io, 
-	Pavel Machek <pavel@denx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Wed, Dec 18, 2024 at 10:47=E2=80=AFAM gene heskett <gheskett@shentel.net=
-> wrote:
->
->
-> On 12/18/24 12:28, Daniel Wagner wrote:
-> > Hi,
-> >
-> > On 11/30/24 11:15 AM, Muhammad Usama Anjum wrote:
-> >> On 11/25/24 7:00 AM, staging.kernelci.org bot wrote:
-> >>> OVERVIEW
-> >>>
-> >>>          Builds: 17 passed, 1 failed
-> >>>
-> >>>      Boot tests: 298 passed, 49 failed
-> >>>
-> >>>        RT tests: 768 passed, 2 failed
-> >> The rt-migrate fails intermittently. Please have a look at it.
-> >
-> > Argh, I missed this email. Got drowned in my inbox. v4.19-rt has
-> > reached EOL. IIRC, the CIP folks might want to look into it.
-> It may have been EOL'd but its potential replacement, a 6.1.54-rt15 is
-> much much worse for latency.
+With the LAZY_PREEMPT patches, PowerPC core code was modified to allow
+scheduling on return to user land from interrupt based on
+CONFIG_PREEMPTION. With the removal of LAZY_PREEMPT the code reverted to
+its original state. The switch to PREEMPT_AUTO did not cover PowerPC so
+this change was lost.
 
-Here's a wild guess.   Could it be that ktimersoftd was enabled in
-4.19, and then its replacement ktimers is not enabled in 6.1?
+Not being able to immediately schedule on return from interrupt can lead
+to large latency spikes but also hang on boot on a e300 based platform
+as reported by Robert Joslyn.
 
--- Alison Chaiken
-Aurora Innovation
+Check for schedule() based on CONFIG_PREEMPTION.
 
-> >
-> > Thanks a lot for the feedback! Highly appreciated!
-> > Daniel
-> >
-> >>
-> >>>
-> >>>      CI systems: maestro
-> >>>
-> >>> REVISION
-> >>>
-> >>>      Commit
-> >>>          name: v4.19.324-rt139-rc1
-> >>>          hash: b33e0cf394c4dfb11c91395dd25ccfc2a9fd2789
-> >>>      Checked out from
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.gi=
-t
-> >>> <https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.g=
-it>
-> >>> v4.19-rt-next
-> >>>
-> >>>
-> >>> BUILDS
-> >>>
-> >>>      Failures
-> >>>        -riscv (defconfig)
-> >>>        Build detail:
-> >>> https://kcidb.kernelci.org/d/build/build?orgId=3D1&var-id=3Dmaestro:6=
-7437f69923416c0c9942fd4
-> >>> <https://kcidb.kernelci.org/d/build/build?orgId=3D1&var-id=3Dmaestro:=
-67437f69923416c0c9942fd4>
-> >>>
-> >>>        Build error: make: *** No rule to make target 'Image'. Stop.
-> >>>        CI system: maestro
-> >>>
-> >>>
-> >>> BOOT TESTS
-> >>>
-> >>>      Failures
-> >>>
-> >>>        arm:(multi_v7_defconfig)
-> >>>        -beaglebone-black
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-382ae923416c0c99438c1
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4382ae923416c0c99438c1>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38317923416c0c994394a
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438317923416c0c994394a>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>>        arm64:(defconfig)
-> >>>        -meson-gxl-s905x-libretech-cc
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38251923416c0c994367b
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438251923416c0c994367b>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>>        i386:(defconfig)
-> >>>        -acer-chromebox-cxi4-puff
-> >>>        -acer-cp514-2h-1130g7-volteer
-> >>>        -asus-C433TA-AJ0005-rammus
-> >>>        -hp-x360-14a-cb0001xx-zork
-> >>>        -asus-CM1400CXA-dalboz
-> >>>        -asus-C523NA-A20057-coral
-> >>>        -acer-cp514-2h-1160g7-volteer
-> >>>        -acer-cp514-3wh-r0qs-guybrush
-> >>>        -dell-latitude-5300-8145U-arcada
-> >>>        -lenovo-TPad-C13-Yoga-zork
-> >>>        -dell-latitude-3445-7520c-skyrim
-> >>>        -hp-14-db0003na-grunt
-> >>>        -acer-R721T-grunt
-> >>>        -acer-cbv514-1h-34uz-brya
-> >>>        -dell-latitude-5400-4305U-sarien
-> >>>        -dell-latitude-5400-8665U-sarien
-> >>>        -hp-x360-14-G1-sona
-> >>>        -acer-cb317-1h-c3z6-dedede
-> >>>        -asus-C436FA-Flip-hatch
-> >>>        -hp-x360-12b-ca0010nr-n4020-octopus
-> >>>        -hp-11A-G6-EE-grunt
-> >>>        -hp-14b-na0052xx-zork
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c3923416c0c9943351
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c3923416c0c9943351>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c4923416c0c9943354
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c4923416c0c9943354>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c5923416c0c994335a
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c5923416c0c994335a>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c2923416c0c9943345
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c2923416c0c9943345>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c0923416c0c9943336
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c0923416c0c9943336>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c5923416c0c9943370
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c5923416c0c9943370>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c4923416c0c9943357
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c4923416c0c9943357>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c0923416c0c9943329
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c0923416c0c9943329>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c6923416c0c9943373
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c6923416c0c9943373>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c2923416c0c9943348
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c2923416c0c9943348>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c1923416c0c9943339
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c1923416c0c9943339>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c1923416c0c994333c
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c1923416c0c994333c>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381bf923416c0c994331e
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381bf923416c0c994331e>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c3923416c0c994334e
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c3923416c0c994334e>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c6923416c0c9943376
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c6923416c0c9943376>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c7923416c0c9943381
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c7923416c0c9943381>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c7923416c0c9943384
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c7923416c0c9943384>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c3923416c0c994334b
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c3923416c0c994334b>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c5923416c0c9943365
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c5923416c0c9943365>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c7923416c0c9943387
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c7923416c0c9943387>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c1923416c0c994333f
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c1923416c0c994333f>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381c2923416c0c9943342
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381c2923416c0c9943342>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>>        x86_64:(x86_64_defconfig,
-> >>> cros://chromeos-4.19/x86_64/chromeos-intel-pineview.flavour.config)
-> >>>        -asus-C436FA-Flip-hatch
-> >>>        -acer-chromebox-cxi4-puff
-> >>>        -acer-cbv514-1h-34uz-brya
-> >>>        -acer-cp514-2h-1160g7-volteer
-> >>>        -acer-cp514-2h-1130g7-volteer
-> >>>        -acer-cb317-1h-c3z6-dedede
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38170923416c0c9943086
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438170923416c0c9943086>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3816e923416c0c994307a
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43816e923416c0c994307a>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3816e923416c0c9943077
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43816e923416c0c9943077>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3816f923416c0c9943080
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43816f923416c0c9943080>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38168923416c0c994303e
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438168923416c0c994303e>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38167923416c0c9943038
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438167923416c0c9943038>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38167923416c0c994303b
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438167923416c0c994303b>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3816e923416c0c9943074
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43816e923416c0c9943074>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38167923416c0c9943035
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438167923416c0c9943035>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38168923416c0c9943044
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438168923416c0c9943044>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38166923416c0c9943032
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438166923416c0c9943032>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3816f923416c0c994307d
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43816f923416c0c994307d>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38205923416c0c9943503
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438205923416c0c9943503>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3820b923416c0c9943530
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43820b923416c0c9943530>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38205923416c0c9943506
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438205923416c0c9943506>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38206923416c0c9943509
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438206923416c0c9943509>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3820b923416c0c994352d
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43820b923416c0c994352d>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3820a923416c0c994352a
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43820a923416c0c994352a>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38205923416c0c9943500
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438205923416c0c9943500>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3820a923416c0c9943527
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43820a923416c0c9943527>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38204923416c0c99434fd
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438204923416c0c99434fd>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38209923416c0c9943524
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438209923416c0c9943524>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38207923416c0c994350f
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438207923416c0c994350f>
-> >>>
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-3820c923416c0c9943536
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-43820c923416c0c9943536>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>> RT TESTS
-> >>>
-> >>>      Failures
-> >>>
-> >>>        rt-tests.rt-migrate-test:
-> >>>        x86_64:(defconfig)
-> >>>        -hp-14b-na0052xx-zork
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-381ad923416c0c9943289
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-4381ad923416c0c9943289>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>>        rt-tests.rt-migrate-test.rt-migrate-test:
-> >>>        x86_64:(defconfig)
-> >>>        -hp-14b-na0052xx-zork
-> >>>        Test details:
-> >>>        -
-> >>> https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:674=
-38599923416c0c9943d3a
-> >>> <https://kcidb.kernelci.org/d/test/test?orgId=3D1&var-id=3Dmaestro:67=
-438599923416c0c9943d3a>
-> >>>
-> >>>
-> >>>        CI system: maestro
-> >>>
-> >>> See complete and up-to-date report at:
-> >>>
-> >>> https://kcidb.kernelci.org/d/revision/revision?orgId=3D1&var-git_comm=
-it_hash=3Db33e0cf394c4dfb11c91395dd25ccfc2a9fd2789&var-patchset_hash=3D
-> >>> <https://kcidb.kernelci.org/d/revision/revision?orgId=3D1&var-git_com=
-mit_hash=3Db33e0cf394c4dfb11c91395dd25ccfc2a9fd2789&var-patchset_hash=3D>
-> >>>
-> >>>
-> >>>
-> >>> Tested-by: kernelci.org bot <bot@kernelci.org>
-> >>>
-> >>> Thanks,
-> >>> KernelCI team
-> >>>
-> >>> _._,_._,_
-> >>> ---------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------
-> >>>
-> >>> Groups.io Links:
-> >>>
-> >>> You receive all messages sent to this group.
-> >>>
-> >>> View/Reply Online (#74789)
-> >>> <https://groups.io/g/kernelci-results-staging/message/74789> | Reply
-> >>> to Group
-> >>> <mailto:kernelci-results-staging@groups.io?subject=3DRe:%20KernelCI%2=
-0report%20for%20stable-rt%3A%20v4.19-rt-next%40v4.19.324-rt139-rc1>
-> >>> | Reply to Sender
-> >>> <mailto:bot@kernelci.org?subject=3DPrivate:%20Re:%20KernelCI%20report=
-%20for%20stable-rt%3A%20v4.19-rt-next%40v4.19.324-rt139-rc1>
-> >>> | Mute This Topic <https://groups.io/mt/109764951/6630336> | New
-> >>> Topic <https://groups.io/g/kernelci-results-staging/post>
-> >>> Your Subscription
-> >>> <https://groups.io/g/kernelci-results-staging/editsub/6630336> |
-> >>> Contact Group Owner
-> >>> <mailto:kernelci-results-staging+owner@groups.io> | Unsubscribe
-> >>> <https://groups.io/g/kernelci-results-staging/leave/13729535/6630336/=
-1522968245/xyzzy>
-> >>> [usama.anjum@collabora.com]
-> >>>
-> >>> _._,_._,_
-> >>
-> >>
-> >
-> Cheers, Gene Heskett, CET.
-> --
-> "There are four boxes to be used in defense of liberty:
->   soap, ballot, jury, and ammo. Please use in that order."
-> -Ed Howdershelt (Author, 1940)
-> If we desire respect for the law, we must first make the law respectable.
->   - Louis D. Brandeis
->
+Fixes: b33022a48c797 ("sched: Replace LAZY_PREEMPT with PREEMPT_AUTO")
+Signed-off-by: Robert Joslyn <robert_joslyn@selinc.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+
+Clark, could you please stuff this into the v6.6 release after next?
+
+ arch/powerpc/kernel/interrupt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
+index c4f6d3c69ba9d..1370612b27e0b 100644
+--- a/arch/powerpc/kernel/interrupt.c
++++ b/arch/powerpc/kernel/interrupt.c
+@@ -395,7 +395,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs)
+ 		/* Returning to a kernel context with local irqs enabled. */
+ 		WARN_ON_ONCE(!(regs->msr & MSR_EE));
+ again:
+-		if (IS_ENABLED(CONFIG_PREEMPT)) {
++		if (IS_ENABLED(CONFIG_PREEMPTION)) {
+ 			/* Return to preemptible kernel context */
+ 			if (unlikely(read_thread_flags() & _TIF_NEED_RESCHED)) {
+ 				if (preempt_count() == 0)
+-- 
+2.47.1
+
