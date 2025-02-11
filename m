@@ -1,97 +1,116 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1173F253B4C
-	for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 15:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288994; cv=none; b=l0ylU8N9GmpjhatwfCbofENmvgHgoULeB3tl5JLSj5WDZ3F4d2YQVjlbGn4p7emOpdPv1SwP0NmPTeX/mtEe9NFm2wBeT3qERbeBRAns8BvbpbLaJ87IC2MD2IWMpoDwxZL3/e1+URqFeRPt39rBIvQoa2jKwaHINlqjl5qpNEI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288994; c=relaxed/simple;
-	bh=9kgt4DsYnmqFCPg4peB6p4/cEoV7Wc11pP7aFn7Ru+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WbRP1vLHuh2fOfoo0UMtHoP4PHc4bbSGK2g2N4OPiOijfuq8Kb5VPFcv/KpSHmSQ09Lc5VvynA3TVWMUbdSuodyDlwO3yQplYfpg5OrWxhVWxIZYaIbVKGsefRfDzWgd4otbsV72OUmu5+aI0l+9UdglweetDk8vIe+Zfk2u81g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4DjAJL0P; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F216A253F0A
+	for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 15:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739289068; cv=pass; b=KOoxuQV4q+HZFbhRW81WEa3P+JwAB2n5WkKiQp01YxIFM3NE+WjiLqepxn0YcuOAA5/2mkduEJGGCu8Vlq7OE5Z6Epw/hpoGWvZ+itkx7Nr9bIi3tOWR7dbC+u4P+iE9BBh7e5wnFPXno6Pj/u8HL4Sir7w3fQcZF05y8/A2vS8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739289068; c=relaxed/simple;
+	bh=s0AsPq4RwJR2+33PXRlQ8dEh5CuInqzkdkunwYbmKC8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=dDp3sLuoplFzmg91aqV7BbaFBkVelHSnAWhtgt5sojnREpVJ+HoFh1u7OagvtHV6dOe/F4jgZiZKr9x36pYWZyDIoM+cWO7ZGZuARaQ77AurLtsbMguZuUSfes3qPsxA0WNDppDOMUnuoHCuEPz0tQHSrKA2cEJqbF9S3IaGoVo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=MjPgOei9; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4DjAJL0P"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so10883a12.0
-        for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 07:49:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739288991; x=1739893791; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9kgt4DsYnmqFCPg4peB6p4/cEoV7Wc11pP7aFn7Ru+s=;
-        b=4DjAJL0POzcBLLqP6yIeNA7VyS/QXfOpYMBJGFG8j1OwDPP+z1eDjjYF9N+lMcY6gq
-         xc/zYQe8Z+x2fO8/iVgPzusqEjgRf0wpMP+sry2ol1dc/rL9ik3Bnzqz3+PJhBAIXO8C
-         cx0+GJY2GPinCBX32/ybsETWUjy4WKWnyRKsRjFsbPCwRmNrL0uImDGcE/WF/7ZzxfhT
-         XA/zU1PYc3GPp38BLvfQObdXaTym9Rk9Ead9A6p4Y1O/WIEaNH84CA9dWwuuJBncv6lH
-         jK/Eei6UNza43rMd/j7Mnce0cSIZuaXpNKkLtFivQU/jf+Ti9dyZwbB+r5mTe5Y2wcOj
-         nxfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739288991; x=1739893791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9kgt4DsYnmqFCPg4peB6p4/cEoV7Wc11pP7aFn7Ru+s=;
-        b=jIndvewPWdy87ZytsNtOj7z+7/gPxFrHDVDsnnR2p62wd6or2sxyHx8o3fk3v5G9sp
-         IKyDBIGQ/M4VGi5sJzmlV3BFDPO2qbVf86MTPasjXcdpRLSvgUACr7rkiPrhYvNvzXaS
-         oECjPVYJxhPieqlpgMuwM4Gdml1i/+mPv7uMPAE1cExCTpr4h9NNSgO7JAhAnfqMgCre
-         Wlzb+ntYAnjbQmnv7iniQbp7ClSBgkAZ3jOKobYzRxiVs8KeXt4iaW9s4Hb3g5jwfnDB
-         VhDdZbB9SGC5naIy6sr9M3+F3OX+bs+qoUxwfsZT8okDOqoqPkGQEfNABFOusENAKYuL
-         GHtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXekSlMnaK/pOAU+AOg9Hotxzu/gDToTescfTV9La73H5nHUwUc2rAD5172zRhnvD2IvugISU7PcJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxWQfH1YuQYzMUFCuiDak+yuixenWF7uqSJXhZUe0JanU0Um4M
-	n7qakxjvspTbG3+Hy/s74iGbfiEc/lTb1XNx/5rM7ThRXowkuR1sYSz0LYBARMCMgX0ukK/0Fx1
-	Pnhr4ZxHcaMWGcs0bI0I9pajjFFcCSSOqaZZV5/n3ngybJ9bj0A==
-X-Gm-Gg: ASbGnctTHJZjV2xUGNh4DqzC9045OkJuB6VwKC6d9OZa60B0LJHpjy1bWjJMzcxX76+
-	YZ569yYJmCuoteen6hPgFVHM4D4q6e439WIGsZmlf6/543UhS+SKhy8mYLbGj+M9qVRoFUvvibw
-	MLggaR7bFLcdAhVGY6fnnWoTgryH1mSBI=
-X-Google-Smtp-Source: AGHT+IE4Fxxf+5z69pFOeL1vlS+GzV7UVLD5EIil0y2c6civPDnAyqFQUMiM+rBmwqzz2VihxIer5GQ59MHN5QmVrIQ=
-X-Received: by 2002:a50:9314:0:b0:5db:e72d:b084 with SMTP id
- 4fb4d7f45d1cf-5de9cce8feemr101816a12.0.1739288991143; Tue, 11 Feb 2025
- 07:49:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="MjPgOei9"
+ARC-Seal: i=1; a=rsa-sha256; t=1739289048; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZuBDVEGmslDdXqhKaV2iIntb0moYczBI9NQEY6Z6jUOL03OFwIYtSeD8do/LBLnIg39LoUKxDCgnHjFc5O+x4LPUTG+/+zp4QM+YJSo6eJ8Ev1mNfTNRCb7nb15Bn2SJro5HFdjD67RlZJrv6SXGzLT6yaDQ6BM2cKtWytuoCZc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739289048; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ynkLWceI6NKQ/gkDqb5Yj4PQr/Nl+gQGLJR+DRzkaMs=; 
+	b=jwnskG3FVGXh74McvVCOzyxrY9THmslv2zIxEx2WIsg4hplORLfi6dWufkgIDvgf/erQgZMP+T9JEFh5AVvVVtpC43p2la6x3DwvgRkPbxgC1i4b5HZazTEVN2Mg71aaxac3I9dGWhlVEuCFmuHgG6t2Pqf+x41V2AD9pbEyj7k=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=gus@collabora.com;
+	dmarc=pass header.from=<gus@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739289048;
+	s=zohomail; d=collabora.com; i=gus@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=ynkLWceI6NKQ/gkDqb5Yj4PQr/Nl+gQGLJR+DRzkaMs=;
+	b=MjPgOei9CWQlbOw7Vkf3KGA4FQvtbZcX7ftapLJ+P6s7N24lU9FbOSl3rMp4FUPE
+	lx9DV9jI7gMeU2Ehkzv1pUDpSkvVZW34asTc+2m6Q445qjlinbKRH47gRtwqInEQjs4
+	DkXS7BQh21uyodyqzUnaR5axBku1slFctNFC45q8=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1739289047127225.90196701042169; Tue, 11 Feb 2025 07:50:47 -0800 (PST)
+Date: Tue, 11 Feb 2025 12:50:47 -0300
+From: Gustavo Padovan <gus@collabora.com>
+To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
+Cc: "kernelci" <kernelci@lists.linux.dev>,
+	"linux-rt-devel" <linux-rt-devel@lists.linux.dev>,
+	"stable-rt" <stable-rt@vger.kernel.org>,
+	"Daniel Wagner" <wagi@monom.org>
+Message-ID: <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
+In-Reply-To: <20250211152018.sK91dh93@linutronix.de>
+References: <20250211090511.xeFJVnH_@linutronix.de>
+ <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com> <20250211152018.sK91dh93@linutronix.de>
+Subject: Re: PREEMPT_RT testing on kernelci
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211090511.xeFJVnH_@linutronix.de> <CABXOdTeLUi8mKkV38SegM_n8=Uyykd-X+n7RysjpgAZfxxb5BQ@mail.gmail.com>
- <20250211153759.5sSPp1PI@linutronix.de>
-In-Reply-To: <20250211153759.5sSPp1PI@linutronix.de>
-From: Guenter Roeck <groeck@google.com>
-Date: Tue, 11 Feb 2025 07:49:40 -0800
-X-Gm-Features: AWEUYZlEqu__1t_B87cyFxYGHoCRQ18AdYIcVNJRtnSUfqO1snO9huHuOzykOU4
-Message-ID: <CABXOdTdgKPZEOWRE11V7XRpRwgAL5bav_X+ibGbYyJwj1EnLsQ@mail.gmail.com>
-Subject: Re: PREEMPT_RT testing on kernelci
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: kernelci@lists.linux.dev, linux-rt-devel@lists.linux.dev, 
-	stable-rt@vger.kernel.org, Daniel Wagner <wagi@monom.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Tue, Feb 11, 2025 at 7:38=E2=80=AFAM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2025-02-11 07:33:57 [-0800], Guenter Roeck wrote:
-> > Unrelated to KernelCI - how stable is PREEMPT_RT in practice ? Reason
-> > for asking is that I enabled it for x86_64 together with lock
-> > debugging and got an almost immediate "sleeping function called"
-> > backtrace.
->
-> If I would have seen it I would have acted. My guess is that this is
-> something not a lot of people observed.
->
+Hi Sebastian,
 
-I suspect that not many run the code with lock debugging enabled. I'll
-send you the backtrace separately.
 
-Guenter
+---- On Tue, 11 Feb 2025 12:20:18 -0300 Sebastian Andrzej Siewior  wrote ---
 
-> > Thanks,
-> > Guenter
->
-> Sebastian
+ > On 2025-02-11 08:33:56 [-0300], Gustavo Padovan wrote: 
+ > > Hi Sebastian, 
+ > Hi Gustavo, 
+ >  
+ > > Thank you for your email. We are happy that KernelCI is helping you with tests. 
+ > ;) 
+ > >  > Since PREEMPT_RT is now available upstream, would it work to compile and 
+ > >  > enable some of its tests for the supported architectures on Linus' tree 
+ > >  > and maybe the -next tree? I don't think that happens at the moment, I 
+ > >  > saw only a few stable-rt trees. 
+ > > 
+ > > https://github.com/kernelci/kernelci-pipeline/pull/1010 
+ > > 
+ > > This will get it enabled for mainline and next. Allow us a few days for processing and 
+ > > deploying this in production. 
+ >  
+ > Sure. Just poke if you have something to inspect or look at because of 
+ > $reason. 
+ >  
+ > The architectures, that support RT are what you see in 
+ > | git grep ARCH_SUPPORTS_RT arch/ 
+ >  
+ > so this does not include arm at current stage for instance. So in 
+ > general, if you can't select CONFIG_PREEMPT_RT you can skip the 
+ > config/ build/ test. 
+ >  
+ > RiscV on the other hand is supported.
+
+Right. Let me look at how we can limit this to x86 only.
+Unfortunatelly, we don't have much RISC-V hw support in KernelCI yet.
+
+ >  
+ > > Beyond that, we would love any feedback you have to us. A lot of the infra 
+ > > we have today is new, so there are still rough edges to work on. 
+ >  
+ > Sure. How do I see easily what is tested/ done? I could maybe wait a few 
+ > days and check the dashboard. The link from above showed timerlat has 
+ > been but I didn't manage to figure what has been. I guess there is a 
+ > script somewhere handling the logic. 
+
+That is one the current limitations in the dashboard. The CI systems are not sending
+a clear signal yet that they completed all tests they wanted to run. They just submit
+test result individually as they get finished. 
+
+Imo, it is a priority to fix this as it is second time this week I get this feedback.
+
+Best,
+
+- Gus
