@@ -1,95 +1,100 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0D51F63D6
-	for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 11:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273663; cv=pass; b=TjhhshlgUpsaty3ry1/QHLKdooeJ7i8kEDlyYKdIHL7dOGpAP8CHbovjrgq7R3XMPNXUbBzVwkA2YTiN2t2Y+WaOVp9wfJPfNPOSNkDS31YgpOwpEGBXcKQuHKoUr47I4HPtjXQUHVn3R3b2+RUA8mcZhwzKHGjBJT9q0RGH3CM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273663; c=relaxed/simple;
-	bh=tkWTQe1ZnBD1cEKU42N3dEUjZh2HVtSnU1yKUW7TBU0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=WTSm3gs+DVPqM/WkU+9+hRhaWOH9drAoYK8rwYRm/JZ2ir32dFFIPa88o78/kGEY1t+FuiaCSrHaBNse2MNyHLOvkPNfNHXaCC/qDfacROz4tzr8MplrZtCrTD4kt7HHkJZUJmSBaQVPkLDsLSxE6tpd1DtLjpKCS5VTKB+FO7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=eyvLuPH8; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1578D250BE2
+	for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 15:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739287223; cv=none; b=V0Qe1LlaUP1pC0TqO1fzttdU9APYTXRez5BDU6rWIecVOz8NQ4tlrODwKZCORA25WOIdzFKUBjOJK63wnT+F++6QhqKMflaY+Tytd6JrHBdh0v0ljD9VqmZe/dzLKiQyxx4iJGAS43nKZdz1ztO1oV4Kkb+2hlM2bocBVKpFCFw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739287223; c=relaxed/simple;
+	bh=mOAVxW6tetpGZjcYV2weElMouCc/GtOd82EnhQ8+85I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tM70loOzz4qOiyYSW/CVlNMNY0ZwpRtNB2ZI1foOX3SzR2ZqqFwXvWpTFHbS20yMJn88yGWPEnUnkfcL4jC5DaJByH3VJP/YXoAHQ/haKdhhMoechNx/rV4tzbDTi0u148R6Tdr2xRqt/SxE5xfuf8HFf6njArQ2m4rXCyzuTlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lo2JW7si; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ri9koU7W; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="eyvLuPH8"
-ARC-Seal: i=1; a=rsa-sha256; t=1739273637; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=n4AtpFWTuDnYniqbGMSC9jo9KzxRm0K6ndSuA0S9VcONiiKYMDdEEfIQfPcRrn0aJIsyJoIFc/ue+QWw3GHkchFXE0WOzWN4ku5m7OHSvgPaB/fXfamXk3TQ9bpVtzgYBDzKDkcEm3aM8XeQagsvhW8rbHTS1G+xgiJxgGLtY5w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739273637; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xXvptsss3i2yENVunW5vvg613bivABAEoytKdrykFYg=; 
-	b=Fbu6AsV2XPaShu956pTxkIGhP1IuRspFZHyG4vJJ3kzBlehGf6c9ospd/eE27YxOyQBkxzxCIyFuw748wEGyzvzZVmSJ7nsrIM2d0LNiTS2+zGG49mlhkkqvWwAE0cMOrftEf+GoQdwYgIE4KGvnC//JBuDBbyupOCoWG6HAbxc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739273637;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=xXvptsss3i2yENVunW5vvg613bivABAEoytKdrykFYg=;
-	b=eyvLuPH8j63AAKCXeu6VBKLfooV8cGy6C0FY/GWywixR8ztvbr+XEP8QTSAXdIxD
-	OxGlhsgu5Hxa024GR+vb5Xc/6K1WWLbBOc8mZnfzV1rDW0ZnvcT2OR21b+3oQUCmrz1
-	sDBHC421zeJnxix527daWErV+uHBbRrzpAK496j4=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1739273636340158.76165558496132; Tue, 11 Feb 2025 03:33:56 -0800 (PST)
-Date: Tue, 11 Feb 2025 08:33:56 -0300
-From: Gustavo Padovan <gus@collabora.com>
-To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
-Cc: "kernelci" <kernelci@lists.linux.dev>,
-	"linux-rt-devel" <linux-rt-devel@lists.linux.dev>,
-	"stable-rt" <stable-rt@vger.kernel.org>,
-	"Daniel Wagner" <wagi@monom.org>
-Message-ID: <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
-In-Reply-To: <20250211090511.xeFJVnH_@linutronix.de>
-References: <20250211090511.xeFJVnH_@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lo2JW7si";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ri9koU7W"
+Date: Tue, 11 Feb 2025 16:20:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739287219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xGUgApZDmXbkZQbNRmGSAJtUSm3HnPj/hv+ZmYMXOjY=;
+	b=lo2JW7si0mmZdBT+bWGK5iop4rllSU+1FwOOetdO/iW6km9Q09xn5CrJ5o+AAtWdx8L83K
+	hYeAMsUZwdMkSvjwvY+rbd423YPZFJoMeXxoGGtih3Mw5R/QL1kcwef1q8sQBdjLbxGfgf
+	bFonJdcaXBlzspXMHzvV89BsWGXSjQJ0DTGODPUXz4s5ISBcH+L6GOXmmlJX1GWjnt7NrK
+	9BrAvLUf51eCIUNRV213VsquKUDKCYXNHtTznzwB1mKyWoHfPf4xY1B4tEueFdprIwb3FZ
+	cGqO+ncxhRNSTEcphbkYghsiudhESx78xBhbFUR1BVi9h7H9FU7mlcJWfwi3/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739287219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xGUgApZDmXbkZQbNRmGSAJtUSm3HnPj/hv+ZmYMXOjY=;
+	b=ri9koU7W9LfDekfm23bFg2OwuVj+iGqpawBr8/PqYfdrS3j4PyjGi6qVbLYSCVttRkRiS5
+	/Wp4vsG8jfcvyxBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Gustavo Padovan <gus@collabora.com>
+Cc: kernelci <kernelci@lists.linux.dev>,
+	linux-rt-devel <linux-rt-devel@lists.linux.dev>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Daniel Wagner <wagi@monom.org>
 Subject: Re: PREEMPT_RT testing on kernelci
+Message-ID: <20250211152018.sK91dh93@linutronix.de>
+References: <20250211090511.xeFJVnH_@linutronix.de>
+ <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
 
-Hi Sebastian,
+On 2025-02-11 08:33:56 [-0300], Gustavo Padovan wrote:
+> Hi Sebastian,
+Hi Gustavo,
 
-Thank you for your email. We are happy that KernelCI is helping you with tests.
+> Thank you for your email. We are happy that KernelCI is helping you with tests.
+;)
+>  > Since PREEMPT_RT is now available upstream, would it work to compile and 
+>  > enable some of its tests for the supported architectures on Linus' tree 
+>  > and maybe the -next tree? I don't think that happens at the moment, I 
+>  > saw only a few stable-rt trees. 
+> 
+> https://github.com/kernelci/kernelci-pipeline/pull/1010
+> 
+> This will get it enabled for mainline and next. Allow us a few days for processing and
+> deploying this in production.
 
----- On Tue, 11 Feb 2025 06:05:11 -0300 Sebastian Andrzej Siewior  wrote ---
+Sure. Just poke if you have something to inspect or look at because of
+$reason.
 
- > Hi, 
- >  
- > I remember Daniel Wagner has been asking to include PREEMPT_RT within 
- > kernelci. I don't really know what the status here is. Thank you for the 
- > work. 
+The architectures, that support RT are what you see in
+| git grep ARCH_SUPPORTS_RT arch/
 
-Current status is that we have them enabled only for the stable-rt branches as
-you can see here:
+so this does not include arm at current stage for instance. So in
+general, if you can't select CONFIG_PREEMPT_RT you can skip the
+config/ build/ test.
 
-https://dashboard.kernelci.org/tree/b8c892b7816074585ff45397712c6310ba5ae26b?df%7Ctp%7Crt-tests=true&i=20&p=t&ti%7Cc=v6.6.74-rt48&ti%7Cch=b8c892b7816074585ff45397712c6310ba5ae26b&ti%7Cgb=v6.6-rt&ti%7Cgu=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Frt%2Flinux-stable-rt.git&ti%7Ct=stable-rt
+RiscV on the other hand is supported.
 
- >  
- > Since PREEMPT_RT is now available upstream, would it work to compile and 
- > enable some of its tests for the supported architectures on Linus' tree 
- > and maybe the -next tree? I don't think that happens at the moment, I 
- > saw only a few stable-rt trees. 
+> Beyond that, we would love any feedback you have to us. A lot of the infra
+> we have today is new, so there are still rough edges to work on.
 
-https://github.com/kernelci/kernelci-pipeline/pull/1010
+Sure. How do I see easily what is tested/ done? I could maybe wait a few
+days and check the dashboard. The link from above showed timerlat has
+been but I didn't manage to figure what has been. I guess there is a
+script somewhere handling the logic.
 
-This will get it enabled for mainline and next. Allow us a few days for processing and
-deploying this in production.
+> Best,
+> 
+> - Gus
 
-Beyond that, we would love any feedback you have to us. A lot of the infra
-we have today is new, so there are still rough edges to work on.
-
-Best,
-
-- Gus
+Sebastian
