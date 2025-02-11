@@ -1,116 +1,97 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F216A253F0A
-	for <stable-rt@vger.kernel.org>; Tue, 11 Feb 2025 15:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289068; cv=pass; b=KOoxuQV4q+HZFbhRW81WEa3P+JwAB2n5WkKiQp01YxIFM3NE+WjiLqepxn0YcuOAA5/2mkduEJGGCu8Vlq7OE5Z6Epw/hpoGWvZ+itkx7Nr9bIi3tOWR7dbC+u4P+iE9BBh7e5wnFPXno6Pj/u8HL4Sir7w3fQcZF05y8/A2vS8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289068; c=relaxed/simple;
-	bh=s0AsPq4RwJR2+33PXRlQ8dEh5CuInqzkdkunwYbmKC8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=dDp3sLuoplFzmg91aqV7BbaFBkVelHSnAWhtgt5sojnREpVJ+HoFh1u7OagvtHV6dOe/F4jgZiZKr9x36pYWZyDIoM+cWO7ZGZuARaQ77AurLtsbMguZuUSfes3qPsxA0WNDppDOMUnuoHCuEPz0tQHSrKA2cEJqbF9S3IaGoVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=MjPgOei9; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D80253B61;
+	Tue, 11 Feb 2025 16:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739291164; cv=none; b=WF2U/OMvxnxfX14cG5Hvpcfwh5DvzJeCHtGBuwmXy5sYyFtFk6YJsX30HUE5tZOTWmGoZenUtvKh8oRocK+Tu0Z19AFQRnlU1/pRTaRoh/5O4kU5nsABEgWxc1Kt6+ZLnNarkhWx4Yo2arD89nKSBDfOpCBMmwZc/z2LUrKGPLU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739291164; c=relaxed/simple;
+	bh=bhRsq0b5reECDJvaMAqhTXpua3kqM/0rBeuBIVouF+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m7vrOWlZrZf4wEcPiaq691VSl7OfLQQxJ1AwIA+i0vCExOoCNZpd8Bg6P5jnuXwCn9AWDE8LHrUNeln4MgS6hAIvABcHwFDldKYDKgSsXWtnI1pSZjxEx2v224ZYVxSgrwi6fqRV8e4ZSaZXADLUEV6FEUkPhWKdWQvTVTMGxUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtOLM+mW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="MjPgOei9"
-ARC-Seal: i=1; a=rsa-sha256; t=1739289048; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZuBDVEGmslDdXqhKaV2iIntb0moYczBI9NQEY6Z6jUOL03OFwIYtSeD8do/LBLnIg39LoUKxDCgnHjFc5O+x4LPUTG+/+zp4QM+YJSo6eJ8Ev1mNfTNRCb7nb15Bn2SJro5HFdjD67RlZJrv6SXGzLT6yaDQ6BM2cKtWytuoCZc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739289048; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ynkLWceI6NKQ/gkDqb5Yj4PQr/Nl+gQGLJR+DRzkaMs=; 
-	b=jwnskG3FVGXh74McvVCOzyxrY9THmslv2zIxEx2WIsg4hplORLfi6dWufkgIDvgf/erQgZMP+T9JEFh5AVvVVtpC43p2la6x3DwvgRkPbxgC1i4b5HZazTEVN2Mg71aaxac3I9dGWhlVEuCFmuHgG6t2Pqf+x41V2AD9pbEyj7k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739289048;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=ynkLWceI6NKQ/gkDqb5Yj4PQr/Nl+gQGLJR+DRzkaMs=;
-	b=MjPgOei9CWQlbOw7Vkf3KGA4FQvtbZcX7ftapLJ+P6s7N24lU9FbOSl3rMp4FUPE
-	lx9DV9jI7gMeU2Ehkzv1pUDpSkvVZW34asTc+2m6Q445qjlinbKRH47gRtwqInEQjs4
-	DkXS7BQh21uyodyqzUnaR5axBku1slFctNFC45q8=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1739289047127225.90196701042169; Tue, 11 Feb 2025 07:50:47 -0800 (PST)
-Date: Tue, 11 Feb 2025 12:50:47 -0300
-From: Gustavo Padovan <gus@collabora.com>
-To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
-Cc: "kernelci" <kernelci@lists.linux.dev>,
-	"linux-rt-devel" <linux-rt-devel@lists.linux.dev>,
-	"stable-rt" <stable-rt@vger.kernel.org>,
-	"Daniel Wagner" <wagi@monom.org>
-Message-ID: <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
-In-Reply-To: <20250211152018.sK91dh93@linutronix.de>
-References: <20250211090511.xeFJVnH_@linutronix.de>
- <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com> <20250211152018.sK91dh93@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtOLM+mW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64A1C4CEDD;
+	Tue, 11 Feb 2025 16:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739291164;
+	bh=bhRsq0b5reECDJvaMAqhTXpua3kqM/0rBeuBIVouF+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QtOLM+mWfmLAttg7/2FG74ZO8YFOUBB4a1hGPkGh/8QJwdfj29Iyj0exaQplJjqiD
+	 2GtyHmFM0BH394XNuKUuxUUR9RN4jXsDrih2hhlXYEjipqA6pByNfPzsLwyqnpFy1V
+	 A4djSjSIsGLDqhHjvNqPICppJ+a8sbOGi+P+4EWisjPy7j/mp27YuLd1bKU7+rozBI
+	 YI/mhOHopQibgpaj7dVeJBBy8ANpZAjFsf3G2V2AkkBMuVV7nydtUPedgsANMjkPKs
+	 miyjf0Vjo5lilSpluU6+2CFDn+HiU4nJ0INjU4rJ4UqJFBpmsHa7op+MUbthPdomR0
+	 Tun4u8K63/DOw==
+Date: Tue, 11 Feb 2025 16:26:00 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Gustavo Padovan <gus@collabora.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	kernelci <kernelci@lists.linux.dev>,
+	linux-rt-devel <linux-rt-devel@lists.linux.dev>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Daniel Wagner <wagi@monom.org>
 Subject: Re: PREEMPT_RT testing on kernelci
+Message-ID: <c357446d-6df3-4e29-a9d2-fb4f94e34ac3@sirena.org.uk>
+References: <20250211090511.xeFJVnH_@linutronix.de>
+ <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
+ <20250211152018.sK91dh93@linutronix.de>
+ <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-
-Hi Sebastian,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="F5A77GSB2tRzHk7e"
+Content-Disposition: inline
+In-Reply-To: <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
+X-Cookie: Printed on recycled paper.
 
 
----- On Tue, 11 Feb 2025 12:20:18 -0300 Sebastian Andrzej Siewior  wrote ---
+--F5A77GSB2tRzHk7e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- > On 2025-02-11 08:33:56 [-0300], Gustavo Padovan wrote: 
- > > Hi Sebastian, 
- > Hi Gustavo, 
- >  
- > > Thank you for your email. We are happy that KernelCI is helping you with tests. 
- > ;) 
- > >  > Since PREEMPT_RT is now available upstream, would it work to compile and 
- > >  > enable some of its tests for the supported architectures on Linus' tree 
- > >  > and maybe the -next tree? I don't think that happens at the moment, I 
- > >  > saw only a few stable-rt trees. 
- > > 
- > > https://github.com/kernelci/kernelci-pipeline/pull/1010 
- > > 
- > > This will get it enabled for mainline and next. Allow us a few days for processing and 
- > > deploying this in production. 
- >  
- > Sure. Just poke if you have something to inspect or look at because of 
- > $reason. 
- >  
- > The architectures, that support RT are what you see in 
- > | git grep ARCH_SUPPORTS_RT arch/ 
- >  
- > so this does not include arm at current stage for instance. So in 
- > general, if you can't select CONFIG_PREEMPT_RT you can skip the 
- > config/ build/ test. 
- >  
- > RiscV on the other hand is supported.
+On Tue, Feb 11, 2025 at 12:50:47PM -0300, Gustavo Padovan wrote:
 
-Right. Let me look at how we can limit this to x86 only.
-Unfortunatelly, we don't have much RISC-V hw support in KernelCI yet.
+>  > The architectures, that support RT are what you see in=20
+>  > | git grep ARCH_SUPPORTS_RT arch/=20
 
- >  
- > > Beyond that, we would love any feedback you have to us. A lot of the infra 
- > > we have today is new, so there are still rough edges to work on. 
- >  
- > Sure. How do I see easily what is tested/ done? I could maybe wait a few 
- > days and check the dashboard. The link from above showed timerlat has 
- > been but I didn't manage to figure what has been. I guess there is a 
- > script somewhere handling the logic. 
+>  > so this does not include arm at current stage for instance. So in=20
+>  > general, if you can't select CONFIG_PREEMPT_RT you can skip the=20
+>  > config/ build/ test.=20
 
-That is one the current limitations in the dashboard. The CI systems are not sending
-a clear signal yet that they completed all tests they wanted to run. They just submit
-test result individually as they get finished. 
+>  > RiscV on the other hand is supported.
 
-Imo, it is a priority to fix this as it is second time this week I get this feedback.
+> Right. Let me look at how we can limit this to x86 only.
+> Unfortunatelly, we don't have much RISC-V hw support in KernelCI yet.
 
-Best,
+We should enable it on arm64 as well, there's plenty of boards for that.
+The current list of supported architectures is arm64, loongarch, riscv
+and x86.
 
-- Gus
+I'd be happy to have it running in my lab for the boards I've got
+multiples of. =20
+
+--F5A77GSB2tRzHk7e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmerehcACgkQJNaLcl1U
+h9AXUQf9H91n4wKdeyjpiFDBhd7BTmf92KidIyz24azYCXZsFnIQYBLLNLHFFsA+
+AxU/8lxmeQAVJZ7+sbLtmc/4c/HeBT2FJ6wFZe/hvXcgGyqfs6vSRSK8EGMlNKGA
+QQbXagxbmrHbhjgMEFjzvLKiuGm9B1KuKdNe1qYk2JSIFy2SAacArCaXLjJxkQ8P
+/1lDOMsksQPZy7LseLSZhfMdIZ4hwRtftz7Tnrn6QUlEywVlPKnUy158pkuATdsD
+ZG/4alb5KBSDMJi97d+IIOztsbzHZjKGMyzzntPa2dXljWYkalts6I9LLP/1jE2+
+VVzMZ23Ysk4A81WDQ4CzW/Pr2mi2RA==
+=N8Hz
+-----END PGP SIGNATURE-----
+
+--F5A77GSB2tRzHk7e--
