@@ -1,55 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2813925F79C
-	for <stable-rt@vger.kernel.org>; Mon, 24 Mar 2025 13:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424D421A435
+	for <stable-rt@vger.kernel.org>; Mon, 31 Mar 2025 19:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742823449; cv=none; b=se/0y447psuZnQ2kkYionGNYTfkw5Q8McrpLb0EyFxrieKLE3ZISlsEhV1mDFw32qO3Yjlyy6yATxAwj7prqL93nMyA567nkwNAyWYFbQhjP0a5f7pCGZKWNBxdRl3q75y292AHzar8gBLFMDpEoFvfF8gpe6Dl1FwIAheaA0nk=
+	t=1743450505; cv=none; b=e32Olad05RqUR4pD40gsjQOHiZvT0mcxYjTGYvwsY1oD9JDgWP8ExSoNRahnTzkNmLwsYwM3oMSrbDiwGhNkaw9sZsS08DGbqoV74OC3a6AvZXPowVfP/rBUKdBKNnhXIlRZiB8c3k03LBTBXObBvrJFuxg1i8ro1edm6uBCjX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742823449; c=relaxed/simple;
-	bh=y9kNmtV3rwyHjkz94A0Wkf/PTe3/sPVpCJ5E8YGL3gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KO9B600GlN3adkE4ijL9fRK0/gI8p6DmGfKdmS1OuGvr0hkA37wDVLUhUJgKTqDCe2a2mtmq0Ot+2MFnh/IO9Mp7i/YuwbCR8k/MHJ/hdChFYxyd7zVAwBm9Ostxsju8btErQ/b7UiYlHU+kdr0N8wryf4oW7A6yW3+gzFWSlVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=URRc7mtC; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1743450505; c=relaxed/simple;
+	bh=jx+kOVHSUKCbsRcFvKLazaf4NS5jfInnRrJa8Rwz4xE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pTfWDm5QjLZBVzZ0vJt0eInEoheb5apwfUaiTCrFfB91eE8hDpDhvvSNVT300wFzBkup4jS/NOcO06QFsM3tqZMoffl3A4QibDuGIwbqIT9P3eCgTWzK23JBq1he4k18GfWJFYuvnUjTqB7XhHhw+vXZlvojwo7joe/yniMYfLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XgdSgggk; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URRc7mtC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XgdSgggk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742823446;
+	s=mimecast20190719; t=1743450503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Itw7D4p9/7HHmEBt3j2UJgQx3i0qNuhBmdev44R+rFY=;
-	b=URRc7mtC29K4eOu4+6610bwr3JWH7tPg7ytrSP3edA7iXDaZDTlOEJdH49hEwr4IFxqUsW
-	qHAUNMOLk1kEWBpXNG1B7lmA/sRbbgtvrRdWIpZp2fBGSM9EBo0ouK0oyey/wgWty2jcM/
-	LIKSpYU4nb1sWDUhDXnLSEMGgINE7aY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=CZUl/W/3DHj1eibZ+TU4Ipkjrazfz2B71T5aEi4wVx4=;
+	b=XgdSgggkhvapsX1TUrRlFkb27NB2JZUNHLCEr3DQvLID3WMK4LQR2MAWQ54tWw+5DQFvVN
+	Iu9TM5GNcrMKlXkClPTYsNgyvOemXEIvtP1eXxmIF6s6xUmiIx5EXXxwL1TfFkNuADqR6e
+	Bco4mA+YT6FYXHtaj1IIxxL836nbpTs=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-Ir4TUETzPaKFRhIJ-tZB6w-1; Mon,
- 24 Mar 2025 09:37:22 -0400
-X-MC-Unique: Ir4TUETzPaKFRhIJ-tZB6w-1
-X-Mimecast-MFC-AGG-ID: Ir4TUETzPaKFRhIJ-tZB6w_1742823441
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-qMpU8gAMOwOyyBQThh2qMg-1; Mon,
+ 31 Mar 2025 15:48:16 -0400
+X-MC-Unique: qMpU8gAMOwOyyBQThh2qMg-1
+X-Mimecast-MFC-AGG-ID: qMpU8gAMOwOyyBQThh2qMg_1743450494
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0780180AB1C;
-	Mon, 24 Mar 2025 13:37:20 +0000 (UTC)
-Received: from localhost (unknown [10.22.65.159])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 39D02180A801;
-	Mon, 24 Mar 2025 13:37:19 +0000 (UTC)
-Date: Mon, 24 Mar 2025 10:37:18 -0300
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E7351800349;
+	Mon, 31 Mar 2025 19:48:14 +0000 (UTC)
+Received: from localhost (unknown [10.22.65.234])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3E33180B488;
+	Mon, 31 Mar 2025 19:48:12 +0000 (UTC)
+Date: Mon, 31 Mar 2025 16:48:11 -0300
 From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: stable-rt <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v5.10-rt] rt: fix build issue in be2net
-Message-ID: <Z-FgDliPqvOBSph3@uudg.org>
-References: <Z9yuIpi8zjrTCkoB@uudg.org>
- <20250324083235.BjR4MB0k@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Ben Hutchings <benh@debian.org>
+Subject: [ANNOUNCE] 5.10.235-rt129
+Message-ID: <Z-rxe2n4qOskrg2f@uudg.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -58,40 +66,78 @@ List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250324083235.BjR4MB0k@linutronix.de>
+Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Mar 24, 2025 at 09:32:35AM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-03-20 21:09:06 [-0300], Luis Claudio R. Goncalves wrote:
-> > Sebastian, Steven, All,
-> > 
-> > Should I apply this solution in a RT update right after I release
-> > v5.10.235-rt128 or should I backport the definition of rt locking
-> > primitives from a newer PREEMPT_RT patch (say v5.15-rt or v6.1-rt)?
-> 
-> The statement ("return spin_unlock.*") is not very common, there is just
-> one "user" even in later kernels.
-> 
-> Backporting the definition (instead of changing the driver) would be
-> more consistent with later trees. I'm somewhere between the definition
-> backport and what is less work.
+Hello RT-list!
 
-How about we compromisse on the workaround for this release and if there is
-a new case I revert the two workarounds and perform the backport? Does that
-sound reasonable?
+I'm pleased to announce the 5.10.235-rt129 stable release.
 
-> The v5.4 should be also affected, right?
+While working on the stable update 5.10.235-rt128, a build problem
+on the be2net driver was discovered on RT. That inconvenience was
+fixed, hence the release of 5.10.235-rt129.
 
-Yes, if the offending commits (below) are backported to v5.4-rt, you will
-see the problem:
+You can get this release via the git tree at:
 
-    1582cc3b4805 dmaengine: at_hdmac: Fix concurrency problems by removing atc_complete_all()
-    7078e935b410 dmaengine: at_hdmac: Fix premature completion of desc in issue_pending
-    7cfae8627511 be2net: fix sleeping while atomic bugs in be_ndo_bridge_getlink
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
+  branch: v5.10-rt
+  Head SHA1: d7dcda5ab69cd154e135797b8d116d5a0736eae2
+
+Or to build 5.10.235-rt129 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.235.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.235-rt129.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
 Luis
+
+Changes from v5.10.235-rt128:
+---
+
+Luis Claudio R. Goncalves (2):
+      rt: fix build issue in be2net
+      Linux 5.10.235-rt129
+---
+drivers/net/ethernet/emulex/benet/be_cmds.c | 7 ++++---
+ localversion-rt                             | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+---
+diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.c b/drivers/net/ethernet/emulex/benet/be_cmds.c
+index 9812a9a5d033..3068ccd37034 100644
+--- a/drivers/net/ethernet/emulex/benet/be_cmds.c
++++ b/drivers/net/ethernet/emulex/benet/be_cmds.c
+@@ -875,9 +875,10 @@ static int be_cmd_lock(struct be_adapter *adapter)
+ /* Must be used only in process context */
+ static void be_cmd_unlock(struct be_adapter *adapter)
+ {
+-	if (use_mcc(adapter))
+-		return spin_unlock_bh(&adapter->mcc_lock);
+-	else
++	if (use_mcc(adapter)) {
++		spin_unlock_bh(&adapter->mcc_lock);
++		return;
++	} else
+ 		return mutex_unlock(&adapter->mbox_lock);
+ }
  
-> Sebastian
-> 
----end quoted text---
+diff --git a/localversion-rt b/localversion-rt
+index 6d2a676e2033..90303f5aabcf 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt128
++-rt129
 
