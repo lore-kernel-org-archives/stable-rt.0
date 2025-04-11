@@ -1,143 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424D421A435
-	for <stable-rt@vger.kernel.org>; Mon, 31 Mar 2025 19:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBBA2586FE
+	for <stable-rt@vger.kernel.org>; Fri, 11 Apr 2025 19:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743450505; cv=none; b=e32Olad05RqUR4pD40gsjQOHiZvT0mcxYjTGYvwsY1oD9JDgWP8ExSoNRahnTzkNmLwsYwM3oMSrbDiwGhNkaw9sZsS08DGbqoV74OC3a6AvZXPowVfP/rBUKdBKNnhXIlRZiB8c3k03LBTBXObBvrJFuxg1i8ro1edm6uBCjX4=
+	t=1744400677; cv=none; b=pj8NWjuJBscqim5tp1IM4260IfwpCOt3CZru1ArIzK98M+UAPuNhVX2ZRffASNa7ec67VSWk3UXonDQ7P0btcI14fxgtn8Jr1stalAc7oMByuAGoQViNKYoPhfnDjoEKvnonJYq9l6whcbcFf8tpC7JiglmYCxPTIULNDGE39Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743450505; c=relaxed/simple;
-	bh=jx+kOVHSUKCbsRcFvKLazaf4NS5jfInnRrJa8Rwz4xE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pTfWDm5QjLZBVzZ0vJt0eInEoheb5apwfUaiTCrFfB91eE8hDpDhvvSNVT300wFzBkup4jS/NOcO06QFsM3tqZMoffl3A4QibDuGIwbqIT9P3eCgTWzK23JBq1he4k18GfWJFYuvnUjTqB7XhHhw+vXZlvojwo7joe/yniMYfLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XgdSgggk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744400677; c=relaxed/simple;
+	bh=/6v0zw5ak3f/ZZAspKY370OySndK9g5vXV6fKod9kqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M2WKVHZfkA2BQyQJMPGhw3hAJ1t6F7QHYhvFYoDWvvNmbs2ZVK2tOiQBR4agS/ehCddlqEN2LumdhRCuaA8qBHFmhhAGMFuncmMBzYypAlxnO7R8wMyilTz+p4L8XZai945KKAPke3UHMgkQkOzJyhC7DwtXVSUf+K2jm+nVbTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gYSS4ir0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vz9n5VFg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XgdSgggk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743450503;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gYSS4ir0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vz9n5VFg"
+Date: Fri, 11 Apr 2025 21:44:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744400674;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=CZUl/W/3DHj1eibZ+TU4Ipkjrazfz2B71T5aEi4wVx4=;
-	b=XgdSgggkhvapsX1TUrRlFkb27NB2JZUNHLCEr3DQvLID3WMK4LQR2MAWQ54tWw+5DQFvVN
-	Iu9TM5GNcrMKlXkClPTYsNgyvOemXEIvtP1eXxmIF6s6xUmiIx5EXXxwL1TfFkNuADqR6e
-	Bco4mA+YT6FYXHtaj1IIxxL836nbpTs=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-qMpU8gAMOwOyyBQThh2qMg-1; Mon,
- 31 Mar 2025 15:48:16 -0400
-X-MC-Unique: qMpU8gAMOwOyyBQThh2qMg-1
-X-Mimecast-MFC-AGG-ID: qMpU8gAMOwOyyBQThh2qMg_1743450494
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E7351800349;
-	Mon, 31 Mar 2025 19:48:14 +0000 (UTC)
-Received: from localhost (unknown [10.22.65.234])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3E33180B488;
-	Mon, 31 Mar 2025 19:48:12 +0000 (UTC)
-Date: Mon, 31 Mar 2025 16:48:11 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQs9wonNrxU6bloYlGrlPFmXTxtcyoPcHDbYs2ntwY0=;
+	b=gYSS4ir06p+cjhF8LTpR/CTZI1da3QrVO1s2oJcbS7SfkgIm8F4I4JNpGTu44mjgFlsFlV
+	UXbC5lbZ9S/KbNMuf3WJjqOgVmZynbvryab3nbbmYQ/JHzLTy1ZgX/ctbW/ozRCDFBphBt
+	8t7BTuXNxYea0vxfQJE98V1HtBnbhBEA+4p7nzaJpOoY4iQoLp8ngnX5o7emsnejSYsxGD
+	7eAGsYydPE0iVZyTM17soX88UbPTbNI8ubwBCBKGkS6kLIgEg0AVJBRadU9OZ7rQxHjx4G
+	S1yun29iElBaEDp62KWinjAxJFSPynrJkS8jJ67eh2lvtZZcZAvF1w9Jep13VQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744400674;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQs9wonNrxU6bloYlGrlPFmXTxtcyoPcHDbYs2ntwY0=;
+	b=Vz9n5VFgohqys4/KOB3Jlp1CimyZROTd1PaEn5DZ3D3tuwd7B8SpRbkCnPda5PEmQXPb1K
+	5+Uuzgq3K3ozP4BA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Gustavo Padovan <gus@collabora.com>
+Cc: kernelci <kernelci@lists.linux.dev>,
+	linux-rt-devel <linux-rt-devel@lists.linux.dev>,
 	stable-rt <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Carsten Emde <C.Emde@osadl.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Wagner <daniel.wagner@suse.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
-	Jeff Brady <jeffreyjbrady@gmail.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Ben Hutchings <benh@debian.org>
-Subject: [ANNOUNCE] 5.10.235-rt129
-Message-ID: <Z-rxe2n4qOskrg2f@uudg.org>
+	Daniel Wagner <wagi@monom.org>
+Subject: Re: PREEMPT_RT testing on kernelci
+Message-ID: <20250411194432.pwc6U7Ds@linutronix.de>
+References: <20250211090511.xeFJVnH_@linutronix.de>
+ <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
+ <20250211152018.sK91dh93@linutronix.de>
+ <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
+ <20250213085256.nhWptGL3@linutronix.de>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250213085256.nhWptGL3@linutronix.de>
 
-Hello RT-list!
+On 2025-02-13 09:52:56 [+0100], To Gustavo Padovan wrote:
+> On 2025-02-11 12:50:47 [-0300], Gustavo Padovan wrote:
+> > Hi Sebastian,
+Hi Gustavo,
 
-I'm pleased to announce the 5.10.235-rt129 stable release.
+> > That is one the current limitations in the dashboard. The CI systems are not sending
+> > a clear signal yet that they completed all tests they wanted to run. They just submit
+> > test result individually as they get finished. 
+> > 
+> > Imo, it is a priority to fix this as it is second time this week I get this feedback.
+> 
+> Ah okay. No need to rush. If you have something to look at, let me know
+> and I will. Other than that I will lean back and wait for the bot to
+> complain ;)
+> 
+> Thank you.
 
-While working on the stable update 5.10.235-rt128, a build problem
-on the be2net driver was discovered on RT. That inconvenience was
-fixed, hence the release of 5.10.235-rt129.
+any updates on this?
 
-You can get this release via the git tree at:
+> > Best,
+> > 
+> > - Gus
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.10-rt
-  Head SHA1: d7dcda5ab69cd154e135797b8d116d5a0736eae2
-
-Or to build 5.10.235-rt129 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.235.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.235-rt129.patch.xz
-
-Signing key fingerprint:
-
-  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Luis
-
-Changes from v5.10.235-rt128:
----
-
-Luis Claudio R. Goncalves (2):
-      rt: fix build issue in be2net
-      Linux 5.10.235-rt129
----
-drivers/net/ethernet/emulex/benet/be_cmds.c | 7 ++++---
- localversion-rt                             | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
----
-diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.c b/drivers/net/ethernet/emulex/benet/be_cmds.c
-index 9812a9a5d033..3068ccd37034 100644
---- a/drivers/net/ethernet/emulex/benet/be_cmds.c
-+++ b/drivers/net/ethernet/emulex/benet/be_cmds.c
-@@ -875,9 +875,10 @@ static int be_cmd_lock(struct be_adapter *adapter)
- /* Must be used only in process context */
- static void be_cmd_unlock(struct be_adapter *adapter)
- {
--	if (use_mcc(adapter))
--		return spin_unlock_bh(&adapter->mcc_lock);
--	else
-+	if (use_mcc(adapter)) {
-+		spin_unlock_bh(&adapter->mcc_lock);
-+		return;
-+	} else
- 		return mutex_unlock(&adapter->mbox_lock);
- }
- 
-diff --git a/localversion-rt b/localversion-rt
-index 6d2a676e2033..90303f5aabcf 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt128
-+-rt129
-
+Sebastian
