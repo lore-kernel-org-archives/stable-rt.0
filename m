@@ -1,98 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750AE1F463D
-	for <stable-rt@vger.kernel.org>; Thu, 17 Apr 2025 13:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744895462; cv=pass; b=UzAMxE+Snmq66I0vusaBNovGfInPT2foBAjw8mcSdm6SI81hAkp+GQ4a33H1K+Obyv9lLDdYodjzQ6dzhPSN+RFb27Ovd/PVpe1XnJvgWoEBHNy0NSnbjn17foklwKxHBoUqLnsnLgwpeQP0hKYkOxFZ/HZv0oCABdOOE8MKjv4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744895462; c=relaxed/simple;
-	bh=8EaCkBy+lfjfDIVihnAsJ6v4h/9qYPFEAqSzducbRWo=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Ze7jFE3WAAZvj+tmKFgpCH4xVRWWGLfAFMLVnDCzOsnGHW8AZD8XXwojXSJDW/UPi7//Z8AoV/6CE7CQQ4qgjnShYD/q3kbVI2w4ehuqxg7WSeMe84e7SvrZAHg3ZUrhzhNQ8ex9/OOmUAue2VImmxbaT8xx2Ui7jpgD9orclb4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=RapSgwib; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811CE24E01F
+	for <stable-rt@vger.kernel.org>; Thu, 17 Apr 2025 15:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744902678; cv=none; b=WClIdkyTdNmBV3jYN151OP3vuTp6XcJmjUn4Fo3gg4dd81Vv4YLvtqKHGEE5RIaYi/5KkyPJLwQC1p4Xcrx0fZ2CwX0sBq16zrc0mK8OsE6TbJ9kTS85RhMGYxUKfhjwmf3I8/j6qoPqPS8fNtjBJq4OJA+rR2CVvLFNaPvieaI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744902678; c=relaxed/simple;
+	bh=E5X679uCPTpvbUEqHbRpM/QTNZhAVmDvQfzsKO4PpZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=az+QLZVACxFmZ/GkXFzCP0/8mTeg1aSonTQETJaaR1turdDJLJ4JMm/uRdkZcMsqA8l37VTxM/8H7d6mUAyohwjCS2wPP/TnNGDHkLYs6iYSEIj3kmpG315oEJa9oqGJHn+3x/5ISqBiDjulfWclaFvpSfBqO5zO9jZ01J1DSKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DLlMefr8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uSvd5H2/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="RapSgwib"
-ARC-Seal: i=1; a=rsa-sha256; t=1744895444; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VohK9JeIpbLhrv6ZAtDYNL1cCwJCc0id9AzX17Iy07+MLq0ozVlxe7Z5jpUMiSTkbWkRSHtshXAuofoK8wu2pDOf+QjT6qB0B4+n9nRrZR9ve0QPpKlwhQDCEHkKqsnBdzJ1XFy4Prbo+s/Pit6KAbQJp7UTjBw6oaQJ2/qmBO8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744895444; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JdgzFf5xo+n7XlCoSvNyi6H4skRHIElcuxjW86zW67k=; 
-	b=jodALV9QbtRrNRLPXRBcsCjtZUw9drLTEJliZ8lr23/UPmoaOLy+C3CH3JLea5RV4piHPg+hGNfK8pSMFtM6TXnnI3RJVkTGsJ46kN6ENIt7OGjm4C/3Rg77BuZYfd5omi4HLCqedpi+5vcEueAl3UHRYYVna6HYiocp4UomqhI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744895444;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=JdgzFf5xo+n7XlCoSvNyi6H4skRHIElcuxjW86zW67k=;
-	b=RapSgwibqYE1LfDihvN7pQ4/eXBdxv4BtxKNQcKxqOa1sMUHxCDq1eOEBncXoNO5
-	aIgqjWY1X/YeHXrxjR89GArJ1VBS1tYEHT40foBmQaVqHriOTQ7iZuJFuex+3MnS2MV
-	Jy4Dq6EgKCzYdq7tfesPO3H5V2TU3JczXyc2LBXs=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1744895443115255.0566878623447; Thu, 17 Apr 2025 06:10:43 -0700 (PDT)
-Date: Thu, 17 Apr 2025 10:10:43 -0300
-From: Gustavo Padovan <gus@collabora.com>
-To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
-Cc: "kernelci" <kernelci@lists.linux.dev>,
-	"linux-rt-devel" <linux-rt-devel@lists.linux.dev>,
-	"stable-rt" <stable-rt@vger.kernel.org>,
-	"Daniel Wagner" <wagi@monom.org>
-Message-ID: <19643df8092.ac2e879d858176.2114269254543526159@collabora.com>
-In-Reply-To: <20250417100410.zxlZCBp-@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DLlMefr8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uSvd5H2/"
+Date: Thu, 17 Apr 2025 17:11:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744902674;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A447NPfUbEt6lE5p6p/8N6z6RAiec9Hb+rOLO+lknAY=;
+	b=DLlMefr8mPvyddF0F4L+paGa/bkNrTTg5Z8lK2Ms6UeU9exl7xKccuJR8TACqyrR6r7noq
+	kB4tFbVZPNy5lVJJ/VqbL8WRGoA/e4InC3i5F1Y+riQG/mnKTamztVuf0orlfCpdcjN5Zd
+	O0WUVOGlVvxyKZQgxmLfM55ZaAuYP3t2bn9PlBzgoyv7PrBF/tbmMYsCMIHj1kRWgnomH7
+	tixdkYuV8m5mZwW9w6IfpRV89DzhI+6tCYJtCMWbGKeDjvDqAyswyDFcRgB0WXck87lujn
+	mO00Rr1BibjhhUjFeUvMjvCpSu8YR15NIjGQpp8s2kG2FfspJskyLBW6mF72tQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744902674;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A447NPfUbEt6lE5p6p/8N6z6RAiec9Hb+rOLO+lknAY=;
+	b=uSvd5H2/iQWgLwz53npXjF8a/6AKjTvDI3kxE5pKAbkFIYXeFZ244xjyLoAUZyiVpWyyDR
+	gF8fWvnXva18AdBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Gustavo Padovan <gus@collabora.com>
+Cc: kernelci <kernelci@lists.linux.dev>,
+	linux-rt-devel <linux-rt-devel@lists.linux.dev>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Daniel Wagner <wagi@monom.org>
+Subject: Re: PREEMPT_RT testing on kernelci
+Message-ID: <20250417151113.W9MG8dy3@linutronix.de>
 References: <20250211090511.xeFJVnH_@linutronix.de>
  <194f4c989de.bdd18d3279996.2067896388251039576@collabora.com>
  <20250211152018.sK91dh93@linutronix.de>
  <194f5b4b029.e5ee4014194612.536900249866001318@collabora.com>
  <20250213085256.nhWptGL3@linutronix.de>
  <20250411194432.pwc6U7Ds@linutronix.de>
- <19634ddfa6f.10623b4b6827067.8120388710582651736@collabora.com> <20250417100410.zxlZCBp-@linutronix.de>
-Subject: Re: PREEMPT_RT testing on kernelci
+ <19634ddfa6f.10623b4b6827067.8120388710582651736@collabora.com>
+ <20250417100410.zxlZCBp-@linutronix.de>
+ <19643df8092.ac2e879d858176.2114269254543526159@collabora.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <19643df8092.ac2e879d858176.2114269254543526159@collabora.com>
 
-
-
----- On Thu, 17 Apr 2025 07:04:10 -0300 Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote ---
-
- > On 2025-04-14 12:14:44 [-0300], Gustavo Padovan wrote: 
- > > Hi Sebastian, 
- > Hi Gustavo, 
- >  
- > > In my understanding you want to know when results for any rt-tests change status (eg PASS -> FAIL or 
- > > vice versa) for a selection of trees (eg mainline, next, etc). Can you confirm? 
- >  
- > The results change is definitely interesting. The other thing is what is 
- > tested and how. I remember you added/ changed some architectures for the 
- > RT subset. I also assume that warnings at bootime (as in lockdep or 
- > general warnings) are reported. 
-
-We have some support around that, but this work is still evolving.
-
- > I remember Daniel asked for some cyclictests/rt-tests integration so I 
- > don't know what is tested here ;) 
- >  
- > From the commandline you sent that there are a few boards running the 
- > cyclictests and everything either passes or is in state "INCONCLUSIVE". 
- > So this looks nice. 
+On 2025-04-17 10:10:43 [-0300], Gustavo Padovan wrote:
+> 
+> 
+> ---- On Thu, 17 Apr 2025 07:04:10 -0300 Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote ---
+> 
+>  > On 2025-04-14 12:14:44 [-0300], Gustavo Padovan wrote: 
+>  > > Hi Sebastian, 
+>  > Hi Gustavo, 
+>  >  
+>  > > In my understanding you want to know when results for any rt-tests change status (eg PASS -> FAIL or 
+>  > > vice versa) for a selection of trees (eg mainline, next, etc). Can you confirm? 
+>  >  
+>  > The results change is definitely interesting. The other thing is what is 
+>  > tested and how. I remember you added/ changed some architectures for the 
+>  > RT subset. I also assume that warnings at bootime (as in lockdep or 
+>  > general warnings) are reported. 
+> 
+> We have some support around that, but this work is still evolving.
 
 Okay.
 
-As for notifications, for which trees/branches you want to see it?
+>  > I remember Daniel asked for some cyclictests/rt-tests integration so I 
+>  > don't know what is tested here ;) 
+>  >  
+>  > From the commandline you sent that there are a few boards running the 
+>  > cyclictests and everything either passes or is in state "INCONCLUSIVE". 
+>  > So this looks nice. 
+> 
+> Okay.
+> 
+> As for notifications, for which trees/branches you want to see it?
 
+Linus' master and the -next tree would be good. If you plan add to add
+Cc here, it would be nice if you could add linux-rt-devel@lists.linux.dev
 
-
+Sebastian
