@@ -1,46 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D706296D39
-	for <stable-rt@vger.kernel.org>; Mon, 12 May 2025 18:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DA41E98F3
+	for <stable-rt@vger.kernel.org>; Wed, 18 Jun 2025 21:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747075575; cv=none; b=GIqVqnlvtcqT/NRdZWP55XstDKgDCc5jF/PpCiKkb1cA/TMtvoungucs8zvsS27Q5SYfj/G1z1SO/RGEz3bgDCuginquSe6EP2gbwEWtw7qzSnJ1oTJDTy7CRxiS6HIum1Pf50iajMqvammfNynbRuy9JGXJrQNHmRRFtxUmjYU=
+	t=1750281121; cv=none; b=ssqeG2DyPkfhC6U3NXYpXAAy5I/DkyNmsMjchNaK4ovBbWdrpMUaNSYIKHURdopd0xtKh91mPPf3OhOqDaD2qGbnpetRfGsf2/JK2x9nl1xcfGPcbcCjrotIM1fVvvlRsXYJ2TT+gstggEy6SHaPkDCj52zl5Si+yT6W54fBXyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747075575; c=relaxed/simple;
-	bh=KTHbeKmh7csudR8176KG0O0zrZanG5wTGnGpE2K39TY=;
+	s=arc-20240116; t=1750281121; c=relaxed/simple;
+	bh=hU6LrB4u6zHdEtjzLO2tMhBFuBmhLxFRILKm9QhJrOA=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iG+JMkC7kYt30eqk6FeQQdVgBmpQoQRmlAKU/ddMhGscDIAeD4/dd6bLkhi/pHyY468p+VPmNrE4NhpPx1LQM5k5eKYkI/VfkXPENz8N1H9DkUGYe5IaiqPmlzoHyGMfgbqP2qZIqFMqG7tbTryQkxQAjvQZY9Xpj7JeFZvxUwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hngduz4f; arc=none smtp.client-ip=170.10.133.124
+	 Content-Disposition; b=g6tlKZoiyFHgVHIh4sPBdo2yTTFzWq33+BO5HDRRZCRLQTMhBNR4ob5tK0M5lH+hV44St8EWwJ3FZgR4PmoLhryHIXgQTerWf7FaubXsFGHpHVZKvKuKgBKw4XQ/YlOxogZguSOWvpfkJHX+MnPIKR1aLvjyDAdaHlk8QTnagqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xp4+B5A9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hngduz4f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xp4+B5A9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747075573;
+	s=mimecast20190719; t=1750281118;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=MRlJdxaHRLU0G69QLi6XRmYLc6kA0ycMlNYlR7WFnAU=;
-	b=hngduz4fcT/X8k2NOx6ou+K8rD8NrmbeKo0LqJhzQiphXDgmFn5L8rwCzR+ynCwFlDcAP6
-	R1hNnh1Cy6IPAuug8saPMz7d4VFFWhPziuJnNIYAM0qhIGr710OpKvC211jZvDTrk6/IJS
-	Ti0TD680ua+qVVmKSx9F7DoJlWrLYM8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=si2yMjR7q7rjBdseCBAaci15mleBdg607YB98sx0/R0=;
+	b=Xp4+B5A9FKy5fK+2TChEY84ovu7YXVb5Aw03Oz8sYzYI7VU6Enj210PHghfgEbiv6I77wV
+	Af/HhfGK4mDMDL1z+m0AKFSRKxhbgbJm6A4yBLPkY9GgNGqElbqE/74AvpozZSscoZ9Qbg
+	jCd+HPDvsvFJkH32xslkQF5KfL644/A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-606--BxVW4CCMU6MRGstWZVZRQ-1; Mon,
- 12 May 2025 14:46:07 -0400
-X-MC-Unique: -BxVW4CCMU6MRGstWZVZRQ-1
-X-Mimecast-MFC-AGG-ID: -BxVW4CCMU6MRGstWZVZRQ_1747075565
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-MWzXy6CtO96X_crPo8LXfw-1; Wed,
+ 18 Jun 2025 17:11:54 -0400
+X-MC-Unique: MWzXy6CtO96X_crPo8LXfw-1
+X-Mimecast-MFC-AGG-ID: MWzXy6CtO96X_crPo8LXfw_1750281112
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB7C21800877;
-	Mon, 12 May 2025 18:46:04 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.42])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C44D9180049D;
-	Mon, 12 May 2025 18:46:03 +0000 (UTC)
-Date: Mon, 12 May 2025 15:46:02 -0300
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2ABDB180028C;
+	Wed, 18 Jun 2025 21:11:52 +0000 (UTC)
+Received: from localhost (unknown [10.22.89.94])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 021611956094;
+	Wed, 18 Jun 2025 21:11:50 +0000 (UTC)
+Date: Wed, 18 Jun 2025 18:11:49 -0300
 From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -56,8 +56,8 @@ To: LKML <linux-kernel@vger.kernel.org>,
 	Jeff Brady <jeffreyjbrady@gmail.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>,
 	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.237-rt131
-Message-ID: <aCJB6th2YHpoWEUV@uudg.org>
+Subject: [ANNOUNCE] 5.10.238-rt132
+Message-ID: <aFMrlTjdVnfGJBEI@uudg.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -66,29 +66,29 @@ List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
 Hello RT-list!
 
-I'm pleased to announce the 5.10.237-rt131 stable release.
+I'm pleased to announce the 5.10.238-rt132 stable release.
 
-This release is just an update to the new stable 5.10.237
-version and no RT specific changes have been made.
+This release is just an update to the new stable 5.10.238 version and
+no RT specific changes have been made.
 
 You can get this release via the git tree at:
 
   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
   branch: v5.10-rt
-  Head SHA1: 54373e23e43ab56de8b65b83bf5371e9bc26dfa9
+  Head SHA1: e14e2866718ae8b8a52ebcc0ed567a0964001c55
 
-Or to build 5.10.237-rt131 directly, the following patches should be applied:
+Or to build 5.10.238-rt132 directly, the following patches should be applied:
 
   https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
 
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.237.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.238.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.237-rt131.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.238-rt132.patch.xz
 
 Signing key fingerprint:
 
