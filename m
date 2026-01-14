@@ -1,102 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A1A29D27D
-	for <stable-rt@vger.kernel.org>; Tue, 13 Jan 2026 19:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4A739C655
+	for <stable-rt@vger.kernel.org>; Wed, 14 Jan 2026 16:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768332989; cv=none; b=XtbXR/uxPQe9KNAIbus31rGLDSqtnYJCElX1eKyK1q1qYOyosvFNQhjDau/RU46SsoKqLg50xuV3zS4bMlOxEurPj1SeIiH02irtMNQHfYx5DQ9pkTuVYvPsu3o6eXunj9FlfnSzQiLFJMEkQCO9MvNrNC2XPWh3WVMkvQdNJXE=
+	t=1768406654; cv=none; b=OF/RxuhAI4n4opVfUa5MhzmM4SJlEarIIH1gNtDTAf1nyqKMw/EGn1KYpuGdJiIpqVcmd2aMVv/H5vATfDGdaViS/FotdqeJCGawSkjB1rUpoBNlT1MY+gDCROJR/uVxORV/jSi5cP3UvoHgP/C1tnljsnFGnvX8DA89m6wHKFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768332989; c=relaxed/simple;
-	bh=EW1h3I/D1orexFUQTVdFzD8KqegRfqiiAS8Ucq4s5y0=;
+	s=arc-20240116; t=1768406654; c=relaxed/simple;
+	bh=aP3Szqwn1vr3oSalYfK+2Jt/iPVG5nGB0Ttpluush/Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Li6yd2XR1ctQa0I60IA8FOJC385xhiw3XM0l2xgim2237RIBI1OaZOC1z74jWQiKg2wGBrHYTaIW1W5TerOxwykJMuKJM4Ys3TOCW0149a/FUSZ8XRoZYgp+nBbefZKxDcV6aSIFLTfFUySgPQ3XY+xWqmKKXnNXmdbYKwuSg4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaMsNweK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RtM7dvWPJlx5GrQGZrZQ21VeRvr4h1xnmHRwmoPD/Xfj3Dkk/AK5eKoQzvrjjG9/MHZXyyp0ryvjvaN4XqQjE0xuns97cBJFjzPckAJv1+JN6eUJ1gymnFGxL9/StJ6lAqNXZrwvf0eRF8lrtpilU0IIrP9dgQhDwDonuMXC1QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aAySgQsw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YAbVtl9/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaMsNweK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768332986;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aAySgQsw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YAbVtl9/"
+Date: Wed, 14 Jan 2026 17:04:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1768406651;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HJw8QksqA8ZUvwDcpS/o4GYtYBXW+Zc2qvpN5Ms6NJo=;
-	b=ZaMsNweKZAkdi7Cs6W3JOdJKC2RXSMa0vns9sCc1rTNcC1yPY0kZGMqk5JHtEQI7dCjijQ
-	sdnm8/cnehCyKBLHYYXiwkmFORBMWRy2WC4+InvbYSE1/2GkZSV7VZSR5ZRTcf6XEMzuYX
-	w/IN2VgmACp+Anh5v6wMLra4Cg4AO3E=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-KCSyAqENPnm5E2K9nfIL9g-1; Tue,
- 13 Jan 2026 14:36:23 -0500
-X-MC-Unique: KCSyAqENPnm5E2K9nfIL9g-1
-X-Mimecast-MFC-AGG-ID: KCSyAqENPnm5E2K9nfIL9g_1768332982
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5FAD01800473;
-	Tue, 13 Jan 2026 19:36:22 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.231])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E056819560AB;
-	Tue, 13 Jan 2026 19:36:21 +0000 (UTC)
-Date: Tue, 13 Jan 2026 16:36:20 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	bh=9Ia2Oz9yUmDn2Q1mN7iWk+poIYKTpG6Iv7FVJrkPEUs=;
+	b=aAySgQswrIj1FPzyfxcnUoyqrvVg8PL9P8Xm6pOY50964yz3ZBGra0YkE6lQU7fz2+5GuX
+	Am7syRUNaT7to2rLnBZvDMkTOKWNZCgBwY9qW4I4EulY8q0YoSgU9ahOIieTOtyafR3616
+	KzkB3+y6jTCY4cS/dUahqbRzYFqKn3s0a6SKo5Mg7ZRWl1/PMZwD4oQuPgRlOe3IRh6i8G
+	byaRDvf1OYBqrH7lm6KGJqkthjo2oWgBfs6QdrKKZaeVAtm34A2Y0l3KA/zDKbuJ+7wZRU
+	sGphuzy9zfXDRF1hPNvcZdpxECDZfn5W2kyp9ePbh2A+wMr/HQPeTaDXsJ0oWQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1768406651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Ia2Oz9yUmDn2Q1mN7iWk+poIYKTpG6Iv7FVJrkPEUs=;
+	b=YAbVtl9/ozDLk2OGbgbZ6MYSgnlVLOhFA8I6AtZudCEqPKdD9wgjM0zwtNcvqLiwCSHEoM
+	ZRJRqq37KfJqUQCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 Cc: stable-rt@vger.kernel.org
 Subject: Re: [PATCH net v4] ipv6: fix a BUG in rt6_get_pcpu_route() under
  PREEMPT_RT
-Message-ID: <aWaetNiLITXn0UrV@redhat.com>
+Message-ID: <20260114160409.wRytcnQC@linutronix.de>
 References: <20251223051413.124687-1-jiayuan.chen@linux.dev>
  <20260112154947.5C8DFdQb@linutronix.de>
+ <aWaetNiLITXn0UrV@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260112154947.5C8DFdQb@linutronix.de>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <aWaetNiLITXn0UrV@redhat.com>
 
-Hi Sebastian!
+On 2026-01-13 16:36:20 [-0300], Luis Claudio R. Goncalves wrote:
+> Hi Sebastian!
+Hi,
 
-On Mon, Jan 12, 2026 at 04:49:47PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-12-23 13:14:12 [+0800], Jiayuan Chen wrote:
-> > On PREEMPT_RT kernels, after rt6_get_pcpu_route() returns NULL, the
-> > current task can be preempted. Another task running on the same CPU
-> > may then execute rt6_make_pcpu_route() and successfully install a
-> > pcpu_rt entry. When the first task resumes execution, its cmpxchg()
-> > in rt6_make_pcpu_route() will fail because rt6i_pcpu is no longer
-> > NULL, triggering the BUG_ON(prev). It's easy to reproduce it by adding
-> > mdelay() after rt6_get_pcpu_route().
+> > This is upstream as commit
+> >    1adaea51c61b5 ("ipv6: fix a BUG in rt6_get_pcpu_route() under PREEMPT_RT")
 > > 
-> > Using preempt_disable/enable is not appropriate here because
-> > ip6_rt_pcpu_alloc() may sleep.
-> > 
-> > Fix this by handling the cmpxchg() failure gracefully on PREEMPT_RT:
-> > free our allocation and return the existing pcpu_rt installed by
-> > another task. The BUG_ON is replaced by WARN_ON_ONCE for non-PREEMPT_RT
-> > kernels where such races should not occur.
-> > 
-> > Link: https://syzkaller.appspot.com/bug?extid=9b35e9bc0951140d13e6
-> > Fixes: d2d6422f8bd1 ("x86: Allow to enable PREEMPT_RT.")
-> > Reported-by: syzbot+9b35e9bc0951140d13e6@syzkaller.appspotmail.com
-> > Closes: https://lore.kernel.org/all/6918cd88.050a0220.1c914e.0045.GAE@google.com/T/
-> > Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> > and should be backported down to v6.12 due to the fixes tag. RT wise it
+> > should be broken since its introduction so if the stable team could take
+> > it down to v5.10-rt, that would be nice.
 > 
-> This is upstream as commit
->    1adaea51c61b5 ("ipv6: fix a BUG in rt6_get_pcpu_route() under PREEMPT_RT")
-> 
-> and should be backported down to v6.12 due to the fixes tag. RT wise it
-> should be broken since its introduction so if the stable team could take
-> it down to v5.10-rt, that would be nice.
+> Just to clarify, do you mean us, the stable RT maintainers, or Greg-KH
+> and his merry band?
 
-Just to clarify, do you mean us, the stable RT maintainers, or Greg-KH
-and his merry band?
+The RT maintainers. I don't think Greg will apply to kernels prio the
+fixes commit also RT is not available in upstream so it makes no
+difference. You could wait a month and see ;)
+This was there since its introduction in 4.x and never triggered.
 
-Best,
-Luis
+> Best,
+> Luis
 
+Sebastian
