@@ -1,81 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4A739C655
-	for <stable-rt@vger.kernel.org>; Wed, 14 Jan 2026 16:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1CD50096D;
+	Mon, 19 Jan 2026 21:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406654; cv=none; b=OF/RxuhAI4n4opVfUa5MhzmM4SJlEarIIH1gNtDTAf1nyqKMw/EGn1KYpuGdJiIpqVcmd2aMVv/H5vATfDGdaViS/FotdqeJCGawSkjB1rUpoBNlT1MY+gDCROJR/uVxORV/jSi5cP3UvoHgP/C1tnljsnFGnvX8DA89m6wHKFc=
+	t=1768856506; cv=none; b=C+HONk2a4SvE1bBbvPaMgPFOSgi/T8DNzjdY9ewd7XLBYbceEMlN0NhnTYDAzGBNXmrVXtJ/FSD/ZQG4OaXOAP5Z1LAFVeWk+9APPeDnF0JjgCkIvRuCWcL2lmpKSjuvCIeXboI408AnG0UHrEOXfjXBXgL05CI+gCIINHWBUHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406654; c=relaxed/simple;
-	bh=aP3Szqwn1vr3oSalYfK+2Jt/iPVG5nGB0Ttpluush/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtM7dvWPJlx5GrQGZrZQ21VeRvr4h1xnmHRwmoPD/Xfj3Dkk/AK5eKoQzvrjjG9/MHZXyyp0ryvjvaN4XqQjE0xuns97cBJFjzPckAJv1+JN6eUJ1gymnFGxL9/StJ6lAqNXZrwvf0eRF8lrtpilU0IIrP9dgQhDwDonuMXC1QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aAySgQsw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YAbVtl9/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1768856506; c=relaxed/simple;
+	bh=PT9nrrPVAbmQq6E72CivuujG6a9b8hCmZ6oLhNnQUBE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AbyUqVsAsVMBjclAn7zhpoSi3qW2ZvfKGJkkQjZfWRvEM5y8GMyaMcprVoFjOz7CPpqzSe9eWl3/bZ6EsnqWZqQYMfr2awIwJygHr+YzHwFtbhC+UO9y6x9a1jHCrFZ+9MxomIGAl1Ca8FoFRvKZRQeIR1N1U6FKhIhFKApFzWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=lNt6dKs3; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aAySgQsw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YAbVtl9/"
-Date: Wed, 14 Jan 2026 17:04:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1768406651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Ia2Oz9yUmDn2Q1mN7iWk+poIYKTpG6Iv7FVJrkPEUs=;
-	b=aAySgQswrIj1FPzyfxcnUoyqrvVg8PL9P8Xm6pOY50964yz3ZBGra0YkE6lQU7fz2+5GuX
-	Am7syRUNaT7to2rLnBZvDMkTOKWNZCgBwY9qW4I4EulY8q0YoSgU9ahOIieTOtyafR3616
-	KzkB3+y6jTCY4cS/dUahqbRzYFqKn3s0a6SKo5Mg7ZRWl1/PMZwD4oQuPgRlOe3IRh6i8G
-	byaRDvf1OYBqrH7lm6KGJqkthjo2oWgBfs6QdrKKZaeVAtm34A2Y0l3KA/zDKbuJ+7wZRU
-	sGphuzy9zfXDRF1hPNvcZdpxECDZfn5W2kyp9ePbh2A+wMr/HQPeTaDXsJ0oWQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1768406651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Ia2Oz9yUmDn2Q1mN7iWk+poIYKTpG6Iv7FVJrkPEUs=;
-	b=YAbVtl9/ozDLk2OGbgbZ6MYSgnlVLOhFA8I6AtZudCEqPKdD9wgjM0zwtNcvqLiwCSHEoM
-	ZRJRqq37KfJqUQCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: stable-rt@vger.kernel.org
-Subject: Re: [PATCH net v4] ipv6: fix a BUG in rt6_get_pcpu_route() under
- PREEMPT_RT
-Message-ID: <20260114160409.wRytcnQC@linutronix.de>
-References: <20251223051413.124687-1-jiayuan.chen@linux.dev>
- <20260112154947.5C8DFdQb@linutronix.de>
- <aWaetNiLITXn0UrV@redhat.com>
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="lNt6dKs3"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CB89DE4116;
+	Mon, 19 Jan 2026 21:51:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1768855919; h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=sPjrPsCW0SWV51AZ+nux2paE0SVATagsky7N1T6E0is=;
+	b=lNt6dKs3URULuPO5Xwh21UVhRR9di1JwHkQj8Ml9c5Zb97wblH1ySiDEnh+T3XlZEvRwJU
+	88s4+C773SGSp8lH0pxIj0JIUPzSzQENzF+XIVpxyhDwC2fTltqnkz80jnX5rJ42XHkSRV
+	MKAaqZ5ZLMSuarDdyUASU6BzH8vT/p24yhqhwH8Rni0pbOUai5ZOXpUsBjUH2jiuFpjSIc
+	W6s/3H4/cBYBK5fydFWpbzsChYGKvwFF/g3aFelRO4kg18tc5WsTsi2+fJLsG/HDfQW+65
+	Tsn2br9GB/wKKUr+jC27bdU7S31m7NPcYb8T1WlaJOqa1gxR+34E9UB/NEae+g==
+Date: Mon, 19 Jan 2026 21:51:55 +0100
+From: Daniel Wagner <wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
+	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 6.12.66-rt15
+Message-ID: <176881761224.25763.16646224135751002623@nitrogen>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aWaetNiLITXn0UrV@redhat.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 2026-01-13 16:36:20 [-0300], Luis Claudio R. Goncalves wrote:
-> Hi Sebastian!
-Hi,
+Hello RT-list!
 
-> > This is upstream as commit
-> >    1adaea51c61b5 ("ipv6: fix a BUG in rt6_get_pcpu_route() under PREEMPT_RT")
-> > 
-> > and should be backported down to v6.12 due to the fixes tag. RT wise it
-> > should be broken since its introduction so if the stable team could take
-> > it down to v5.10-rt, that would be nice.
-> 
-> Just to clarify, do you mean us, the stable RT maintainers, or Greg-KH
-> and his merry band?
+I'm pleased to announce the 6.12.66-rt15 stable release. This is
+just an update to the latest stable release. No RT specific changes.
 
-The RT maintainers. I don't think Greg will apply to kernels prio the
-fixes commit also RT is not available in upstream so it makes no
-difference. You could wait a month and see ;)
-This was there since its introduction in 4.x and never triggered.
+You can get this release via the git tree at:
 
-> Best,
-> Luis
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-Sebastian
+  branch: v6.12-rt
+  Head SHA1: 682cc16c05c6cec473f4277c9b807dcd5cacd0c8
+
+Or to build 6.12.66-rt15 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.12.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.12.66.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/6.12/older/patch-6.12.66-rt15.patch.xz
+
+Signing key fingerprint:
+
+  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Daniel
+
+Changes from v6.12.57-rt14:
+---
+
+Daniel Wagner (1):
+      v6.12.66-rt15
+---
+localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---
+diff --git a/localversion-rt b/localversion-rt
+index 08b3e75841ad..18777ec0c27d 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt14
++-rt15
