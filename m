@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD0E225408
-	for <stable-rt@vger.kernel.org>; Tue, 10 Feb 2026 01:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58152DF6E9
+	for <stable-rt@vger.kernel.org>; Tue, 17 Feb 2026 13:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770687081; cv=none; b=ADmcln4BdAmfmj7aEuX88KvFfq8vess/mbtq+29Z633pr7k399ag24zjcubqyN1ZVInl2WO08KkaRBjkD9sAtJiftX1qSrcK98c78VwNHDzrvG/DAt2CWtkVPkU50QDG/Pr75iHZO1s1swKymtMZb5VMmmgQnXwK68ci+Mw9pms=
+	t=1771334974; cv=none; b=Sp2f43Dr8ZRnVv5QBEDWXoCFJdIWrZZSy12riKV7pq5weeSRqYZLyz4Di1HLOdR/aAf2yKVp3cYaA8Tsb18yJzf+t7s8y8gdM+8WQHSrBP6VRszCcBu7zR/exLz0yP3TNGdwEcty4Ij6AN9p3pFoqLgHSgKGJXaeaSWPK2nT0zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770687081; c=relaxed/simple;
-	bh=yxrcRqe9ro1svTbTgqZZj8BlqGpMugc8LFFzYoGRXL8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q9g1A8M5MRWJzSgP/rZxGUcGwfbg6e5XRQ+dOeEc2AyDCne+eWRMILHXmhTw7ui1y/suCwL2RZVhpMDt1VrD4eIYpJTKz/xJ/8m+2+UXSDXiu9QHf5iaBy0v84EKfqyPb6fNXvLzXEhBqDbKee5QXJEBL+PcwSOyQfz6J27hnSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WFRKjopV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1771334974; c=relaxed/simple;
+	bh=mRWSzqWaAPbBsZcqjVkG+bh1UBceI5SVHDnP1e2imhE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=D6ZUJwd/mCUcA62cj11zMYOP7YXcJB9b5PEhnDnAV6CisAKjxd2KRT9MbvGnQ2N7e2MAkeEiHCFglHyb4qGD65Lxia22NTxgHFoZufO9x2qDfyjPfjGNpl8t42R+hbcGtXCxgYOtE4orMvlhM+eb+tNHO+yDKwcBEn0ksC28gmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L4334wAi; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WFRKjopV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4334wAi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770687079;
+	s=mimecast20190719; t=1771334971;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/nWOZhJEkvy1+pw7cGHB3rPaOygbBGW7MfeiszVO32E=;
-	b=WFRKjopVhiU28kXLG6cgwDvgEWzL5OO9r63CHMJ5+0Odo+6aaz608WXiVI9pzszkV4ehuN
-	MciaFgzp8YAbwGY0Wze5YpEevA0bzL1tsaqdqWvgREp5FZDoSZVtZGdEhPcOu1xR6Ph1tx
-	cUdFDIVxU4iW5NiklRezwx7nsHVHUDY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=PRmg/W0wzWZVwb346QVotuTNgadWrQyRwDbYUeMZc7k=;
+	b=L4334wAiT5PNCspqEhY4816DYAiFrRthkCdV3PSYafsBQJ//PlZkkcPMPPOLosMcRucOqT
+	TBQvGEnainGClko5baf7o38lJTkCgyvfL1lSsb6sU960dm+X6PDzxquifT8y3jLKzmnY/O
+	F1KxxiFLKQ3CSDHQ13y27nZ8lVWiozA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-130-7Hr1TOC_NIaSrV_XmbAcQw-1; Mon,
- 09 Feb 2026 20:31:15 -0500
-X-MC-Unique: 7Hr1TOC_NIaSrV_XmbAcQw-1
-X-Mimecast-MFC-AGG-ID: 7Hr1TOC_NIaSrV_XmbAcQw_1770687074
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-571-YaaLT7zaN_yLajVl9MlTMA-1; Tue,
+ 17 Feb 2026 08:29:27 -0500
+X-MC-Unique: YaaLT7zaN_yLajVl9MlTMA-1
+X-Mimecast-MFC-AGG-ID: YaaLT7zaN_yLajVl9MlTMA_1771334966
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DBE31956053;
-	Tue, 10 Feb 2026 01:31:13 +0000 (UTC)
-Received: from localhost (unknown [10.22.64.105])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B257C180066C;
-	Tue, 10 Feb 2026 01:31:11 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D6321956050;
+	Tue, 17 Feb 2026 13:29:25 +0000 (UTC)
+Received: from localhost (unknown [10.22.64.145])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E9AF71800361;
+	Tue, 17 Feb 2026 13:29:23 +0000 (UTC)
+Date: Tue, 17 Feb 2026 10:29:22 -0300
 From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: linux-rt-users <linux-rt-users@vger.kernel.org>,
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
 	stable-rt <stable-rt@vger.kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -51,43 +51,92 @@ To: linux-rt-users <linux-rt-users@vger.kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Daniel Wagner <daniel.wagner@suse.com>,
 	Clark Williams <williams@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
 	Jeff Brady <jeffreyjbrady@gmail.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>,
 	Ben Hutchings <ben@decadent.org.uk>,
 	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [PATCH RT 2/2] Linux 5.10.248-rt143-rc1
-Date: Mon,  9 Feb 2026 22:31:03 -0300
-Message-ID: <20260210013103.73763-3-lgoncalv@redhat.com>
-In-Reply-To: <20260210013103.73763-1-lgoncalv@redhat.com>
-References: <20260210013103.73763-1-lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.248-rt143
+Message-ID: <aZRtMp_UWp08TtoL@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-v5.10.248-rt143-rc1 stable review patch.
-If anyone has any objections, please let me know.
+Hello RT-list!
 
------------
+I'm pleased to announce the 5.10.248-rt143 stable release.
 
+This is basically kernel 5.10.248-rt142 with an extra patch suggested by
+Ben Hutchings to fix a build problem introduced in 5.10.247-rt141.
 
-Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.10-rt
+  Head SHA1: e1c3ac4207efdc4bd22fe82fef0aaa0ad1d8efcf
+
+Or to build 5.10.248-rt143 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.248.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.248-rt143.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
+
+Changes from v5.10.248-rt142:
 ---
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
+Chen Ni (1):
+      net/sched: act_ife: convert comma to semicolon
+
+Luis Claudio R. Goncalves (1):
+      Linux 5.10.248-rt143
+---
+localversion-rt     | 2 +-
+ net/sched/act_ife.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+---
 diff --git a/localversion-rt b/localversion-rt
-index 234720dc343d..aec9f67adeee 100644
+index 234720dc343d..a7cc5d609b19 100644
 --- a/localversion-rt
 +++ b/localversion-rt
 @@ -1 +1 @@
 --rt142
-+-rt143-rc1
--- 
-2.53.0
++-rt143
+diff --git a/net/sched/act_ife.c b/net/sched/act_ife.c
+index 892d4824d81d..e518e9b36486 100644
+--- a/net/sched/act_ife.c
++++ b/net/sched/act_ife.c
+@@ -648,9 +648,9 @@ static int tcf_ife_dump(struct sk_buff *skb, struct tc_action *a, int bind,
+ 
+ 	memset(&opt, 0, sizeof(opt));
+ 
+-	opt.index = ife->tcf_index,
+-	opt.refcnt = refcount_read(&ife->tcf_refcnt) - ref,
+-	opt.bindcnt = atomic_read(&ife->tcf_bindcnt) - bind,
++	opt.index = ife->tcf_index;
++	opt.refcnt = refcount_read(&ife->tcf_refcnt) - ref;
++	opt.bindcnt = atomic_read(&ife->tcf_bindcnt) - bind;
+ 
+ 	spin_lock_bh(&ife->tcf_lock);
+ 	opt.action = ife->tcf_action;
 
