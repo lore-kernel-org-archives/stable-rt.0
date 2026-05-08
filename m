@@ -1,46 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACA448C8B6
-	for <stable-rt@vger.kernel.org>; Tue,  5 May 2026 17:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBB2301485
+	for <stable-rt@vger.kernel.org>; Fri,  8 May 2026 19:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778002824; cv=none; b=WWcrSpZmUM3HTfnlx+OxGp6Kz7XSpt3DM9z3BQcheYN7y+or9eBsyrXmYP/DH5lDCkVYpQfgTslCK0QYlPrRDQ+q8CTyY9+ono3xCAOUW+LqC3A4Z1lKuSngJ5gcfmEE6zsGCi7Uv75p8YJLYjELZR5WKcaOlBKhHPSk0tuCOpI=
+	t=1778267417; cv=none; b=FlV+M0yre9tvdpBWH0eGZacPe4LVDHRR02pj87+fBnrw5yzt5o6lkhAcl4kPxO+tw+dRBJMZtu3A4MVXgYgRM0RLXirXwD5qOPqHmOcQeT52usaKeKRXZgfhbDizvLG+O2QcB6uzBw3vRUN8/pDP81L0Z5qD0R/2TqUDsVxDJuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778002824; c=relaxed/simple;
-	bh=m8D9DqI4YmeYPx25nYgcYGuCvfaZ7/3R1TNCUp255pE=;
+	s=arc-20240116; t=1778267417; c=relaxed/simple;
+	bh=389mBnQQTYshozEoD4S9evNTtFTLy6JDKqlaMHtGKT0=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Bhwvh/LSyqixdVX8WW68URxsA3+MIfEyE1SivPoz3DteagFkwIFiXyjIX7Ix/ooYbocOE4w2vYCh6py88JXyj26iISZBCrTSVf2lqWEdNCUigxawEPQFVZXvBr2Rjwmzeca+H//9Mkp4lkq33PhSc/nXM/jDx7Usv8vutI8DtkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRt73qwO; arc=none smtp.client-ip=170.10.129.124
+	 Content-Disposition; b=Uveu9x+NEQ9JU0DuFpd0Uoae93UMsFIC3SVf0sgnQXf91EulvhNFpWKvrv4FqTtoaHDeKgPrjPGqlQIPGFt0ErKRbH+ayopvtXuwxZaiM04U/VTQgr0nsVE/OJKEAGv9MH9ho8OpboUGGqvLfA74hLOkGGW9LC/LZaKYm5uJHQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=isPD4D84; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRt73qwO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isPD4D84"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778002822;
+	s=mimecast20190719; t=1778267412;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=Y+2/bgg3acAP6Tef1uDEaFzFjB+7X1GJU0EeFmhllx8=;
-	b=PRt73qwOfPIBglq2h+pJ/Xk+tH4ZpNDyGVuP+NAZhu/BFV0vRuwVWrntcV8b8M2JfpDXrZ
-	LO+6lQMoZdV7deyVRJ2s7VGn7jiiLBACSgbkXi+Qthv/hm9HIHe148xpNBXszYNXYRBDtX
-	Ykvey/nOIfZfI1Brtm51qt5EvKKR8kQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=g0pz8N71Yoiooi3EaKqYLi2wLyGLkdc5C8VlWghPvkI=;
+	b=isPD4D84fm0ScOaN3gnUnYMeYAkufNQeSK7yDZJOoQKq5rw/dIlEE0pT6FnNVED1Xla68K
+	3Dm08nNYhJj8S71lXJ8zucO8G7sB7QPeXSUNml30q0wW+SipQ2Wy6vJTnNIJN1xqtsc9UG
+	H+GXg5HpB18D9M4r+lA1sdQRpEbr7bU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-7-ETXN-bQMM020RrtOgojavQ-1; Tue,
- 05 May 2026 13:40:18 -0400
-X-MC-Unique: ETXN-bQMM020RrtOgojavQ-1
-X-Mimecast-MFC-AGG-ID: ETXN-bQMM020RrtOgojavQ_1778002816
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-311-LunyrnAiPM2MTrtGnFg8NQ-1; Fri,
+ 08 May 2026 15:10:09 -0400
+X-MC-Unique: LunyrnAiPM2MTrtGnFg8NQ-1
+X-Mimecast-MFC-AGG-ID: LunyrnAiPM2MTrtGnFg8NQ_1778267407
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 401751800345;
-	Tue,  5 May 2026 17:40:16 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.183])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6FE8219560A6;
-	Tue,  5 May 2026 17:40:15 +0000 (UTC)
-Date: Tue, 5 May 2026 14:40:14 -0300
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45EA119560A2;
+	Fri,  8 May 2026 19:10:07 +0000 (UTC)
+Received: from localhost (unknown [10.22.88.92])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8908F18004A3;
+	Fri,  8 May 2026 19:10:06 +0000 (UTC)
+Date: Fri, 8 May 2026 16:10:05 -0300
 From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -49,12 +49,13 @@ To: LKML <linux-kernel@vger.kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Daniel Wagner <daniel.wagner@suse.com>,
-	Clark Williams <williams@redhat.com>, Pavel Machek <pavel@denx.de>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
 	Jeff Brady <jeffreyjbrady@gmail.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>,
 	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.254-rt150
-Message-ID: <aforfpN2Y_oYr8e8@redhat.com>
+Subject: [ANNOUNCE] 5.10.255-rt151
+Message-ID: <af41Df5xTu_LtIyo@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -63,29 +64,33 @@ List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
 Hello RT-list!
 
-I'm pleased to announce the 5.10.254-rt150 stable release.
+I'm pleased to announce the 5.10.255-rt151 stable release.
 
-This release is just an update to the new stable version, 5.10.254,
+This release is just an update to the new stable 5.10.255 version
 and no RT-specific changes have been made.
+
+KernelCI test results for v5.10.255-rt151-rc1 can be found here:
+
+  https://dashboard.kernelci.org/tree/stable-rt/v5.10-rt-next/5fbc557d2372ab6bc1378057fe91379fc1133785
 
 You can get this release via the git tree at:
 
   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
   branch: v5.10-rt
-  Head SHA1: a8821e9aac9b10589a170665e857ffd233281225
+  Head SHA1: f890d3d2d43123238f1102e6c8ea96d75103cac9
 
-Or to build 5.10.254-rt150 directly, the following patches should be applied:
+Or to build 5.10.255-rt151 directly, the following patches should be applied:
 
   https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
 
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.254.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.255.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.254-rt150.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.255-rt151.patch.xz
 
 Signing key fingerprint:
 
