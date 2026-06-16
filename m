@@ -1,69 +1,58 @@
-Received: from mx.nabladev.com (mx.nabladev.com [178.251.229.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411BA2F549F;
-	Fri, 12 Jun 2026 19:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.229.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D871A6803;
+	Tue, 16 Jun 2026 01:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781291028; cv=none; b=plLnLrGQHHADz/cl46/NdyYstNNb3H/Xg+Q39ZLXD0tHq5IIMYfrmQWvJfQIvp38eLAimEl6eeAYSuFx+/7lWSsHTGruStpBRvGTHiMW/zVvK7iVxcUEEx5hrQFG/+l2xiplXJBEjk+wlVlZT3+GMv2zcncMcCMsDeTcipEctRQ=
+	t=1781573884; cv=none; b=XSYm5xbrc7Sgwz8jTK2Viamd/SoRz8mpihlbY76gSiGTJTp8DUDauyFywPP4TFPcYXDoMsKDVyUoOR2Yf6fuQK0HflmTUnsQADCOaOuXsnJPltyIpzHotq6JFMcC51e8FGBTZ/o08dhMVAL0EX7OsXHAW3Z5N3S4oLaYpR8tg0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781291028; c=relaxed/simple;
-	bh=L8znca/8uZ0/nNFnQ6KWQaUVzwSFDlIg4z9BXmgDkBc=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i6MTX7t65AcyoqwEOgJh5rDklyUg+zn3rz9cH9kyK6cnhRc97KTS7L6an1+SVmEvdDU7z60xjVP19ufG8hS9duXxdgeUBp/QYoJGKjJBo7J0vyPqk53c3whAQ/09oRa7f7IjFU1b4t28ugxo+eNtBBpeBefrtnDmmQzK4MGJ7KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com; spf=pass smtp.mailfrom=nabladev.com; dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b=bsR6TNrj; arc=none smtp.client-ip=178.251.229.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabladev.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b="bsR6TNrj"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F6AB11729D;
-	Fri, 12 Jun 2026 21:03:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nabladev.com;
-	s=dkim; t=1781291024; h=from:subject:date:message-id:to:mime-version:content-type;
-	bh=oR2PwlvPrxXMAOJvy9pA0OHWJPCDxf9diZsxWclH0l4=;
-	b=bsR6TNrjUsiaJR1Sc5T2DYCe2JHhCOIeJkfQJ6fMU/vIjTZUWpM6LC88Nm91CrcDipGPaU
-	MR6e4hSNoJTpxYooP4weorCacRorujd4w+N7yvvC1NRu3wa6IZj8O0Lo0GBadHj+VHCLlE
-	nKUDPBE43Shg6YQuCDujIp8PwlqZJRvjGy6qFE8I9pm72p2jrSwU5UTBmDYyxhsBm4yHqV
-	jILlSLgmXUXFgFVmLROw9ca2Fab+f94HpLAWRzglAAe1DeIeDiw4xRv8urVALs7xFSMu7N
-	J5NJ/NHjsfLpkGWqr4E4e1fY1EuR8katd7Q261w34mdZbVPaVRk/jxAw8F+egA==
-Date: Fri, 12 Jun 2026 21:03:42 +0200
-From: Pavel Machek <pavel@nabladev.com>
-To: williams@redhat.com, linux-kernel@vger.kernel.org,
-	stable-rt@vger.kernel.org
-Subject: 6.1-rt planned?
-Message-ID: <aixYDtebH28HxGnf@duo.ucw.cz>
+	s=arc-20240116; t=1781573884; c=relaxed/simple;
+	bh=gB3sOd7luu6XRq61yKFesMz86TpB1EoZFaep7FSkB0g=;
+	h=From:Subject:Date:Message-ID:To; b=neyqvyOab+VHbR25EOciWIe67PFaUcnz0rBnGCizpcu7jtdfLlT0nuZTzmj8eaiLmtMV97Rt2XK2iz5Ci6ZF90UqQGuwcZFaG/TpJGlmu3hQp7Nbnotz9CiCceEgQVZKeT8QHlzkeOpXoZHjJmAAMhN42nhiMkUlpCjhDteq+CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45AA21F000E9;
+	Tue, 16 Jun 2026 01:38:03 +0000 (UTC)
+From: Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 6.1.175-rt63
+Date: Tue, 16 Jun 2026 01:34:39 -0000
+Message-ID: <178157367917.3851513.17741063665559040253@demetrius>
+To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@oracle.com>,Luis Claudio R. Goncalves <lgoncalv@redhat.com>,Stable RT List <stable-rt@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Mq4W0Zb+j+pbk1IE"
-Content-Disposition: inline
-X-Last-TLS-Session-Version: TLSv1.3
+
+Hello RT-list!
+
+I'm pleased to announce the 6.1.175-rt63 stable release.
+
+Note that gcc version 16 had some issues with the tree and I added two commits
+to deal with warnings treated as errors:
+
+a381a46f641a kvm/vmx: guard regparm(0) on vmread_error_trampoline for x86_32 only
+1fab82e55444 tools/lib/bpf: fix const-qualifier discard in resolve_full_path
+
+I've sent the patches to the stable list so after they're pulled into linux-6.1.y
+they'll override the RT patches for the following RT release. 
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v6.1-rt
+  Head SHA1: c232ef803846171236bc0feca33652b9fe681794
+
+Or to build 6.1.175-rt63 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.1.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.1.175.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/6.1/patch-6.1.175-rt63.patch.xz
 
 
---Mq4W0Zb+j+pbk1IE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Enjoy!
+Clark
 
-Hi!
-
-Is there / could I ask for 6.1-rt release? There was quite a bit of
-CVEs recently, so update would be nice.
-
-Thanks and best regards,
-								Pavel
-
---Mq4W0Zb+j+pbk1IE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaixYDgAKCRAw5/Bqldv6
-8j9JAJ0YK0qbh4AgvCsdAM1J/a3jZwi86ACfT0k8M+cPVs6STNrHBNVAZ5gWfbM=
-=a1k+
------END PGP SIGNATURE-----
-
---Mq4W0Zb+j+pbk1IE--
