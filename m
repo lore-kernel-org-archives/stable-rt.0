@@ -1,88 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFE928C009
-	for <stable-rt@vger.kernel.org>; Thu, 25 Jun 2026 08:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EDF416132
+	for <stable-rt@vger.kernel.org>; Tue,  7 Jul 2026 13:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782374551; cv=none; b=XQ+2KB5wd0ROwITEC7TQ2/DP+9e0YAxFFDRuCdinJdg7EpW3nrhdjBoSQLijAP/KZNDRLxCMue50KKCnybe8V1Wx46614bhXNX0HKW+wSHj21R3sQqgT4x77fq2SihOFf/CwRk2RSOcrmb2Sil+CNAuHttLkMDnY5XJnimnA9UI=
+	t=1783430762; cv=none; b=l2IRyAPNC4hVijw0OF1VB+xntz6mu8e4TMBl/owgPQSmU+IUYOuK5BBGbeOXLZk8bD/W2S0jVQ5fFykxh38/suoLzsytP04uB9LEIDW0JUjGJiv79uUlFeAZH40Vid0KPoTX3bvIER7bS+J/QpXLO0eQOvQp+KyOjYcSt0kCBaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782374551; c=relaxed/simple;
-	bh=P1eLcT0iPwNuHcCA7MYfRNCAInpCh8tJHDZnAbIwUjk=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iTKAMxQw7ydDGg2QpiL5Ri4sqLXykro4OLtYTC9dCmfOAsOvBS8sz4ZVLQldRBlCOajbi8ZIy+b9y0O/RAWmh2FifaLte0MULgDYwPlmIutz7LTJBQnH2NOjYdTOswQnnlxIJ29tkV991uEt7Wk42+pKUSHimQJGvq661r8qUaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D9qlpHga; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U9O8iXXl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1783430762; c=relaxed/simple;
+	bh=ayP2GGh7kHlpDdW9rJVgMI83F7NC3N90oPAibtWtiks=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SZ+ZMURULZ4wVbQC2jtou6oR8P6zUTvDIRwwOoARgoM3ryimLQvAk9xw7doxCWFUPz0ZLqUFpzBawitLHhB5msD/MJ4bPhbCyUEfEphH0IFWOlWx0MGeji9GTjMUt5tAfYeZNuTBJu9Mq7OgSiWL9ssUG5nby2yqLtaOx5aeEAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JvAPBKmI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D9qlpHga";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9O8iXXl"
-Date: Thu, 25 Jun 2026 10:02:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1782374548;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JvAPBKmI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783430759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R6RfTSm75C5XgoUu3poPlnJaFQoPycgyOby8gbtUnMc=;
-	b=D9qlpHgan2mNV1BAUzWCKhVZJslZ5vL26wHtMDVWZVLDrHA2twdqIm2TkD6t3nau1dDl0q
-	Y4KLltEKs6n6/r4Luz/7MJsxIG19Gd47tk2cPFFDh2SH+/PD4gixIRElUHjpxwWqbTN8yb
-	Mm6hGrSZSP2/OtDXjtnHIXehGIvq8KZM5cQPDvhI8Pens4sPxJvEiqrtwUvkmMw9H5BBIo
-	z+BNBYz+76U2ioDTf/eK0NXxcw94Wfp4jq00iXW6my+E/lmPiy0ArG4EfPbEO5fwN3BX7v
-	TmedGqfYqi/r6JeY3UY0718moc9Ztk2Q7l507OEDJUcsbucjHTIhQE8N6Rlo1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1782374548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R6RfTSm75C5XgoUu3poPlnJaFQoPycgyOby8gbtUnMc=;
-	b=U9O8iXXl76XIoQrSph7j1uQQ36yWgW55H911uKVhL2tLXWl0qCCK9nEcEc0gh3SUvCLQrG
-	hmjz7zqayvN0muDA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=Lw1QlAzHbEYqiIECgDF5JQR9V35i2bZ0eU+ZKjWFzYQ=;
+	b=JvAPBKmINGYy9RPq5EohkVCuUK7jOVBWjkXNNCwL3Z4tdR5MQJOnsRj82cBHp51fOhV9fZ
+	4xpsuGgyfy6tTnZ4zwnYugt25PQSZ2hlCmB6hmmYfpiP+Wx5yzf/2fOtlO5PfWC0KxhCmu
+	wvCBNhQWg8yM3L/QL7XJ+uaKyGJTLMQ=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-L5At6Ir5OD2a2Rt3Kiu1gg-1; Tue,
+ 07 Jul 2026 09:25:55 -0400
+X-MC-Unique: L5At6Ir5OD2a2Rt3Kiu1gg-1
+X-Mimecast-MFC-AGG-ID: L5At6Ir5OD2a2Rt3Kiu1gg_1783430754
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CCC211955D96;
+	Tue,  7 Jul 2026 13:25:53 +0000 (UTC)
+Received: from localhost (unknown [10.22.80.89])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2A4AE18005B3;
+	Tue,  7 Jul 2026 13:25:52 +0000 (UTC)
+Date: Tue, 7 Jul 2026 10:25:51 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Stable RT List <stable-rt@vger.kernel.org>
-Subject: Re: Question about the maintenance of OOT RT patches for LTS
- releases (v12.x and v18.x)
-Message-ID: <20260625080227.WCsryMw4@linutronix.de>
-References: <ajlez0ZNV3PJ26iz@redhat.com>
- <20260624064944.Lt3vOksN@linutronix.de>
- <aju8K3aPXCWr7v7z@redhat.com>
- <20260625-afar-trailside-f84c5025dc57@thorsis.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.260-rt156
+Message-ID: <akz-X1U6yqts_E0V@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260625-afar-trailside-f84c5025dc57@thorsis.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 2026-06-25 09:35:19 [+0200], Alexander Dahl wrote:
-> Hello,
-> 
-> just adding one datapoint here in case someone is wondering if there
-> are users out there? ;-)
+Hello RT-list!
 
-Sure. Having an update from _any_ user feels good. At least the work is
-used ;)
+I'm pleased to announce the 5.10.260-rt156 stable release.
 
-> > Sebastian, just to make sure I understood your answer, then we don't need
-> > to keep the OOT patches up-to-date for v6.18-rt specifically? My question
-> > came from comments raised on the last two RT maintainers meetings and the
-> > LF RT Board meeting. I just want to have a good answer if somebody else
-> > asks about that. And to volunteer if work is needed.
-> 
-> We still use v6.12 LTS with PREEMPT_RT on arm32 (at91),
-> and plan to use PREEMPT_RT on at91 (sam9x60, sama5d2) in the future.
-> 
-> If there are no regular patches for v6.18 we will probably skip that
-> and use the LTS coming later this year.
+This release is just an update to the new stable 5.10.260 version and
+no RT-specific changes have been performed.
 
-I did assume we have v6.18 in maintenance but somehow it skipped. *I*
-usually skip updates if there are no clashes and nothing changes.
+You can get this release via the git tree at:
 
-> Greets
-> Alex
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-Sebastian
+  branch: v5.10-rt
+  Head SHA1: 3d73dc88a54627945d0003034e19101b8f12e40d
+
+Or to build 5.10.260-rt156 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.260.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.260-rt156.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+  git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+This release has been tested in KernelCI via tag v5.10.260-rt156-rc1:
+
+  https://dashboard.kernelci.org/tree/stable-rt/v5.10-rt-next/ddb0e070eba763536fef82f0779439e8efa3a326
+
+Enjoy!
+Luis
+
