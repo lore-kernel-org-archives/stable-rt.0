@@ -1,106 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EDF416132
-	for <stable-rt@vger.kernel.org>; Tue,  7 Jul 2026 13:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E60246AEDF;
+	Tue, 14 Jul 2026 13:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783430762; cv=none; b=l2IRyAPNC4hVijw0OF1VB+xntz6mu8e4TMBl/owgPQSmU+IUYOuK5BBGbeOXLZk8bD/W2S0jVQ5fFykxh38/suoLzsytP04uB9LEIDW0JUjGJiv79uUlFeAZH40Vid0KPoTX3bvIER7bS+J/QpXLO0eQOvQp+KyOjYcSt0kCBaM=
+	t=1784036339; cv=none; b=LgKb8Nk8XIXeEJ07wjVzuLLERWtxv6ePdNFvFiMWCgObWFZ3AoPZSPyaLCdalNnj3QrTx1cK9zrRNSriOe73lB0U3jDnExQXUSE+/5e4e3ZkzwaZOo/sqLCNJ+23ac1bHclf3UkhgdSRWBhu4OHymjvECspfQlhnWXi3j+Lm56I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783430762; c=relaxed/simple;
-	bh=ayP2GGh7kHlpDdW9rJVgMI83F7NC3N90oPAibtWtiks=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SZ+ZMURULZ4wVbQC2jtou6oR8P6zUTvDIRwwOoARgoM3ryimLQvAk9xw7doxCWFUPz0ZLqUFpzBawitLHhB5msD/MJ4bPhbCyUEfEphH0IFWOlWx0MGeji9GTjMUt5tAfYeZNuTBJu9Mq7OgSiWL9ssUG5nby2yqLtaOx5aeEAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JvAPBKmI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JvAPBKmI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783430759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=Lw1QlAzHbEYqiIECgDF5JQR9V35i2bZ0eU+ZKjWFzYQ=;
-	b=JvAPBKmINGYy9RPq5EohkVCuUK7jOVBWjkXNNCwL3Z4tdR5MQJOnsRj82cBHp51fOhV9fZ
-	4xpsuGgyfy6tTnZ4zwnYugt25PQSZ2hlCmB6hmmYfpiP+Wx5yzf/2fOtlO5PfWC0KxhCmu
-	wvCBNhQWg8yM3L/QL7XJ+uaKyGJTLMQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-L5At6Ir5OD2a2Rt3Kiu1gg-1; Tue,
- 07 Jul 2026 09:25:55 -0400
-X-MC-Unique: L5At6Ir5OD2a2Rt3Kiu1gg-1
-X-Mimecast-MFC-AGG-ID: L5At6Ir5OD2a2Rt3Kiu1gg_1783430754
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CCC211955D96;
-	Tue,  7 Jul 2026 13:25:53 +0000 (UTC)
-Received: from localhost (unknown [10.22.80.89])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2A4AE18005B3;
-	Tue,  7 Jul 2026 13:25:52 +0000 (UTC)
-Date: Tue, 7 Jul 2026 10:25:51 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
-	stable-rt <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Wagner <daniel.wagner@suse.com>,
-	Clark Williams <williams@redhat.com>,
-	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
-	Jeff Brady <jeffreyjbrady@gmail.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.260-rt156
-Message-ID: <akz-X1U6yqts_E0V@redhat.com>
+	s=arc-20240116; t=1784036339; c=relaxed/simple;
+	bh=iCVr/wKzKS9hUTZisb/4Q+bqzi06gn1CceWoVLWJKGc=;
+	h=From:Subject:Date:Message-ID:To; b=cbsDnBB9fkElUMgHP3FrDwrM2PFas0sVw0jLzT4oglIdRcKwgDlMe6MTHsvJUCGkMC8rDCL8oqGo73pHSQ4YKBMH9QBnWpO8GrwMRzF3HYcyHvTp8FW34ev6W1SgaJs+JvgMfIVtyQJsdJhnhowSdVSFosiNk4ehHVTHP2fPDbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1212E1F000E9;
+	Tue, 14 Jul 2026 13:38:57 +0000 (UTC)
+From: Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 6.6.144-rt76
+Date: Tue, 14 Jul 2026 13:37:59 -0000
+Message-ID: <178403627961.2542645.1740723237887139811@demetrius>
+To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@oracle.com>,Luis Claudio R. Goncalves <lgoncalv@redhat.com>,Stable RT List <stable-rt@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
 Hello RT-list!
 
-I'm pleased to announce the 5.10.260-rt156 stable release.
-
-This release is just an update to the new stable 5.10.260 version and
-no RT-specific changes have been performed.
+I'm pleased to announce the 6.6.144-rt76 stable release.
 
 You can get this release via the git tree at:
 
   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-  branch: v5.10-rt
-  Head SHA1: 3d73dc88a54627945d0003034e19101b8f12e40d
+  branch: v6.6-rt
+  Head SHA1: a53df22569c0ad66b668d767aa956343688d05a8
 
-Or to build 5.10.260-rt156 directly, the following patches should be applied:
+Or to build 6.6.144-rt76 directly, the following patches should be applied:
 
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.6.tar.xz
 
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.260.xz
+  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.6.144.xz
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.260-rt156.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/patch-6.6.144-rt76.patch.xz
 
-Signing key fingerprint:
-
-  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-  git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-This release has been tested in KernelCI via tag v5.10.260-rt156-rc1:
-
-  https://dashboard.kernelci.org/tree/stable-rt/v5.10-rt-next/ddb0e070eba763536fef82f0779439e8efa3a326
 
 Enjoy!
-Luis
-
+Clark
