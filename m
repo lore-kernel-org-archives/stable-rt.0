@@ -1,43 +1,54 @@
-Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CDA2E5B21
-	for <stable-rt@vger.kernel.org>; Fri, 17 Jul 2026 14:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506F1429CF1
+	for <stable-rt@vger.kernel.org>; Fri, 17 Jul 2026 14:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784297900; cv=none; b=KQkXBpdexxa+Jo9ANp0++7H+XSaY+pLoyv9mUSXsVCsHaGXxQ72FeFvopFBW1/JZRy6qfzVvHQpQ69J9ClX3JTNnOk49h35m+RhWJg29bYxJH0uQ5xYlPHqft1wprlgYHgpPEcO5MTO8KHvV3gmNOB+XwcZLmEB+LEW0BXiCt5k=
+	t=1784298134; cv=none; b=kNhZPCgZY/OimrwNGhtKx1OblBBjIHcN1Nz5RmxbNd1+4nxE0IylR6CvBkg7L0xo10HutBf956ZtulmJljbaCHND0bBpxFnTL+kyVHE8GwevipcL+RmltwyW0Ie3aluktRGcFBGsJNL9hnG4E5gNhyhIkCj341viYF7zcgOUO2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784297900; c=relaxed/simple;
-	bh=dFJknAB4UxeFFcfOhd3Dqn5Qy2VcLSkWR5CkKjVsZEE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n0pX3WkJsDuf14RiCyQvmrCGYTRVSrtzA4NB7+QegHzYptAqPERP1yjlU7mVLRV6ez7IpSXRXJeCTisdwsGBK8WEZ9cDdXyPwtFcezmWEr6DK3KKIJ+0mCsSj1r7hczFSwCSrs8+iAJ7y6M8qR1dF2bbZdVwXM98g/cVr3/xrAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=SAS/K6ww; arc=none smtp.client-ip=85.9.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	s=arc-20240116; t=1784298134; c=relaxed/simple;
+	bh=jb7dCv80urt/y8dpp8Xxa2kwrP1gh/g9rVtXnefsETQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omIDPZXGVtROYeTQtXGXi00Kn3AkXDUjcINJcesqy9ZdFb9rVqV75szHk/XjePId+Mb9INuD6ORXomr9huOVFOIvLRGUbElpy5xVE0/olbWI0d6ELzkteoIIoINn0be/3zRn8JfYe8wqa4FZDYrA1eRlLd0asgPLiRhRLiwFdZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0r8TN4DZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x1pxkntP; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="SAS/K6ww"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org;
-	s=protonmail; t=1784297878; x=1784557078;
-	bh=cAs0tv9YwBjDiL82Q3cICzEx9b52YgKptif7g/7ck1w=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=SAS/K6wwXwnxVPQrIZv2rfe/TkYfa6yrCg+XACyr8iQule4w3G9JOxGVDxPKDgwfK
-	 xhvUfMAM4N3wI4Aw2ZgaRXLeOj9QITxuSKGK/uQHbIfJXUIjmIgUBtuSZTN4V4WfpU
-	 ur5nQckqneeRkq083qgyS0UNkQAYpqJ1j+SWkxPaJtvNcKnXea/YqwlDoVD2POExHv
-	 g8KQfEK0OsdijdIUXvZXrQd3N4G1lJRGzQ7HAZqy5/6rNW1+xLXcqRntFZUFiuMnh6
-	 7tgLoeHOSBYUtoga4zuCJoM2tR7d6Iu2kgjvPlHEkSNeuw3tnm2nFlWyJ/dZN0xA+Y
-	 I6dXqCiLPcp1A==
-Date: Fri, 17 Jul 2026 14:17:54 +0000
-To: "bigeasy@linutronix.de" <bigeasy@linutronix.de>
-From: Daniel Wagner <wagi@monom.org>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, pavel@nabladev.com, nobuhiro.iwamatsu.x90@mail.toshiba, stable-rt@vger.kernel.org, cip-dev@lists.cip-project.org
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0r8TN4DZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x1pxkntP"
+Date: Fri, 17 Jul 2026 16:22:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1784298131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e83lJnaZX4/+AdvTSdSIoeXVY9ifGj/RLgipoOnIiWI=;
+	b=0r8TN4DZPqnJsn9AB1Qg27Gu6MPqbi53in9Vk3jKV+YhCvP+O7hkFdVMcgMmRKTCD4HbBp
+	z9+/riggw221pccNt/pdkU8TdpG0DojprpN0ogBOBxqy7iap+Z6dS4LXKu8Uh3kBtwBFl+
+	8lwspqdpCn2P8PdcaWeQtQoltY+qg980tnsdjB2eqysrF06dc+DyA5RGBNtzDUj0EeHzv/
+	dgo1DwQDJ+q6VDsZ8p3lY9C8NVFPHrwW8Nns06OBHi2CZGKEx0BNwP3vnYsziSng1fbe1j
+	oZaYWyvxqYWMO2iU3mlBfvizzWhi3pCIa8wy39qJgA/qL/ktNjXMjsDzBujFaQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1784298131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e83lJnaZX4/+AdvTSdSIoeXVY9ifGj/RLgipoOnIiWI=;
+	b=x1pxkntPasYwRPe4RuNArDcm4dvlJvL/ulbzK9tj5+gju0WjfCqTh6b0THqf87OQr5jbna
+	Xh5NiKYr0/h9tBCQ==
+From: "bigeasy@linutronix.de" <bigeasy@linutronix.de>
+To: Daniel Wagner <wagi@monom.org>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, pavel@nabladev.com,
+	nobuhiro.iwamatsu.x90@mail.toshiba, stable-rt@vger.kernel.org,
+	cip-dev@lists.cip-project.org
 Subject: Re: v6.12-rt arm updates
-Message-ID: <3706c5f1-53af-460e-9409-fa1b78706645@monom.org>
-In-Reply-To: <20260717140336.krBy6oQT@linutronix.de>
-References: <8a0f6ad1-0df7-4707-bcc4-83603cada945@monom.org> <20260717134624._f9g97lg@linutronix.de> <141ef3cb-361d-432c-a7ba-af010406283c@monom.org> <20260717140336.krBy6oQT@linutronix.de>
-Feedback-ID: 209527651:user:proton
-X-Pm-Message-ID: 8f2cef08f4da1841c18d72d0cc2148f69324cccb
+Message-ID: <20260717142210._ukh1yBD@linutronix.de>
+References: <8a0f6ad1-0df7-4707-bcc4-83603cada945@monom.org>
+ <20260717134624._f9g97lg@linutronix.de>
+ <141ef3cb-361d-432c-a7ba-af010406283c@monom.org>
+ <20260717140336.krBy6oQT@linutronix.de>
+ <3706c5f1-53af-460e-9409-fa1b78706645@monom.org>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
@@ -45,60 +56,14 @@ List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <3706c5f1-53af-460e-9409-fa1b78706645@monom.org>
 
-On 7/17/26 4:03 PM, bigeasy@linutronix.de wrote:
-> On 2026-07-17 13:54:58 [+0000], Daniel Wagner wrote:
->>>> # Commits in upstream but not in v6.12-stable
->>>> ARM__enable_irq_in_translation_section_permission_fault_handlers.patch
->>>> #  59e4f3b45b96 ("ARM: ensure interrupts are enabled in __do_user_faul=
-t()")
->>
->> I've replaced the downstream patch with the commit mentioned...
->>> You should be able to drop a few of those and replace them with what I
->>> have in v6.18
->>> =09https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.gi=
-t/commit/?h=3Dlinux-6.18.y-rt-patches&id=3D73c8e8d7a75fcc8b9026385e64990f3d=
-5ec8a40d
->>
->> ... which is what you have done here as well. The main difference is
->> that v6.12-stable ships 'ARM: 9459/1: Disable jump-label on PREEMPT_RT'
->=20
-> It does? Not as of v6.12.95.
+On 2026-07-17 14:17:54 [+0000], Daniel Wagner wrote:
+> So here my updated queue (the comment points to the upstream
+> version of the patch):
 
-You are right, I was looking at the wrong tree. I am adding it back.
+This looks okay. Your delta should be
+	https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/diff/?h=linux-6.18.y-rt&id=868deefc37dfbdfe93d760155e0c84f5f3363cc2&id2=90a16cd5d693a75843b766d0efa17f1bc0149931
 
->> The resulting v6.12-rt queue is
->>
->> 0001-ARM-ensure-interrupts-are-enabled-in-__do_user_fault.patch
->=20
-> This looks like 59e4f3b45b96a ("ARM: ensure interrupts are enabled in __d=
-o_user_fault()")
-
-Correct.
-
-So here my updated queue (the comment points to the upstream
-version of the patch):
-
-0001-ARM-ensure-interrupts-are-enabled-in-__do_user_fault.patch
-# 59e4f3b45b96 ("ARM: ensure interrupts are enabled in __do_user_fault()")
-
-0001-ARM-vfp-Provide-vfp_state_hold-for-VFP-locking.patch
-0002-ARM-vfp-Use-vfp_state_hold-in-vfp_sync_hwstate.patch
-0003-ARM-vfp-Use-vfp_state_hold-in-vfp_support_entry.patch
-0004-ARM-vfp-Move-sending-signals-outside-of-vfp_state_ho.patch
-#  f26bdbe1fa9f ("ARM: 9423/1: vfp: Provide vfp_state_hold() for VFP=20
-locking.")
-#  b54cdbad4a39 ("ARM: 9424/1: vfp: Use vfp_state_hold() in=20
-vfp_sync_hwstate().")
-#  27035c23bad5 ("ARM: 9425/1: vfp: Use vfp_state_hold() in=20
-vfp_support_entry().")
-#  c0b5195bad63 ("ARM: 9426/1: vfp: Move sending signals outside of=20
-vfp_state_hold()ed section.")
-
-0001-arm-Disable-jump-label-on-PREEMPT_RT.patch
-# 56d97d3587b ("ARM: 9459/1: Disable jump-label on PREEMPT_RT")
-
-ARM__Allow_to_enable_RT.patch
-#  c6e61c06d606 ("ARM: 9463/1: Allow to enable RT")
-
+Sebastian
