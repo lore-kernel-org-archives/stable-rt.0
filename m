@@ -1,111 +1,107 @@
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E9361DA6;
-	Tue, 21 Jul 2026 13:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5721A486643
+	for <stable-rt@vger.kernel.org>; Wed, 29 Jul 2026 13:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784640618; cv=none; b=oxXgNPuhhUzUgwPeZ7XbZyrBue0IyEoeOU65DmNw9a7pvz3ZnN0k4RGBWWhnHe1x7GnEDCV6ou6LIN/qsYfklLPqxsNaVcxzkZ1dgFfZlLXDeJQOq2qTtQ4waB8VoBF3dRRNUiUgXAypbckW73TUQrhkYlmwPHi3eYyrYuMhv0Q=
+	t=1785330991; cv=none; b=enoiQNCuHsu6xtsdiyys0e9cDno+cv1B9UDCX+BXUS6WIh2ClGfQMlzyO0NQqVYN5vJwLc2wCsGc/zT+tlCUoIdfAuJSgJu5lknS9qJQutoL9X2nGrZmlFXTFA7oVCbpuhnB+U12477HcCBYp/HP+aq+Y8L75vXl9U1dLj/45tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784640618; c=relaxed/simple;
-	bh=TGPeFPqfu3MMiAGBvpHW/Tkf+M5e2KHsuMoS3yOD83U=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=HCLd9ov/fBbxcdYfUx5tiWkqTRTmH2AJf7b6a3jSdk1aIXlil1UvkOhAViqvMW+2nPd5zgR4d/7lZEAZzE8AVmwF8VO6d9OnUK52EVQbQri1R/8meLIfHXPdf/sa1TZGBYViwd9kNjOFP383shy2//YChT5Qu4ZU5Nj2S2j+rxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=CuLm725O; arc=none smtp.client-ip=185.70.43.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	s=arc-20240116; t=1785330991; c=relaxed/simple;
+	bh=HtVAmAgPUn85evEwL89OZyJbMozv9oeYxwsEiXF6wyE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ng0mUy+W6pGFtejsh72/OufDRLEpPNCHDCq8orzOFXINw/KlwQdJBfrlIuXOu2FEbDfCH9QItEoHFj+f+nYx39e5t98CWNbZEi1Gbsxvvmj8v+G04QUr/htfotgMg2TXOEcqLFsphhXfdMU6crNwQjf0Qr4X9n2JaKKfXvdIgp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1KZSjEA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="CuLm725O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org;
-	s=protonmail; t=1784640606; x=1784899806;
-	bh=LqQ+DTrPXRdNMYhdS4CEpsCkCP2EoYkyFsyxrbbhJl4=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=CuLm725Oc9oE4RqPD4yxCE6J/S72vrwEuRKB1n2ZC/865BJdZrquVwuFqXXUSGIFO
-	 7gyWZhsuHWD4baexirby3MpkxCD7sCTskUKEi4ptnSCsSB44NbctsBvbTHBgxpRXQ0
-	 yBQvx69JvebsyzixdV53SWE15RWH/fg3L4DuL5oGD2S6JVo07KJVwbB7ceIN2njyV/
-	 LMkII6W+hHrxKyu4MvVC/So9zgNBbmUQVeJxsM3ktDC09aj0GGXkc5UM6DyprYwYEj
-	 VmevmyCbm90PW5uBo1eJQZzLP1X/ey5LcOXPk5lulslj246meU26fXhEMDHfoUX3RG
-	 Zj2K68Xa/G02w==
-Date: Tue, 21 Jul 2026 13:30:01 +0000
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <williams@redhat.com>
-From: Daniel Wagner <wagi@monom.org>
-Subject: [ANNOUNCE] v6.12.96-rt19
-Message-ID: <e5d0edb9-03d9-4356-911a-a5779c1986bc@monom.org>
-Feedback-ID: 209527651:user:proton
-X-Pm-Message-ID: 41964f5e84cbf393907700e52c330ba6db9e0827
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1KZSjEA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785330989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=46HDWoO7wpug+J4EQFZnp5uoWM8nPAphNROMYAv5mGw=;
+	b=b1KZSjEAYFZ8mZWJsLoZgUrXz8dXnWRIAl8YEHWk/l/c2F6RdAuerbKTf1eFprIua7MOod
+	rpTktpBJT4oopn+K4sT/se2eSCHqe3u7QZXn5Xd88LfgGS2mTqyvVuVvWQNtPkO8rt0ONG
+	pBigQGuFNaCQ3WreOCLUXpMZ5e+PXEo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-jmybDbreOKWRek8ojrHuag-1; Wed,
+ 29 Jul 2026 09:15:54 -0400
+X-MC-Unique: jmybDbreOKWRek8ojrHuag-1
+X-Mimecast-MFC-AGG-ID: jmybDbreOKWRek8ojrHuag_1785330952
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61510180029F;
+	Wed, 29 Jul 2026 13:15:52 +0000 (UTC)
+Received: from localhost (unknown [10.22.88.130])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5878519560AB;
+	Wed, 29 Jul 2026 13:15:51 +0000 (UTC)
+Date: Wed, 29 Jul 2026 10:15:48 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.261-rt157
+Message-ID: <amn9BEdIB3bYxcuC@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 Hello RT-list!
 
-I'm pleased to announce the 6.12.96-rt19 stable release.
+I'm pleased to announce the 5.10.261-rt157 stable release.
 
-This updates to the latest stable release. Since the latest stable=20
-backports a
-number of ARM patches that touch the RT code, this is not a straightforward
-update. I tried various update strategies, and doing the rebase and=20
-replacing
-one patch resulted in the cleanest diff, making it the least likely to=20
-introduce
-regressions in this area.
-
-The main change in the stable-rt tree is the removal of
-
- =20
-patches/ARM__enable_irq_in_translation_section_permission_fault_handlers.pa=
-tch
-
-which is replaced by
-
-   59e4f3b45b96a ("ARM: ensure interrupts are enabled in __do_user_fault()"=
-)
-
-The remaining changes are small context updates to the existing patches.
-
-Last time I reported latency spikes in my test lab. Lukas Beckmann (thanks!=
-)
-tracked down the root cause:
-
- =20
-https://lore.kernel.org/regressions/4e31e3b5-fa69-4c4c-a5e9-dea7a8452ee7@ma=
-ilbox.org/
-
-All of the deadline scheduler fixes have since been merged into the=20
-stable tree,
-so this RT release picks them up as well.
+This release is just an update to the new stable 5.10.261 version
+and no RT-specific changes have been made.
 
 You can get this release via the git tree at:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-   branch: v6.12-rt-patches
-   Head SHA1: f615822de142655b0cb1b94c4e6a0043b1ffac3d
+  branch: v5.10-rt
+  Head SHA1: 27640dfd3dc9f64c7843a6988968e934e3cc5352
 
-Or to build 6.12.96-rt19 directly, the following patches should be applied:
+Or to build 5.10.261-rt157 directly, the following patches should be applied:
 
-   https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.12.tar.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
 
-   https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.12.96.xz
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.261.xz
 
- =20
-https://www.kernel.org/pub/linux/kernel/projects/rt/6.12/older/patch-6.12.9=
-6-rt19.patch.xz
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.261-rt157.patch.xz
+
+This release has been submitted to KernelCI as v5.10.261-rt157-rc1:
+
+  https://dashboard.kernelci.org/tree/stable-rt/v5.10-rt-next/v5.10.261-rt157-rc1
 
 Signing key fingerprint:
 
-   5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
 
 All keys used for the above files and repositories can be found on the
 following git repository:
 
-    git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
 
 Enjoy!
-Daniel
+Luis
 
