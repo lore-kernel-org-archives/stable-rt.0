@@ -1,90 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950EF1A9FBC
-	for <stable-rt@vger.kernel.org>; Fri, 21 Aug 2026 06:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A74949F102
+	for <stable-rt@vger.kernel.org>; Wed,  2 Sep 2026 13:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787293503; cv=none; b=bPSRdhlmZOSR46V8zrmIiA5cLbhLcgI5Xeki3UgxiI8wDXEdZH7JiVYDfRLkVTUnekgqmRDvoYexm1bLmRF8LEeLAa3Qrj9liSo90R70l3wO+IxnJlYYSFITbck3EpjXvZdfTu8i4Nhs0VtNtO3cPIyo2BLVRivgR9C1d5ZvLV4=
+	t=1788355749; cv=none; b=NdgNXpLrhSaBeB1J1Xs0wUqtoEWacoxpizMXdLwEBujmqLfiWT5ZMh1rKzxGKlfOqFwId52SHj6pGRam/o5U2FIOQjWXW+f/Musw66SBrrBgxGFjpUAYxN8STXU/J30AfoYccwL6eyRmzvcAakesGAimBSkFNWPqfoTQtxeOYso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787293503; c=relaxed/simple;
-	bh=nlJ267SVJUxTaU7rEwu56wgT5tYTCmDt+/aDhIrHYeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WxWi+yJdtit7stV8EeWfcaPVz69ToKlx6w85ZXZWtdamisojoPQexKFgzPLn8UZhSWgtW0wGHSkI/fuRSk7Fs2BczwdBH3LYYuXTnmhePTua8fwgfAg5NXLw+qzBs+xNWze/5hfArpuSmmA3ioZPhg4C3gPzYSURx1uFh6vVspo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JZgRg5lY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MgyW2iQT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1788355749; c=relaxed/simple;
+	bh=7Qe0H2N2giHT0x1wAHmts9/6vQN/n8Xs/84gOOPZg6g=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=uAIRThhTi/AzEOHyWy+95WHu47w8FNk/l+CPfcL2xSZSgoOZOMMn91jmhPJUilXFI3HRnI2bA+Iv1i74oQGvAozleoVR/FgEx+BFwVOD85ul4ZYOg3Hu5Lr5wWr+3jqstqXy9jN2S+L/nKXYfoucLJRx4j0T4u62y12OtOLbA18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+6cQTxj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JZgRg5lY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MgyW2iQT"
-Date: Fri, 21 Aug 2026 08:24:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1787293497;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+6cQTxj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788355746;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nlJ267SVJUxTaU7rEwu56wgT5tYTCmDt+/aDhIrHYeg=;
-	b=JZgRg5lYAk2cjchUKzEIuqYD/T97rhO682X0TRMOdEeLNDk2QEfGZRAxcOqh4nJyoQb4OC
-	N1VVKfh/ur1lhhTrPpJN3AZ/blmE7HEvbK5CL5Gtar1hmNmzmvLkxPMpdcdVG3K7GWhrxm
-	UK87lBcmuqbYcIBamMibYr9HiKxs9TH0tvYPNR2GP5auR8yLbu/s8BwvVttCHtKw7iqaYK
-	AJhqGTHIimPOnP0KSo38rsJ8U7gOwGDV+W63N8EILDNtc5f5oI+T4L3/zzaIoCNip+V2yP
-	d8FgraJkONIVkWEsswvgkoVgnF2dgZyUyiAF03X+t6mP//LL9uOBHZzRE+2OZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1787293497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nlJ267SVJUxTaU7rEwu56wgT5tYTCmDt+/aDhIrHYeg=;
-	b=MgyW2iQTCv7siOebM4bwG1wVvJqsuMMTTgq1fEsfJ8F9Zxf9MtcUp5mgK2c2zXeT+3e+Kp
-	pJKg44h/fvGgsvBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Bryan Brattlof <bb@ti.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Stable RT List <stable-rt@vger.kernel.org>,
-	Praneeth Bajjuri <praneeth@ti.com>
-Subject: Re: Question about the maintenance of OOT RT patches for LTS
- releases (v12.x and v18.x)
-Message-ID: <20260821062456.vqrnjWSh@linutronix.de>
-References: <ajlez0ZNV3PJ26iz@redhat.com>
- <20260624064944.Lt3vOksN@linutronix.de>
- <aju8K3aPXCWr7v7z@redhat.com>
- <20260625-afar-trailside-f84c5025dc57@thorsis.com>
- <20260625080227.WCsryMw4@linutronix.de>
- <20260819163011.v7uqv6zbavgbebq5@bryanbrattlof.com>
- <20260820142314.OrEinRQt@linutronix.de>
- <aocj-6A2vEPw-5-O@redhat.com>
- <20260820161246.TOprmKgB@linutronix.de>
- <aoc4Ks-zKZMEcvmx@redhat.com>
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=I/QQeqIzDjAPdewDxjTgXRQDBKemy4NTsHja+NPtaTc=;
+	b=J+6cQTxjzgDVdvMlQIF0jt2nXCJGOqTuGYFQIHHAtgPHX3kbckKr4b8bzUIjkUYFC6PUSj
+	ZcClsfrgYTXLRvEETkbqtEQmtoXQxQ9DGHu/Vnk1jmrjUKfFOE2VmP1Q/3QQUFW6mWilFC
+	KvzoFem0djpi/nfpsuofQMmgz3CvTMM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-E2HOFZAQPdiyrIggs6HMrg-1; Wed,
+ 02 Sep 2026 09:29:02 -0400
+X-MC-Unique: E2HOFZAQPdiyrIggs6HMrg-1
+X-Mimecast-MFC-AGG-ID: E2HOFZAQPdiyrIggs6HMrg_1788355741
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 83699185510E;
+	Wed,  2 Sep 2026 13:28:53 +0000 (UTC)
+Received: from localhost (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 610991955F07;
+	Wed,  2 Sep 2026 13:28:52 +0000 (UTC)
+Date: Wed, 2 Sep 2026 10:28:51 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.268-rt164
+Message-ID: <apgkkzzlqqLGEwgE@redhat.com>
 Precedence: bulk
 X-Mailing-List: stable-rt@vger.kernel.org
 List-Id: <stable-rt.vger.kernel.org>
 List-Subscribe: <mailto:stable-rt+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:stable-rt+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aoc4Ks-zKZMEcvmx@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 2026-08-20 14:23:54 [-0300], Luis Claudio R. Goncalves wrote:
-> Sebastian, I can merge v6.18.45 into v6.18.37-rt6 too. I can not rebase
-> from v6.18.37-rt6 to v6.18.45. But if I repeat the process with
+Hello RT-list!
 
-That is expected. That branch has all the patches but also intermediate
-patches. The "exact" patches are probably easy to recognize as applied
-and dropped as part of the rebase process but the intermediate patches/
-commits can result in a clash aborting the process.
+I'm pleased to announce the 5.10.268-rt164 stable release.
 
-So applying the quilt queue should work and merging the stable tag in
-either of the two "complete" branches, too. Just don't rebase anything.
+This release is just an update to the new stable 5.10.268
+version and no RT specific changes have been made.
 
-> v6.18.37-rt6-rebase, it works fine. In any case, if that is not the
-> problem that prompted Bryan's email, no need to focus on that. I was just
-> trying to understand the reasoning behind the question and spotted the
-> rebase failure.
+You can get this release via the git tree at:
 
-Okay.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-> Best
-> Luis
+  branch: v5.10-rt
+  Head SHA1: 6119c34b6412a60985a17b9fa5f76494bb7f88e9
 
-Sebastian
+Or to build 5.10.268-rt164 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.268.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.268-rt164.patch.xz
+
+This release has been tested under KernelCI as:
+
+  https://dashboard.kernelci.org/tree/stable-rt/v5.10-rt-next/v5.10.268-rt164-rc1
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
+
